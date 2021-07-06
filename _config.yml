@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: EnableAsync Blog
+title: EnableAsync's Blog
 subtitle: EnableAsync 的博客
-description: 用来记录分享一些内容
+description: 用来记录、分享一些内容
 keywords: [golang, java]
 author: EnableAsync
 language: zh
@@ -46,7 +46,7 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace: ''
   wrap: true
   hljs: false
@@ -62,7 +62,7 @@ prismjs:
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
   path: ''
-  per_page: 10
+  per_page: 9
   order_by: -date
 
 # Category & Tag
@@ -97,7 +97,8 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+#theme: landscape
+theme: zhaoo
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
