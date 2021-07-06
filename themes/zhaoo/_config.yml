@@ -60,13 +60,13 @@ preview:
     size: cover # css: background-size
     position: center # css: background-position
   motto:
-    default: 我在开了灯的床头下，想问问自己的心啊。
+    default: 生于忧患，死于安乐
     color: '#ffffff'
     typing: true
 #    api: https://v2.jinrishici.com/one.json
 #    data_contents: ['data', 'content']
-    api: https://v1.hitokoto.cn/?encode=text&c=a
-    data_contents:
+#    api: https://v1.hitokoto.cn/?encode=text&c=a
+#    data_contents:
     # ex.one  =>  apl: https://v1.hitokoto.cn/?encode=text&c=i  data_contents:
     # ex.two  =>  api: https://v2.jinrishici.com/one.json  data_contents: ['data', 'content']
 
