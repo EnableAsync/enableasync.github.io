@@ -3,9 +3,9 @@ title: Linux 中的一些坑
 categories: linux
 ---
 
-# 输入法
+## 输入法
 
-## Fcitx 失效
+### Fcitx 失效
 
 1. 使用 im-config 修复
 
@@ -27,8 +27,10 @@ categories: linux
    `/etc/profile.d/pop-im-ibus.sh` 第一次出现于 `pop-os_20.10_amd64_intel_4.iso` （发布于 2020 年 12 月中旬）
    
    相关 issue，https://github.com/pop-os/pop/issues/1445
-# Dash to dock
-## Dash to dock 重叠问题
+
+## Dash to dock
+
+### Dash to dock 重叠问题
 
    Pop os 自带的 Dock 与 Dash to dock 发生了重叠
 
