@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Kind 的一些使用方式</title>
+    <title>Kind 的一些使用心得</title>
     <url>/uncategorized/kind/</url>
     <content><![CDATA[<h1 id="Kind-的一些使用心得"><a href="#Kind-的一些使用心得" class="headerlink" title="Kind 的一些使用心得"></a>Kind 的一些使用心得</h1><p>因为 Kind 启动相比于 Minikube 更快，而且支持多 Node，所以现在换成了 Kind，这里记录一些 Kind 的使用心得。</p>
 <h2 id="1-Kind-安装"><a href="#1-Kind-安装" class="headerlink" title="1. Kind 安装"></a>1. Kind 安装</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">mv ./kind /usr/bin/kind</span><br></pre></td></tr></table></figure>
