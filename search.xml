@@ -1,9 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>advanced-mathematics</title>
+    <url>/uncategorized/advanced-mathematics/</url>
+    <content><![CDATA[<h2 id="第一模块-极限与连续"><a href="#第一模块-极限与连续" class="headerlink" title="第一模块 极限与连续"></a>第一模块 极限与连续</h2><h3 id="一、定义"><a href="#一、定义" class="headerlink" title="一、定义"></a>一、定义</h3><h4 id="1-极限-p3"><a href="#1-极限-p3" class="headerlink" title="1. 极限 p3"></a>1. 极限 p3</h4><ol>
+<li><p>数列极限</p>
+</li>
+<li><p>函数自变量趋向于有限值的极限</p>
+</li>
+<li><p>函数自变量趋向于无穷</p>
+<ol>
+<li>正无穷</li>
+<li>负无穷</li>
+<li>双向无穷</li>
+</ol>
+</li>
+</ol>
+<p><strong>例1</strong></p>
+<p><img  src="/../advanced-mathematics/image-20210726183327553.png"  ><span class="image-caption">image-20210726183327553</span></p>
+<p><img  src="/../advanced-mathematics/image-20210726184604364.png"  ><span class="image-caption">image-20210726184604364</span></p>
+<h4 id="2-无穷小"><a href="#2-无穷小" class="headerlink" title="2. 无穷小"></a>2. 无穷小</h4><h4 id="3-连续"><a href="#3-连续" class="headerlink" title="3. 连续"></a>3. 连续</h4><h3 id="易错点"><a href="#易错点" class="headerlink" title="易错点"></a>易错点</h3><h4 id="求极限"><a href="#求极限" class="headerlink" title="求极限"></a>求极限</h4><h5 id="f-x-在-x-a-的可导性"><a href="#f-x-在-x-a-的可导性" class="headerlink" title="f(x) 在 x=a 的可导性"></a>f(x) 在 x=a 的可导性</h5><ol>
+<li>保双侧（从正负两个方向靠近）</li>
+<li>不可跨（后面只能是 f(a)，不能是 f(a-h)）</li>
+<li>阶相同</li>
+</ol>
+<h5 id="不明显的等价无穷小"><a href="#不明显的等价无穷小" class="headerlink" title="不明显的等价无穷小"></a>不明显的等价无穷小</h5><ol>
+<li>$\sin \frac{x}{1+x} \sim \frac{x}{1+x} \sim x$ 【660 t3】</li>
+<li>$(1+x)^a-1 \sim ax\  ({x \to 0})$【660 t7】</li>
+</ol>
+<h5 id="e-无穷大-x"><a href="#e-无穷大-x" class="headerlink" title="e^(无穷大 * x)"></a>e^(无穷大 * x)</h5><ol>
+<li>通常对 x 进行分类讨论，$x &gt; 0 , x = 0, x &lt; 0$ 【660 t25】</li>
+</ol>
+<h5 id="中值定理求极限"><a href="#中值定理求极限" class="headerlink" title="中值定理求极限"></a>中值定理求极限</h5><ol>
+<li>注意是不是大的减去小的</li>
+<li>注意 f’(ξ) 不一定是 1 阶无穷小 660 t21</li>
+</ol>
+<h5 id="给一个式子，求另一个式子"><a href="#给一个式子，求另一个式子" class="headerlink" title="给一个式子，求另一个式子"></a>给一个式子，求另一个式子</h5><ol>
+<li>注意给的式子里面是否包含另一个式子 660 t15</li>
+</ol>
+<h5 id="1-∞"><a href="#1-∞" class="headerlink" title="1^∞"></a>1^∞</h5><ol>
+<li>一般是凑 lim△-&gt;0 (1 + △)^1/△</li>
+<li>1^∞ - e^a 也可以划成 e^∞ * ln(1 + △)，然后提出后面的 e^a，变成 e^△ - 1 之后等价无穷小，以此来实现提高精确度 660 t13</li>
+</ol>
+<h5 id="精确度不够"><a href="#精确度不够" class="headerlink" title="精确度不够"></a>精确度不够</h5><ol>
+<li>泰勒展开提高精确度 660 t17</li>
+</ol>
+<h5 id="ln"><a href="#ln" class="headerlink" title="ln"></a>ln</h5><ol>
+<li>ln a + ln b = ln ab</li>
+<li>ln a - ln b = ln a/b</li>
+<li>凑 ln (1+x) 等价无穷小</li>
+</ol>
+<h5 id="有变上限积分"><a href="#有变上限积分" class="headerlink" title="有变上限积分"></a>有变上限积分</h5><ol>
+<li>一般用洛必达，注意求导的时候还要乘上下限的导数</li>
+<li>有的题目可以使用积分中值定理</li>
+</ol>
+<h5 id="∞-∞"><a href="#∞-∞" class="headerlink" title="∞ - ∞"></a>∞ - ∞</h5><ol>
+<li>把一个函数使用泰勒展开变成多项式后进行计算，注意无穷大的泰勒展开一般是提出一个无穷大使得后面变成无穷小进行展开</li>
+</ol>
+<h2 id="第二模块-导数与微分"><a href="#第二模块-导数与微分" class="headerlink" title="第二模块 导数与微分"></a>第二模块 导数与微分</h2><h3 id="易错点-1"><a href="#易错点-1" class="headerlink" title="易错点"></a>易错点</h3><h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><h5 id="f-x-a-f-x-…"><a href="#f-x-a-f-x-…" class="headerlink" title="f(x+a) = f(x)( …)"></a>f(x+a) = f(x)( …)</h5><ol>
+<li>一般为分段函数</li>
+</ol>
+<h5 id="f-x-y"><a href="#f-x-y" class="headerlink" title="f(x+y)"></a>f(x+y)</h5><ol>
+<li>直接导数定义</li>
+</ol>
+<h4 id="反函数求法-P35-例3"><a href="#反函数求法-P35-例3" class="headerlink" title="反函数求法 P35 例3"></a>反函数求法 P35 例3</h4><p>互为倒数，所以相乘为 1，所以另外一个用 1 去除</p>
+<h4 id="导数"><a href="#导数" class="headerlink" title="导数"></a>导数</h4><h5 id="定义域"><a href="#定义域" class="headerlink" title="定义域"></a>定义域</h5><ol>
+<li>要注意求出函数的某个参数之后函数定义域是否会发生变化 660 t27</li>
+</ol>
+<h5 id="高阶导数-讲义-p44"><a href="#高阶导数-讲义-p44" class="headerlink" title="高阶导数 讲义 p44"></a>高阶导数 讲义 p44</h5><h5 id="定义式需要更高阶无穷小-660-t31"><a href="#定义式需要更高阶无穷小-660-t31" class="headerlink" title="定义式需要更高阶无穷小 660 t31"></a>定义式需要更高阶无穷小 660 t31</h5><ol>
+<li><p>将定义式中的 f(a+h) 在 x=a 处展开：</p>
+<p>$f(a+h) = f(a) + f’(a)h + \frac{f’’(a)h^2}{2} + o(h^2)$</p>
+</li>
+<li><p>将原式划成分子分母形式之后进行洛必达</p>
+</li>
+</ol>
+<h2 id="第三模块-一元函数微分学应用"><a href="#第三模块-一元函数微分学应用" class="headerlink" title="第三模块 一元函数微分学应用"></a>第三模块 一元函数微分学应用</h2><h3 id="常见构造"><a href="#常见构造" class="headerlink" title="常见构造"></a>常见构造</h3><ol>
+<li><p>$f’+f \Rightarrow e^xf(x)$</p>
+<p>$f’-f\Rightarrow e^{-x}f(x)$</p>
+</li>
+<li><p>$f’+kf \Rightarrow e^{kx}f(x)$</p>
+<p>$xf’+kf \Rightarrow x^kf(x)$</p>
+</li>
+<li><p> $f’’g \Rightarrow (f’g)’ = f’’g + f’g’$</p>
+<p> $f’’g \Rightarrow \frac{f’’g-f’g’}{g^2} $</p>
+<p> $f’’g-fg’’=(f’g-fg’)’$</p>
+</li>
+<li><p>$f’’-f = (f’+f)’-(f’+f)$</p>
+<p>$f’’-f=(f’-f)’+(f’-f)$</p>
+</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>cognitive_power</title>
+    <url>/uncategorized/cognitive-power/</url>
+    <content><![CDATA[<p><img  src="/../cognitive-power/v2-c0c2d3692c95587205ee4b7bad160120_720w.jpg"  ><span class="image-caption">img</span></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>computer-network</title>
+    <url>/uncategorized/computer-network/</url>
+    <content><![CDATA[<h2 id="电路交换"><a href="#电路交换" class="headerlink" title="电路交换"></a>电路交换</h2><ol>
+<li>最典型的的电路交换网络：电话网络</li>
+<li>需要建立电路连接<ol>
+<li>建立连接（呼叫/电路建立）</li>
+<li>通信</li>
+<li>释放连接（拆除电路）</li>
+</ol>
+</li>
+<li>独占资源（用户占用的电路不能共享）</li>
+<li>电路交换网络通过多路复用（Multiplexing）共享中继线</li>
+</ol>
+<h2 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a>分组交换</h2><h3 id="计算公式"><a href="#计算公式" class="headerlink" title="计算公式"></a>计算公式</h3><p>报文：$M$ bits</p>
+<p>链路带宽（数据传输速率）：$R$ bps</p>
+<p>分组长度（大小）：$L$ bits</p>
+<p>跳步数：$h$ ($n-1$)</p>
+<p>路由器数：$n$</p>
+<p>传输时间：<br>$$<br>\begin{align*}<br>T &amp;= M/R+(h-1)L/R \<br>  &amp;= M/R+nL/R<br>\end{align*}<br>$$</p>
+<h4 id="例-1-1-（计算时间）"><a href="#例-1-1-（计算时间）" class="headerlink" title="例 1.1 （计算时间）"></a>例 1.1 （计算时间）</h4><p>在下图所示的采用“存储-转发”方式的分组交换网络中，所有链路的数据传输速率为100 Mbps，分组大小为1 000 B，其中分组头大小为20 B。若主机H1向主机H2发送一个大小为980 000 B的文件，则在不考虑分组拆装时间和传播延迟的情况下，从H1发送开始到H2接收完为止，需要的时间至少是多少？</p>
+<p><img  src="/../computer-network/image-20210803095358896.png"  ><span class="image-caption">image-20210803095358896</span></p>
+<p>【解】980 000 B大小的文件需要分1000个分组，每个分组1 000 B。H1发送整个文件需要的传输延迟为 $(980 000+20<em>1000)<em>8/100 000 000=80ms$ 根据路由选择基本原理，所有数据分组应该经过两个路由的转发，所以再加上最后一个分组的两次转发的传输延迟，即 $2</em>1000</em>8/100 000 000=0.16ms$ 。所以，H2收完整个文件至少需 $80+0.16=80.16ms$ 。</p>
+<h2 id="分组交换-vs-电路交换"><a href="#分组交换-vs-电路交换" class="headerlink" title="分组交换 vs 电路交换"></a>分组交换 vs 电路交换</h2><h3 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h3><p><img  src="/../computer-network/image-20210803100822597.png"  ><span class="image-caption">image-20210803100822597</span></p>
+<p>共 1 Mb/s链路</p>
+<p>每个用户：</p>
+<ul>
+<li>“活动”时需100 kb/s</li>
+<li>平均活动时间10%</li>
+</ul>
+<p>电路交换：</p>
+<ul>
+<li>10 个用户</li>
+</ul>
+<p>分组交换：</p>
+<ul>
+<li>对于35个用户, 大于10个用户同时活动的概率&lt;0.0004</li>
+</ul>
+<p>分组交换允许更多用户同时使用网络——网络资源充分共享</p>
+<h3 id="分组交换绝对优于电路交换？"><a href="#分组交换绝对优于电路交换？" class="headerlink" title="分组交换绝对优于电路交换？"></a>分组交换绝对优于电路交换？</h3><ul>
+<li>分组交换适用于突发数据传输网络<ul>
+<li>资源充分共享</li>
+<li>简单、无需呼叫建立</li>
+</ul>
+</li>
+<li>分组交换可能产生拥塞（congestion）: 分组延迟和丢失<ul>
+<li>需要协议处理可靠数据传输和拥塞控制</li>
+</ul>
+</li>
+<li>Q: 如何提供电路级性能保障？<ul>
+<li>例如，音/视频应用所需的带宽保障</li>
+</ul>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>kind</title>
+    <url>/uncategorized/kind/</url>
+    <content><![CDATA[<h1 id="记如何使用-Kind-的一些使用方式"><a href="#记如何使用-Kind-的一些使用方式" class="headerlink" title="记如何使用 Kind 的一些使用方式"></a>记如何使用 Kind 的一些使用方式</h1><h2 id="1-Kind-安装"><a href="#1-Kind-安装" class="headerlink" title="1. Kind 安装"></a>1. Kind 安装</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">mv ./kind /usr/bin/kind</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-使用-Kind-创建含有两个-Node-的-kubernetes-集群"><a href="#2-使用-Kind-创建含有两个-Node-的-kubernetes-集群" class="headerlink" title="2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群"></a>2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群</h2><h3 id="1-创建配置文件"><a href="#1-创建配置文件" class="headerlink" title="1. 创建配置文件"></a>1. 创建配置文件</h3><p>这里我创建了两个 Node，使用以下配置文件，并将其命名为 <code>kind.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># a cluster with 1 control-plane nodes and 2 workers</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Cluster</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">kind.x-k8s.io/v1alpha4</span></span><br><span class="line"><span class="attr">nodes:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">control-plane</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-创建集群"><a href="#2-创建集群" class="headerlink" title="2. 创建集群"></a>2. 创建集群</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo kind create cluster --config kind.yaml</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的点有：</p>
+<ol>
+<li>不要设置集群 name，在我本地，如果设置了 name 会导致 kubeconfig 无法导出。</li>
+<li>要使用 sudo，在我本地，如果不使用 sudo 会导致无法创建集群，原因未知。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Creating cluster <span class="string">&quot;kind&quot;</span> ...</span><br><span class="line"> ✓ Ensuring node image (kindest/node:v1.21.1) 🖼</span><br><span class="line"> ✓ Preparing nodes 📦 📦 📦  </span><br><span class="line"> ✓ Writing configuration 📜 </span><br><span class="line"> ✓ Starting control-plane 🕹️ </span><br><span class="line"> ✓ Installing CNI 🔌 </span><br><span class="line"> ✓ Installing StorageClass 💾 </span><br><span class="line"> ✓ Joining worker nodes 🚜 </span><br><span class="line">Set kubectl context to <span class="string">&quot;kind-kind&quot;</span></span><br><span class="line">You can now use your cluster with:</span><br><span class="line"></span><br><span class="line">kubectl cluster-info --context kind-kind</span><br></pre></td></tr></table></figure>
+
+<p>如果出现以上信息表示创建成功，可以进行下一步。</p>
+<h3 id="3-导出-kubeconfig"><a href="#3-导出-kubeconfig" class="headerlink" title="3. 导出 kubeconfig"></a>3. 导出 kubeconfig</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kind export kubeconfig</span><br></pre></td></tr></table></figure>
+
+<p>如果不使用这一步，会导致使用 <code>kubectl</code> 的时候必须加上 <code>sudo</code>，否则无法连接到 kubernetes。</p>
+<h2 id="3-安装-kubernetes-dashboard"><a href="#3-安装-kubernetes-dashboard" class="headerlink" title="3. 安装 kubernetes-dashboard"></a>3. 安装 kubernetes-dashboard</h2><h3 id="1-使用-helm-安装-dashboard"><a href="#1-使用-helm-安装-dashboard" class="headerlink" title="1. 使用 helm 安装 dashboard"></a>1. 使用 helm 安装 dashboard</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add kubernetes-dashboard repository</span></span><br><span class="line">helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/</span><br><span class="line"><span class="comment"># Deploy a Helm Release named &quot;dashboard&quot; using the kubernetes-dashboard chart</span></span><br><span class="line">helm install dashboard kubernetes-dashboard/kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-转发-dashboard-pod"><a href="#2-转发-dashboard-pod" class="headerlink" title="2. 转发 dashboard pod"></a>2. 转发 dashboard pod</h3><p>这一步的目的是在本地访问部署了 dashboard 的 pod</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> POD_NAME=$(kubectl get pods -n default -l <span class="string">&quot;app.kubernetes.io/name=kubernetes-dashboard,app.kubernetes.io/instance=dashboard&quot;</span> -o jsonpath=<span class="string">&quot;&#123;.items[0].metadata.name&#125;&quot;</span>)</span><br><span class="line">  <span class="built_in">echo</span> https://127.0.0.1:8443/</span><br><span class="line">  kubectl -n default port-forward <span class="variable">$POD_NAME</span> 8443:8443</span><br></pre></td></tr></table></figure>
+
+<p>之后会提示</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Forwarding from 127.0.0.1:8443 -&gt; 8443</span><br><span class="line">Forwarding from [::1]:8443 -&gt; 8443</span><br></pre></td></tr></table></figure>
+
+<p>说明转发成功，此时访问 <a href="https://127.0.0.1:8443/">https://127.0.0.1:8443/</a> ，注意是 https</p>
+<h3 id="3-生成-token"><a href="#3-生成-token" class="headerlink" title="3. 生成 token"></a>3. 生成 token</h3><p>不出意外 dashboard 需要 token 来登录，使用以下步骤来生成 token：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl create serviceaccount dashboard -n default</span><br><span class="line">kubectl create rolebinding def-ns-admin --clusterrole=admin --serviceaccount=default:def-ns-admin</span><br><span class="line">kubectl create clusterrolebinding dashboard-cluster-admin --clusterrole=cluster-admin --serviceaccount=default:dashboard</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl describe sa dashboard</span><br><span class="line">Name:                dashboard</span><br><span class="line">Namespace:           default</span><br><span class="line">Labels:              &lt;none&gt;</span><br><span class="line">Annotations:         &lt;none&gt;</span><br><span class="line">Image pull secrets:  &lt;none&gt;</span><br><span class="line">Mountable secrets:   dashboard-token-vzzjn</span><br><span class="line">Tokens:              dashboard-token-vzzjn</span><br><span class="line">Events:              &lt;none&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里可以看到 <code>dashboard-token-vzzjn</code> 就是我们需要的 token，使用以下命令显示具体内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl describe secret dashboard-token-vzzjn</span><br></pre></td></tr></table></figure>
+
+<p>之后就可以将具体的 token 粘贴在 dashboard 中登录。</p>
+]]></content>
+      <tags>
+        <tag>k8s, kind</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linear-algebra</title>
+    <url>/uncategorized/linear-algebra/</url>
+    <content><![CDATA[<h2 id="向量"><a href="#向量" class="headerlink" title="向量"></a>向量</h2><p>向量与矩阵的关系</p>
+<p>若：A = αβT</p>
+<p>=&gt;</p>
+<ul>
+<li>(αT, β) = tr(A)</li>
+<li>AA = α (βTa) βT = 内积 A （ 可以用于求特征值，f(A) = f(λ) ）</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>Linux 中的一些坑</title>
     <url>/linux/linux/</url>
-    <content><![CDATA[<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ol>
+    <content><![CDATA[<h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><h3 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h3><ol>
 <li><p>使用 im-config 修复</p>
 </li>
 <li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
@@ -15,12 +224,12 @@
 <p>因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
 <p><code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
 <p>相关 issue，<a href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
-<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /usr/share/gnome-shell/extensions</span><br><span class="line">sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock</span><br></pre></td></tr></table></figure>
-
-<p>之后重启 gnome 即可解决</p>
 </li>
 </ol>
+<h2 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h2><h3 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h3><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
+   <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /usr/share/gnome-shell/extensions</span><br><span class="line">sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock</span><br></pre></td></tr></table></figure>
+
+<p>   之后重启 gnome 即可解决</p>
 ]]></content>
       <categories>
         <category>linux</category>
