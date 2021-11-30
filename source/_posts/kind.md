@@ -1,10 +1,12 @@
 ---
-title: kind
+title: Kind 的一些使用方式
 date: 2021-11-30 21:40:27
 tags: k8s, kind
 ---
 
-# 记如何使用 Kind 的一些使用方式
+# Kind 的一些使用方式
+
+因为 Kind 启动相比于 Minikube 更快，而且支持多 Node，所以现在换成了 Kind，这里记录一些 Kind 的使用心得。
 
 ## 1. Kind 安装
 
