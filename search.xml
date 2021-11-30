@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>kind</title>
+    <title>Kind 的一些使用方式</title>
     <url>/uncategorized/kind/</url>
-    <content><![CDATA[<h1 id="记如何使用-Kind-的一些使用方式"><a href="#记如何使用-Kind-的一些使用方式" class="headerlink" title="记如何使用 Kind 的一些使用方式"></a>记如何使用 Kind 的一些使用方式</h1><h2 id="1-Kind-安装"><a href="#1-Kind-安装" class="headerlink" title="1. Kind 安装"></a>1. Kind 安装</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">mv ./kind /usr/bin/kind</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h1 id="Kind-的一些使用方式"><a href="#Kind-的一些使用方式" class="headerlink" title="Kind 的一些使用方式"></a>Kind 的一些使用方式</h1><p>因为 Kind 启动相比于 Minikube 更快，而且支持多 Node，所以现在换成了 Kind，这里记录一些 Kind 的使用心得。</p>
+<h2 id="1-Kind-安装"><a href="#1-Kind-安装" class="headerlink" title="1. Kind 安装"></a>1. Kind 安装</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">mv ./kind /usr/bin/kind</span><br></pre></td></tr></table></figure>
 
 <h2 id="2-使用-Kind-创建含有两个-Node-的-kubernetes-集群"><a href="#2-使用-Kind-创建含有两个-Node-的-kubernetes-集群" class="headerlink" title="2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群"></a>2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群</h2><h3 id="1-创建配置文件"><a href="#1-创建配置文件" class="headerlink" title="1. 创建配置文件"></a>1. 创建配置文件</h3><p>这里我创建了两个 Node，使用以下配置文件，并将其命名为 <code>kind.yaml</code></p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># a cluster with 1 control-plane nodes and 2 workers</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Cluster</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">kind.x-k8s.io/v1alpha4</span></span><br><span class="line"><span class="attr">nodes:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">control-plane</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br></pre></td></tr></table></figure>

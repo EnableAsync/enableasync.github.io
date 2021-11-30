@@ -6,12 +6,12 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>kind - EnableAsync&#39;s Blog</title>
+  <title>Kind 的一些使用方式 - EnableAsync&#39;s Blog</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   <meta name="keywords" content="golang,java">
-  <meta name="description" content="记如何使用 Kind 的一些使用方式1. Kind 安...">
+  <meta name="description" content="Kind 的一些使用方式因为 Kind 启动相比于 M...">
   <meta name="author" content="EnableAsync">
   <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
@@ -147,7 +147,7 @@
         <i class="iconfont iconsearch j-navbar-search"></i>
       
     </div>
-    <div class="center">kind</div>
+    <div class="center">Kind 的一些使用方式</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -183,17 +183,18 @@
     <section class="head">
   <img   class="lazyload" data-original="/images/theme/post-image.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">kind</h1>
+    <h1 class="head-title">Kind 的一些使用方式</h1>
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>November 30, 2021</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2627</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2690</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h1 id="记如何使用-Kind-的一些使用方式"><a href="#记如何使用-Kind-的一些使用方式" class="headerlink" title="记如何使用 Kind 的一些使用方式"></a>记如何使用 Kind 的一些使用方式</h1><h2 id="1-Kind-安装"><a href="#1-Kind-安装" class="headerlink" title="1. Kind 安装"></a>1. Kind 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">mv ./kind /usr/bin/kind</span><br></pre></td></tr></table></figure>
+        <h1 id="Kind-的一些使用方式"><a href="#Kind-的一些使用方式" class="headerlink" title="Kind 的一些使用方式"></a>Kind 的一些使用方式</h1><p>因为 Kind 启动相比于 Minikube 更快，而且支持多 Node，所以现在换成了 Kind，这里记录一些 Kind 的使用心得。</p>
+<h2 id="1-Kind-安装"><a href="#1-Kind-安装" class="headerlink" title="1. Kind 安装"></a>1. Kind 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">mv ./kind /usr/bin/kind</span><br></pre></td></tr></table></figure>
 
 <h2 id="2-使用-Kind-创建含有两个-Node-的-kubernetes-集群"><a href="#2-使用-Kind-创建含有两个-Node-的-kubernetes-集群" class="headerlink" title="2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群"></a>2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群</h2><h3 id="1-创建配置文件"><a href="#1-创建配置文件" class="headerlink" title="1. 创建配置文件"></a>1. 创建配置文件</h3><p>这里我创建了两个 Node，使用以下配置文件，并将其命名为 <code>kind.yaml</code></p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a cluster with 1 control-plane nodes and 2 workers</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Cluster</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">kind.x-k8s.io/v1alpha4</span></span><br><span class="line"><span class="attr">nodes:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">control-plane</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br></pre></td></tr></table></figure>
@@ -261,7 +262,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Kind-%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-text">记如何使用 Kind 的一些使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Kind-%E5%AE%89%E8%A3%85"><span class="toc-text">1. Kind 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8-Kind-%E5%88%9B%E5%BB%BA%E5%90%AB%E6%9C%89%E4%B8%A4%E4%B8%AA-Node-%E7%9A%84-kubernetes-%E9%9B%86%E7%BE%A4"><span class="toc-text">2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">1. 创建配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="toc-text">2. 创建集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AF%BC%E5%87%BA-kubeconfig"><span class="toc-text">3. 导出 kubeconfig</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-kubernetes-dashboard"><span class="toc-text">3. 安装 kubernetes-dashboard</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8-helm-%E5%AE%89%E8%A3%85-dashboard"><span class="toc-text">1. 使用 helm 安装 dashboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%BD%AC%E5%8F%91-dashboard-pod"><span class="toc-text">2. 转发 dashboard pod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%94%9F%E6%88%90-token"><span class="toc-text">3. 生成 token</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kind-%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-text">Kind 的一些使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Kind-%E5%AE%89%E8%A3%85"><span class="toc-text">1. Kind 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8-Kind-%E5%88%9B%E5%BB%BA%E5%90%AB%E6%9C%89%E4%B8%A4%E4%B8%AA-Node-%E7%9A%84-kubernetes-%E9%9B%86%E7%BE%A4"><span class="toc-text">2. 使用 Kind 创建含有两个 Node 的 kubernetes 集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">1. 创建配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="toc-text">2. 创建集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AF%BC%E5%87%BA-kubeconfig"><span class="toc-text">3. 导出 kubeconfig</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-kubernetes-dashboard"><span class="toc-text">3. 安装 kubernetes-dashboard</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8-helm-%E5%AE%89%E8%A3%85-dashboard"><span class="toc-text">1. 使用 helm 安装 dashboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%BD%AC%E5%8F%91-dashboard-pod"><span class="toc-text">2. 转发 dashboard pod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%94%9F%E6%88%90-token"><span class="toc-text">3. 生成 token</span></a></li></ol></li></ol></li></ol>
   </aside>
 
         
