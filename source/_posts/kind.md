@@ -4,7 +4,7 @@ date: 2021-11-30 21:40:27
 tags: k8s, kind
 ---
 
-# Kind 的一些使用方式
+# Kind 的一些使用心得
 
 因为 Kind 启动相比于 Minikube 更快，而且支持多 Node，所以现在换成了 Kind，这里记录一些 Kind 的使用心得。
 
