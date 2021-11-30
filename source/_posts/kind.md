@@ -1,5 +1,5 @@
 ---
-title: Kind 的一些使用方式
+title: Kind 的一些使用心得
 date: 2021-11-30 21:40:27
 tags: k8s, kind
 ---
