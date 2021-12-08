@@ -2,6 +2,7 @@
 title: Rust的一些学习心得
 date: 2021-12-08 19:04:50
 tags: rust
+categories: rust
 ---
 
 # Rust 学习心得
