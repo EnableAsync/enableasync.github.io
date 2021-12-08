@@ -378,5 +378,5 @@ Rust 正是通过这两大武器：`所有权和生命周期` + `Send 和 Sync`�
 
 ## 参考文献
 
-[1]: https://github.com/rustcc/RustPrimer	"RustPrimer"
+1. https://github.com/rustcc/RustPrimer
 
