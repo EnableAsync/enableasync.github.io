@@ -201,7 +201,7 @@
 </li>
 <li><p>删除 /etc/profile.d/pop-im-ibus.sh</p>
 <p><code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="comment"># 如果环境变量 XMODIFIERS 没有被设置</span></span><br><span class="line">   ...</span><br><span class="line">   <span class="comment"># 设置环境变量以启动用户指定的输入法</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
 
 <p>因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
 <p><code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
@@ -209,7 +209,7 @@
 </li>
 </ol>
 <h2 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h2><h3 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h3><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
-   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/share/gnome-shell/extensions</span><br><span class="line">sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock</span><br></pre></td></tr></table></figure>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
 
 <p>   之后重启 gnome 即可解决</p>
 
