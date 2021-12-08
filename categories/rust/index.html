@@ -6,13 +6,12 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Linux 中的一些坑 - EnableAsync&#39;s Blog</title>
+  <title>rust - EnableAsync&#39;s Blog</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   <meta name="keywords" content="golang,java">
-  <meta name="description" content="输入法Fcitx 失效
-使用 im-config 修复...">
+  <meta name="description" content="用来记录、分享一些内容">
   <meta name="author" content="EnableAsync">
   <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
@@ -148,7 +147,7 @@
         <i class="iconfont iconsearch j-navbar-search"></i>
       
     </div>
-    <div class="center">Linux 中的一些坑</div>
+    <div class="center">分类</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -176,79 +175,23 @@
   </div>
 </nav>
   <main id="main">
-  <div class="article-wrap">
-    <div class="row container">
-      <div class="col-xl-3"></div>
-      <div class="col-xl-6"><article class="article">
-  <div class="wrap">
-    <section class="head">
-  <img   class="lazyload" data-original="/images/theme/post-image.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
-  <div class="head-mask">
-    <h1 class="head-title">Linux 中的一些坑</h1>
-    <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 08, 2021</span>
-      
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>754</span>
-    </div>
-  </div>
-</section>
-    <section class="main">
-      <section class="content">
-        <h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><h3 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h3><ol>
-<li><p>使用 im-config 修复</p>
-</li>
-<li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
-</li>
-<li><p>删除 /etc/profile.d/pop-im-ibus.sh</p>
-<p><code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="comment"># 如果环境变量 XMODIFIERS 没有被设置</span></span><br><span class="line">   ...</span><br><span class="line">   <span class="comment"># 设置环境变量以启动用户指定的输入法</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-
-<p>因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
-<p><code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
-<p>相关 issue，<a target="_blank" rel="noopener" href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
-</li>
-</ol>
-<h2 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h2><h3 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h3><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
-   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/share/gnome-shell/extensions</span><br><span class="line">sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock</span><br></pre></td></tr></table></figure>
-
-<p>   之后重启 gnome 即可解决</p>
-
-      </section>
-      <section class="extra">
+  <section class="archive">
+    <div class="archive-container">
+      <div class="archive-post">
+        <h3 class="archive-total"># rust</h3>
         
-          <ul class="copyright">
-  
-    <li><strong>本文作者：</strong>EnableAsync</li>
-    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/linux/linux/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;linux&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;linux&#x2F;index.html</a></li>
-    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
-  
-</ul>
-        
-        
-        
-        
-  <nav class="nav">
-    <a></a>
-    <a href="/rust/rust/">Rust的一些学习心得<i class="iconfont iconright"></i></a>
-  </nav>
-
-      </section>
-      
-    </section>
-  </div>
-</article></div>
-      <div class="col-xl-3">
         
           
-  <aside class="toc-wrap">
-    <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-text">输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fcitx-%E5%A4%B1%E6%95%88"><span class="toc-text">Fcitx 失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dash-to-dock"><span class="toc-text">Dash to dock</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dash-to-dock-%E9%87%8D%E5%8F%A0%E9%97%AE%E9%A2%98"><span class="toc-text">Dash to dock 重叠问题</span></a></li></ol></li></ol>
-  </aside>
-
+            <h3 class="archive-year">2021 年</h3>
+          
+          <div class="archive-item">
+            <a class="archive-date" href="/rust/rust/">12/08</a>
+            <a class="archive-title" href="/rust/rust/">Rust的一些学习心得</a>
+          </div>
         
       </div>
     </div>
-  </div>
+  </section>
 </main>
   
 

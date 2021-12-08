@@ -73,7 +73,7 @@
   </entry>
   <entry>
     <title>Rust的一些学习心得</title>
-    <url>/uncategorized/rust/</url>
+    <url>/rust/rust/</url>
     <content><![CDATA[<h1 id="Rust-学习心得"><a href="#Rust-学习心得" class="headerlink" title="Rust 学习心得"></a>Rust 学习心得</h1><h2 id="Rust-标准库-trait"><a href="#Rust-标准库-trait" class="headerlink" title="Rust 标准库 trait"></a>Rust 标准库 trait</h2><p>假设有以下变量：</p>
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> t = T::new()</span><br></pre></td></tr></table></figure>
 
@@ -231,6 +231,9 @@
 <li><a href="https://github.com/rustcc/RustPrimer">https://github.com/rustcc/RustPrimer</a></li>
 </ol>
 ]]></content>
+      <categories>
+        <category>rust</category>
+      </categories>
       <tags>
         <tag>rust</tag>
       </tags>
