@@ -71,4 +71,165 @@
         <category>linux</category>
       </categories>
   </entry>
+  <entry>
+    <title>rust的一些学习心得</title>
+    <url>/uncategorized/rust/</url>
+    <content><![CDATA[<h1 id="Rust-学习心得"><a href="#Rust-学习心得" class="headerlink" title="Rust 学习心得"></a>Rust 学习心得</h1><h2 id="Rust-标准库-trait"><a href="#Rust-标准库-trait" class="headerlink" title="Rust 标准库 trait"></a>Rust 标准库 trait</h2><p>假设有以下变量：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> t = T::new()</span><br></pre></td></tr></table></figure>
+
+<h3 id="impl-From-lt-U-gt-for-T"><a href="#impl-From-lt-U-gt-for-T" class="headerlink" title="impl From&lt;U&gt; for T"></a><code>impl From&lt;U&gt; for T</code></h3><p>如果为 <code>T</code> 实现了 <code>From&lt;U&gt;</code> 则可以通过 <code>T::from(U)</code> 得到 <code>T</code>。</p>
+<p>例如 <code>String</code> 实现了 <code>From&lt;&amp;str&gt;</code>，所以 <code>String</code> 可以从 <code>&amp;str</code> 生成。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> string = <span class="string">&quot;hello&quot;</span>.to_string();</span><br><span class="line"><span class="keyword">let</span> other_string = <span class="built_in">String</span>::from(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">assert_eq!</span>(string, other_string);</span><br></pre></td></tr></table></figure>
+
+<h3 id="impl-Into-lt-U-gt-for-T"><a href="#impl-Into-lt-U-gt-for-T" class="headerlink" title="impl Into&lt;U&gt; for T"></a><code>impl Into&lt;U&gt; for T</code></h3><p>如果为 <code>T</code> 实现了 <code>Into&lt;U&gt;</code> 则可以通过 <code>t.into()</code> 消耗自己得到 <code>U</code>。</p>
+<p>例如 <code>String</code> 类型实现了 <code>Into&lt;Vec&lt;u8&gt;&gt;</code>。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">is_hello</span></span>&lt;T: <span class="built_in">Into</span>&lt;<span class="built_in">Vec</span>&lt;<span class="built_in">u8</span>&gt;&gt;&gt;(s: T) &#123;</span><br><span class="line">   <span class="keyword">let</span> bytes = <span class="string">b&quot;hello&quot;</span>.to_vec();</span><br><span class="line">   <span class="built_in">assert_eq!</span>(bytes, s.into());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> s = <span class="string">&quot;hello&quot;</span>.to_string();</span><br><span class="line">is_hello(s);</span><br></pre></td></tr></table></figure>
+
+<p>在实际编程中，用来接收多种类型的参数，如 <code>Into&lt;String&gt;</code> 可以同时接收 <code>String</code> 和 <code>&amp;str</code>。</p>
+<h3 id="impl-AsRef-lt-U-gt-for-T"><a href="#impl-AsRef-lt-U-gt-for-T" class="headerlink" title="impl AsRef&lt;U&gt; for T"></a><code>impl AsRef&lt;U&gt; for T</code></h3><p>如果为 <code>T</code> 实现了 <code>AsRef&lt;U&gt;</code> 则可以通过 <code>t.as_ref()</code> 得到 <code>&amp;U</code>。</p>
+<p>注：</p>
+<ol>
+<li>与 <code>Into&lt;U&gt;</code> 不同的是，<code>AsRef&lt;U&gt;</code> 只是类型转换，<code>t</code> 对象本身没有被消耗；</li>
+<li><code>T: AsRef&lt;U&gt;</code> 中的 <code>T</code>，可以接受 资源拥有者（owned）类型，共享引用（shared referrence）类型 ，可变引用（mutable referrence）类型。</li>
+</ol>
+<p>例如 <code>String</code> 和 <code>&amp;str</code> 都实现了 <code>AsRef&lt;str&gt;</code>：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">is_hello</span></span>&lt;T: <span class="built_in">AsRef</span>&lt;<span class="built_in">str</span>&gt;&gt;(s: T) &#123;</span><br><span class="line">   <span class="built_in">assert_eq!</span>(<span class="string">&quot;hello&quot;</span>, s.as_ref());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> s = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">is_hello(s);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> s = <span class="string">&quot;hello&quot;</span>.to_string();</span><br><span class="line">is_hello(s);</span><br></pre></td></tr></table></figure>
+
+<h3 id="impl-AsMut-lt-U-gt-for-T"><a href="#impl-AsMut-lt-U-gt-for-T" class="headerlink" title="impl AsMut&lt;U&gt; for T"></a><code>impl AsMut&lt;U&gt; for T</code></h3><p>如果为 <code>T</code> 实现了 <code>AsRef&lt;U&gt;</code> 则可以通过 <code>t.as_mut()</code> 得到 <code>&amp;mut U</code>。</p>
+<h3 id="impl-Borror-lt-U-gt-for-T"><a href="#impl-Borror-lt-U-gt-for-T" class="headerlink" title="impl Borror&lt;U&gt; for T"></a><code>impl Borror&lt;U&gt; for T</code></h3><p>如果 <code>T</code> 实现了 <code>Borrow&lt;U&gt;</code>，那么，<code>t</code> 可执行 <code>.borrow()</code> 操作，即 <code>t.borrow()</code>。操作的结果，我们得到了一个类型为 <code>&amp;U</code> 的新引用。</p>
+<p><code>Borrow</code> 可以认为是 <code>AsRef</code> 的严格版本，它对普适引用操作的前后类型之间附加了一些其它限制。</p>
+<p><code>Borrow</code> 的前后类型之间要求必须有内部等价性。不具有这个等价性的两个类型之间，不能实现 <code>Borrow</code>。</p>
+<p><code>AsRef</code> 更通用，更普遍，覆盖类型更多，是 <code>Borrow</code> 的超集。</p>
+<p>举例：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::borrow::Borrow;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">check</span></span>&lt;T: Borrow&lt;<span class="built_in">str</span>&gt;&gt;(s: T) &#123;</span><br><span class="line">    <span class="built_in">assert_eq!</span>(<span class="string">&quot;Hello&quot;</span>, s.borrow());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> s = <span class="string">&quot;Hello&quot;</span>.to_string();</span><br><span class="line"></span><br><span class="line">check(s);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> s = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line"></span><br><span class="line">check(s);</span><br></pre></td></tr></table></figure>
+
+<h3 id="impl-BorrowMut-lt-U-gt-for-T"><a href="#impl-BorrowMut-lt-U-gt-for-T" class="headerlink" title="impl BorrowMut&lt;U&gt; for T"></a><code>impl BorrowMut&lt;U&gt; for T</code></h3><p>如果 <code>T</code> 实现了 <code>BorrowMut&lt;U&gt;</code>，那么，<code>t</code> 可执行 <code>.borrow_mut()</code> 操作，即 <code>t.borrow_mut()</code>。操作的结果我们得到类型为 <code>&amp;mut U</code> 的一个可变（mutable）引用。</p>
+<h3 id="impl-ToOwned-for-T"><a href="#impl-ToOwned-for-T" class="headerlink" title="impl ToOwned for T"></a><code>impl ToOwned for T</code></h3><p><code>ToOwned</code> 为 <code>Clone</code> 的普适版本。它提供了 <code>.to_owned()</code> 方法，用于类型转换。</p>
+<p>有些实现了 <code>Clone</code> 的类型 <code>T</code> 可以从引用状态实例 <code>&amp;T</code> 通过 <code>.clone()</code> 方法，生成具有所有权的 <code>T</code> 的实例。但是它只能由 <code>&amp;T</code> 生成 <code>T</code>。而对于其它形式的引用，<code>Clone</code> 就无能为力了。</p>
+<p>而 <code>ToOwned</code> trait 能够从任意引用类型实例，生成具有所有权的类型实例。</p>
+<h3 id="impl-Deref-for-T"><a href="#impl-Deref-for-T" class="headerlink" title="impl Deref for T"></a><code>impl Deref for T</code></h3><p><code>Deref</code> 是 <code>deref</code> 操作符 <code>*</code> 的 trait，比如 <code>*v</code>。</p>
+<p>一般理解，<code>*t</code> 操作，是 <code>&amp;t</code> 的反向操作，即试图由资源的引用获取到资源的拷贝（如果资源类型实现了 <code>Copy</code>），或所有权（资源类型没有实现 <code>Copy</code>）。</p>
+<p>Rust 中，本操作符行为可以重载。这也是 Rust 操作符的基本特点。本身没有什么特别的。</p>
+<h4 id="强制隐式转换（coercion）"><a href="#强制隐式转换（coercion）" class="headerlink" title="强制隐式转换（coercion）"></a>强制隐式转换（coercion）</h4><p><code>Deref</code> 神奇的地方并不在本身 <code>解引</code> 这个意义上，Rust 的设计者在它之上附加了一个特性：<code>强制隐式转换</code>，这才是它神奇之处。</p>
+<p>这种隐式转换的规则为：</p>
+<p>一个类型为 <code>T</code> 的对象 <code>t</code>，如果 <code>T: Deref&lt;Target=U&gt;</code>，那么，相关 <code>t</code> 的某个智能指针或引用（比如 <code>&amp;foo</code>）在应用的时候会自动转换成 <code>&amp;U</code>。</p>
+<p>粗看这条规则，貌似有点类似于 <code>AsRef</code>，而跟 <code>解引</code> 似乎风马牛不相及。实际里面有些玄妙之处。</p>
+<p>Rust 编译器会在做 <code>*v</code> 操作的时候，自动先把 <code>v</code> 做引用归一化操作，即转换成内部通用引用的形式 <code>&amp;v</code>，整个表达式就变成 <code>*&amp;v</code>。这里面有两种情况：</p>
+<ol>
+<li>把其它类型的指针（比如在库中定义的，<code>Box</code>, <code>Rc</code>, <code>Arc</code>, <code>Cow</code> 等），转成内部标准形式 <code>&amp;v</code>；</li>
+<li>把多重 <code>&amp;</code> （比如：<code>&amp;&amp;&amp;&amp;&amp;&amp;&amp;v</code>），简化成 <code>&amp;v</code>（通过插入足够数量的 <code>*</code> 进行解引）。</li>
+</ol>
+<p>所以，它实际上在解引用之前做了一个引用的归一化操作。</p>
+<p>为什么要转呢？ 因为编译器设计的能力是，只能够对 <code>&amp;v</code> 这种引用进行解引用。其它形式的它不认识，所以要做引用归一化操作。</p>
+<p>使用引用进行过渡也是为了能够防止不必要的拷贝。</p>
+<p>下面举一些例子：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(s: &amp;<span class="built_in">str</span>) &#123;</span><br><span class="line">    <span class="comment">// borrow a string for a second</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// String implements Deref&lt;Target=str&gt;</span></span><br><span class="line"><span class="keyword">let</span> owned = <span class="string">&quot;Hello&quot;</span>.to_string();</span><br><span class="line"></span><br><span class="line"><span class="comment">// therefore, this works:</span></span><br><span class="line">foo(&amp;owned);</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>String</code> 实现了 <code>Deref&lt;Target=str&gt;</code>。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(s: &amp;<span class="built_in">str</span>) &#123;</span><br><span class="line">    <span class="comment">// borrow a string for a second</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// String implements Deref&lt;Target=str&gt;</span></span><br><span class="line"><span class="keyword">let</span> owned = <span class="string">&quot;Hello&quot;</span>.to_string();</span><br><span class="line"><span class="keyword">let</span> counted = Rc::new(owned);</span><br><span class="line"></span><br><span class="line"><span class="comment">// therefore, this works:</span></span><br><span class="line">foo(&amp;counted);</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>Rc&lt;T&gt;</code> 实现了 <code>Deref&lt;Target=T&gt;</code>。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(s: &amp;[<span class="built_in">i32</span>]) &#123;</span><br><span class="line">    <span class="comment">// borrow a slice for a second</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Vec&lt;T&gt; implements Deref&lt;Target=[T]&gt;</span></span><br><span class="line"><span class="keyword">let</span> owned = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">foo(&amp;owned);</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>Vec&lt;T&gt;</code> 实现了 <code>Deref&lt;Target=[T]&gt;</code>。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Foo</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> Foo &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(&amp;<span class="keyword">self</span>) &#123; <span class="built_in">println!</span>(<span class="string">&quot;Foo&quot;</span>); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> f = &amp;&amp;Foo;</span><br><span class="line"></span><br><span class="line">f.foo();</span><br><span class="line">(&amp;f).foo();</span><br><span class="line">(&amp;&amp;f).foo();</span><br><span class="line">(&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;f).foo();</span><br></pre></td></tr></table></figure>
+
+<p>上面那几种函数的调用，效果是一样的。</p>
+<p><code>coercion</code> 的设计，是 Rust 中仅有的类型隐式转换，设计它的目的，是为了简化程序的书写，让代码不至于过于繁琐。把人从无尽的类型细节中解脱出来，让书写 Rust 代码变成一件快乐的事情。</p>
+<h3 id="Cow"><a href="#Cow" class="headerlink" title="Cow"></a><code>Cow</code></h3><p><code>Clone-on-write</code>，即写时克隆。本质上是一个智能指针。</p>
+<p>它有两个可选值：</p>
+<ul>
+<li><code>Borrowed</code>，用于包裹对象的引用（通用引用）；</li>
+<li><code>Owned</code>，用于包裹对象的所有者；</li>
+</ul>
+<p><code>Cow</code> 提供</p>
+<ol>
+<li>对此对象的不可变访问（比如可直接调用此对象原有的不可变方法）；</li>
+<li>如果遇到需要修改此对象，或者需要获得此对象的所有权的情况，<code>Cow</code> 提供方法做克隆处理，并避免多次重复克隆。</li>
+</ol>
+<p><code>Cow</code> 的设计目的是提高性能（减少复制）同时增加灵活性，因为大部分情况下，业务场景都是读多写少。利用 <code>Cow</code>，可以用统一，规范的形式实现，需要写的时候才做一次对象复制。这样就可能会大大减少复制的次数。</p>
+<p>它有以下几个要点需要掌握：</p>
+<ol>
+<li><code>Cow&lt;T&gt;</code> 能直接调用 <code>T</code> 的不可变方法，因为 <code>Cow</code> 这个枚举，实现了 <code>Deref</code>；</li>
+<li>在需要写 <code>T</code>的时候，可以使用 <code>.to_mut()</code> 方法得到一个具有所有权的值的可变借用；<ol>
+<li>注意，调用 <code>.to_mut()</code> 不一定会产生克隆；</li>
+<li>在已经具有所有权的情况下，调用 <code>.to_mut()</code> 有效，但是不会产生新的克隆；</li>
+<li>多次调用 <code>.to_mut()</code> 只会产生一次克隆。</li>
+</ol>
+</li>
+<li>在需要写 <code>T</code> 的时候，可以使用 <code>.into_owned()</code> 创建新的拥有所有权的对象，这个过程往往意味着内存拷贝并创建新对象；<ol>
+<li>如果之前 <code>Cow</code> 中的值是借用状态，调用此操作将执行克隆；</li>
+<li>本方法，参数是<code>self</code>类型，它会“吃掉”原先的那个对象，调用之后原先的对象的生命周期就截止了，在 <code>Cow</code> 上不能调用多次；</li>
+</ol>
+</li>
+</ol>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><p><code>.to_mut()</code> 举例</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::borrow::Cow;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> cow: Cow&lt;[_]&gt; = Cow::Owned(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> hello = cow.to_mut();</span><br><span class="line"></span><br><span class="line"><span class="built_in">assert_eq!</span>(hello, &amp;[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br></pre></td></tr></table></figure>
+
+<p><code>.into_owned()</code> 举例</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::borrow::Cow;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> cow: Cow&lt;[_]&gt; = Cow::Owned(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> hello = cow.into_owned();</span><br><span class="line"></span><br><span class="line"><span class="built_in">assert_eq!</span>(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], hello);</span><br></pre></td></tr></table></figure>
+
+<p>综合举例</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::borrow::Cow;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">abs_all</span></span>(input: &amp;<span class="keyword">mut</span> Cow&lt;[<span class="built_in">i32</span>]&gt;) &#123;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..input.len() &#123;</span><br><span class="line">        <span class="keyword">let</span> v = input[i];</span><br><span class="line">        <span class="keyword">if</span> v &lt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">// clones into a vector the first time (if not already owned)</span></span><br><span class="line">            input.to_mut()[i] = -v;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p>题目：写一个函数，过滤掉输入的字符串中的所有空格字符，并返回过滤后的字符串。</p>
+<p>对这个简单的问题，不用思考，我们都可以很快写出代码：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">remove_spaces</span></span>(input: &amp;<span class="built_in">str</span>) -&gt; <span class="built_in">String</span> &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="keyword">mut</span> buf = <span class="built_in">String</span>::with_capacity(input.len());</span><br><span class="line"></span><br><span class="line">   <span class="keyword">for</span> c <span class="keyword">in</span> input.chars() &#123;</span><br><span class="line">      <span class="keyword">if</span> c != <span class="string">&#x27; &#x27;</span> &#123;</span><br><span class="line">         buf.push(c);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   buf</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>设计函数输入参数的时候，我们会停顿一下，这里，用 <code>&amp;str</code> 好呢，还是 <code>String</code> 好呢？思考一番，从性能上考虑，有如下结论：</p>
+<ol>
+<li>如果使用 <code>String</code> 则外部在调用此函数的时候，<ol>
+<li>如果外部的字符串是 <code>&amp;str</code>，那么，它需要做一次克隆，才能调用此函数；</li>
+<li>如果外部的字符串是 <code>String</code>，那么，它不需要做克隆，就可以调用此函数。但是，一旦调用后，外部那个字符串的所有权就被 <code>move</code> 到此函数中了，外部的后续代码将无法再使用原字符串。</li>
+</ol>
+</li>
+<li>如果使用 <code>&amp;str</code>，则不存在上述两个问题。但可能会遇到生命周期的问题，需要注意。</li>
+</ol>
+<p>继续分析上面的例子，我们发现，在函数体内，做了一次新字符串对象的生成和拷贝。</p>
+<p>让我们来仔细分析一下业务需求。最坏的情况下，如果字符串中没有空白字符，那最好是直接原样返回。这种情况做这样一次对象的拷贝，完全就是浪费了。</p>
+<p>于是我们心想改进这个算法。很快，又遇到了另一个问题，返回值是 <code>String</code> 的嘛，我不论怎样，要把 <code>&amp;str</code> 转换成 <code>String</code> 返回，始终都要经历一次复制。于是我们快要放弃了。</p>
+<p>好吧，<code>Cow</code> 君这时出马了。写出了如下代码：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::borrow::Cow;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">remove_spaces</span></span>&lt;<span class="symbol">&#x27;a</span>&gt;(input: &amp;<span class="symbol">&#x27;a</span> <span class="built_in">str</span>) -&gt; Cow&lt;<span class="symbol">&#x27;a</span>, <span class="built_in">str</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> input.contains(<span class="string">&#x27; &#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut</span> buf = <span class="built_in">String</span>::with_capacity(input.len());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> input.chars() &#123;</span><br><span class="line">            <span class="keyword">if</span> c != <span class="string">&#x27; &#x27;</span> &#123;</span><br><span class="line">                buf.push(c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Cow::Owned(buf);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Cow::Borrowed(input);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完美解决了业务逻辑与返回值类型冲突的问题。本例可细细品味。</p>
+<p>外部程序，拿到这个 <code>Cow</code> 返回值后，按照我们上文描述的 <code>Cow</code> 的特性使用就好了。</p>
+<h3 id="Send-和-Sync"><a href="#Send-和-Sync" class="headerlink" title="Send 和 Sync"></a><code>Send</code> 和 <code>Sync</code></h3><p><code>std::marker</code> 模块中，有两个 trait：<code>Send</code> 和 <code>Sync</code>，它们与多线程安全相关。</p>
+<p>标记为 <code>marker trait</code> 的 trait，它实际就是一种约定，没有方法的定义，也没有关联元素（associated items）。仅仅是一种约定，实现了它的类型必须满足这种约定。一种类型是否加上这种约定，要么是编译器的行为，要么是人工手动的行为。</p>
+<p><code>Send</code> 和 <code>Sync</code> 在大部分情况下（针对 Rust 的基础类型和 std 中的大部分类型），会由编译器自动推导出来。对于不能由编译器自动推导出来的类型，要使它们具有 <code>Send</code> 或 <code>Sync</code> 的约定，可以由人手动实现。实现的时候，必须使用 <code>unsafe</code> 前缀，因为 Rust 默认不信任程序员，由程序员自己控制的东西，统统标记为 <code>unsafe</code>，出了问题（比如，把不是线程安全的对象加上 <code>Sync</code> 约定）由程序员自行负责。</p>
+<p>它们的定义如下：</p>
+<p>如果 <code>T: Send</code>，那么将 <code>T</code> 传到另一个线程中时（按值传送），不会导致数据竞争或其它不安全情况。</p>
+<ol>
+<li><code>Send</code> 是对象可以安全发送到另一个执行体中；</li>
+<li><code>Send</code> 使被发送对象可以和产生它的线程解耦，防止原线程将此资源释放后，在目标线程中使用出错（use after free）。</li>
+</ol>
+<p>如果 <code>T: Sync</code>，那么将 <code>&amp;T</code> 传到另一个线程中时，不会导致数据竞争或其它不安全情况。</p>
+<ol>
+<li><code>Sync</code> 是可以被同时多个执行体访问而不出错；</li>
+<li><code>Sync</code> 防止的是竞争；</li>
+</ol>
+<p>推论：</p>
+<ol>
+<li><code>T: Sync</code> 意味着 <code>&amp;T: Send</code>；</li>
+<li><code>Sync + Copy = Send</code>；</li>
+<li>当 <code>T: Send</code> 时，可推导出 <code>&amp;mut T: Send</code>；</li>
+<li>当 <code>T: Sync</code> 时，可推导出 <code>&amp;mut T: Sync</code>；</li>
+<li>当 <code>&amp;mut T: Send</code> 时，不能推导出 <code>T: Send</code>；</li>
+</ol>
+<p>（注：<code>T</code>, <code>&amp;T</code>, <code>&amp;mut T</code>，<code>Box&lt;T&gt;</code> 等都是不同的类型）</p>
+<p>具体的类型：</p>
+<ol>
+<li>原始类型（比如： u8, f64），都是 <code>Sync</code>，都是 <code>Copy</code>，因此都是 <code>Send</code>；</li>
+<li>只包含原始类型的复合类型，都是 <code>Sync</code>，都是 <code>Copy</code>，因此都是 <code>Send</code>；</li>
+<li>当 <code>T: Sync</code>，<code>Box&lt;T&gt;</code>, <code>Vec&lt;T&gt;</code> 等集合类型是 <code>Sync</code>；</li>
+<li>具有内部可变性的的指针，不是 <code>Sync</code> 的，比如 <code>Cell</code>, <code>RefCell</code>, <code>UnsafeCell</code>；</li>
+<li><code>Rc</code> 不是 <code>Sync</code>。因为只要一做 <code>&amp;Rc&lt;T&gt;</code> 操作，就会克隆一个新引用，它会以非原子性的方式修改引用计数，所以是不安全的；</li>
+<li>被 <code>Mutex</code> 和 <code>RWLock</code> 锁住的类型 <code>T: Send</code>，是 <code>Sync</code> 的；</li>
+<li>原始指针（<code>*mut</code>, <code>*const</code>）既不是 <code>Send</code> 也不是 <code>Sync</code>；</li>
+</ol>
+<p>Rust 正是通过这两大武器：<code>所有权和生命周期</code> + <code>Send 和 Sync</code>（本质上为类型系统）来为并发编程提供了安全可靠的基础设施。使得程序员可以放心在其上构建稳健的并发模型。这也正是 Rust 的核心设计观的体现：内核只提供最基础的原语，真正的实现能分离出去就分离出去。并发也是如此。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2>]]></content>
+      <tags>
+        <tag>rust</tag>
+      </tags>
+  </entry>
 </search>
