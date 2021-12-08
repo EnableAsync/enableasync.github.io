@@ -251,7 +251,7 @@ pjax: false
 highlight:
   enable: true
   style: # https://highlightjs.org/static/demo/
-    light: Xcode
+    light: Solarized Light
     dark: Solarized Dark
 
 # SEO
