@@ -46,9 +46,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux 中的一些坑</title>
+    <title>Linux 的一些使用心得</title>
     <url>/linux/linux/</url>
-    <content><![CDATA[<h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><h3 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h3><ol>
+    <content><![CDATA[<h2 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h2><p>有的时候需要更换 linux 的 ip 地址：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
+
+<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
+<h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><h3 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h3><ol>
 <li><p>使用 im-config 修复</p>
 </li>
 <li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>

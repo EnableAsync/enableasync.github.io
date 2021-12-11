@@ -6,13 +6,12 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Linux 中的一些坑 - EnableAsync&#39;s Blog</title>
+  <title>Linux 的一些使用心得 - EnableAsync&#39;s Blog</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   <meta name="keywords" content="golang,java">
-  <meta name="description" content="输入法Fcitx 失效
-使用 im-config 修复...">
+  <meta name="description" content="换 MAC 地址有的时候需要更换 linux 的 ip...">
   <meta name="author" content="EnableAsync">
   <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
@@ -148,7 +147,7 @@
         <i class="iconfont iconsearch j-navbar-search"></i>
       
     </div>
-    <div class="center">Linux 中的一些坑</div>
+    <div class="center">Linux 的一些使用心得</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -184,17 +183,21 @@
     <section class="head">
   <img   class="lazyload" data-original="/images/theme/post-image.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">Linux 中的一些坑</h1>
+    <h1 class="head-title">Linux 的一些使用心得</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 08, 2021</span>
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 11, 2021</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>754</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>923</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><h3 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h3><ol>
+        <h2 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h2><p>有的时候需要更换 linux 的 ip 地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
+
+<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
+<h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><h3 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h3><ol>
 <li><p>使用 im-config 修复</p>
 </li>
 <li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
@@ -242,7 +245,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-text">输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fcitx-%E5%A4%B1%E6%95%88"><span class="toc-text">Fcitx 失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dash-to-dock"><span class="toc-text">Dash to dock</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dash-to-dock-%E9%87%8D%E5%8F%A0%E9%97%AE%E9%A2%98"><span class="toc-text">Dash to dock 重叠问题</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2-MAC-%E5%9C%B0%E5%9D%80"><span class="toc-text">换 MAC 地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-text">输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fcitx-%E5%A4%B1%E6%95%88"><span class="toc-text">Fcitx 失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dash-to-dock"><span class="toc-text">Dash to dock</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dash-to-dock-%E9%87%8D%E5%8F%A0%E9%97%AE%E9%A2%98"><span class="toc-text">Dash to dock 重叠问题</span></a></li></ol></li></ol>
   </aside>
 
         
