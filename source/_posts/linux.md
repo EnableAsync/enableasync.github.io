@@ -1,7 +1,19 @@
 ---
-title: Linux 中的一些坑
+title: Linux 的一些使用心得
 categories: linux
 ---
+
+## 换 MAC 地址
+
+有的时候需要更换 linux 的 ip 地址：
+
+```bash
+sudo ifconfig eth0 down
+sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e
+sudo ifconfig wlo1 up
+```
+
+这里 `eth0` 是网络 interface，ether 之后的参数就是 MAC 地址
 
 ## 输入法
 
