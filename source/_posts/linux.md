@@ -3,33 +3,33 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
-## 常用的一些 gnome extensions
+# 常用的一些 gnome extensions
 
-### ddterm
+## ddterm
 
 - 按 `F10` 快速启动命令行，再按 `F10` 隐藏，十分方便
 
-### Desktop Icons NG(DING)
+## Desktop Icons NG(DING)
 
 在桌面上显示图标
 
-### Lock Keys
+## Lock Keys
 
 可以显示当前大小写状况
 
-### NetSpeed
+## NetSpeed
 
 显示当前网速
 
-### TopIcons Plus
+## TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）
 
 在顶部显示图标
 
-### Dash to Dock
+## Dash to Dock
 
 在底部智能显示一个 Dock
 
-## 换 MAC 地址
+# 换 MAC 地址
 
 有的时候需要更换 linux 的 ip 地址：
 
@@ -41,9 +41,9 @@ sudo ifconfig wlo1 up
 
 这里 `eth0` 是网络 interface，ether 之后的参数就是 MAC 地址
 
-## 输入法
+# 输入法
 
-### Fcitx 失效
+## Fcitx 失效
 
 1. 使用 im-config 修复
 
@@ -66,9 +66,9 @@ sudo ifconfig wlo1 up
    
    相关 issue，https://github.com/pop-os/pop/issues/1445
 
-## Dash to dock
+# Dash to dock
 
-### Dash to dock 重叠问题
+## Dash to dock 重叠问题
 
    Pop os 自带的 Dock 与 Dash to dock 发生了重叠
 

@@ -5,9 +5,7 @@ tags: rust
 categories: rust
 ---
 
-# Rust 学习心得
-
-## Rust 标准库 trait
+# Rust 标准库 trait
 
 假设有以下变量：
 
@@ -15,7 +13,7 @@ categories: rust
 let t = T::new()
 ```
 
-### `impl From<U> for T`
+## `impl From<U> for T`
 
 如果为 `T` 实现了 `From<U>` 则可以通过 `T::from(U)` 得到 `T`。
 
@@ -28,7 +26,7 @@ let other_string = String::from("hello");
 assert_eq!(string, other_string);
 ```
 
-### `impl Into<U> for T`
+`impl Into<U> for T`
 
 如果为 `T` 实现了 `Into<U>` 则可以通过 `t.into()` 消耗自己得到 `U`。
 
@@ -46,7 +44,7 @@ is_hello(s);
 
 在实际编程中，用来接收多种类型的参数，如 `Into<String>` 可以同时接收 `String` 和 `&str`。
 
-### `impl AsRef<U> for T`
+## `impl AsRef<U> for T`
 
 如果为 `T` 实现了 `AsRef<U>` 则可以通过 `t.as_ref()` 得到 `&U`。
 
@@ -69,11 +67,11 @@ let s = "hello".to_string();
 is_hello(s);
 ```
 
-### `impl AsMut<U> for T`
+## `impl AsMut<U> for T`
 
 如果为 `T` 实现了 `AsRef<U>` 则可以通过 `t.as_mut()` 得到 `&mut U`。
 
-### `impl Borror<U> for T`
+## `impl Borror<U> for T`
 
 如果 `T` 实现了 `Borrow<U>`，那么，`t` 可执行 `.borrow()` 操作，即 `t.borrow()`。操作的结果，我们得到了一个类型为 `&U` 的新引用。
 
@@ -101,11 +99,11 @@ let s = "Hello";
 check(s);
 ```
 
-### `impl BorrowMut<U> for T`
+## `impl BorrowMut<U> for T`
 
 如果 `T` 实现了 `BorrowMut<U>`，那么，`t` 可执行 `.borrow_mut()` 操作，即 `t.borrow_mut()`。操作的结果我们得到类型为 `&mut U` 的一个可变（mutable）引用。
 
-### `impl ToOwned for T`
+## `impl ToOwned for T`
 
 `ToOwned` 为 `Clone` 的普适版本。它提供了 `.to_owned()` 方法，用于类型转换。
 
@@ -113,7 +111,7 @@ check(s);
 
 而 `ToOwned` trait 能够从任意引用类型实例，生成具有所有权的类型实例。
 
-### `impl Deref for T`
+## `impl Deref for T`
 
 `Deref` 是 `deref` 操作符 `*` 的 trait，比如 `*v`。
 
@@ -121,7 +119,7 @@ check(s);
 
 Rust 中，本操作符行为可以重载。这也是 Rust 操作符的基本特点。本身没有什么特别的。
 
-#### 强制隐式转换（coercion）
+### 强制隐式转换（coercion）
 
 `Deref` 神奇的地方并不在本身 `解引` 这个意义上，Rust 的设计者在它之上附加了一个特性：`强制隐式转换`，这才是它神奇之处。
 
@@ -207,7 +205,7 @@ f.foo();
 
 `coercion` 的设计，是 Rust 中仅有的类型隐式转换，设计它的目的，是为了简化程序的书写，让代码不至于过于繁琐。把人从无尽的类型细节中解脱出来，让书写 Rust 代码变成一件快乐的事情。
 
-### `Cow`
+## `Cow`
 
 `Clone-on-write`，即写时克隆。本质上是一个智能指针。
 
@@ -234,7 +232,7 @@ f.foo();
    1. 如果之前 `Cow` 中的值是借用状态，调用此操作将执行克隆；
    2. 本方法，参数是`self`类型，它会“吃掉”原先的那个对象，调用之后原先的对象的生命周期就截止了，在 `Cow` 上不能调用多次；
 
-#### 例子
+### 例子
 
 `.to_mut()` 举例
 
@@ -276,7 +274,7 @@ fn abs_all(input: &mut Cow<[i32]>) {
 }
 ```
 
-#### 实例
+### 更多的例子
 
 题目：写一个函数，过滤掉输入的字符串中的所有空格字符，并返回过滤后的字符串。
 
@@ -335,7 +333,7 @@ fn remove_spaces<'a>(input: &'a str) -> Cow<'a, str> {
 
 外部程序，拿到这个 `Cow` 返回值后，按照我们上文描述的 `Cow` 的特性使用就好了。
 
-### `Send` 和 `Sync`
+## `Send` 和 `Sync`
 
 `std::marker` 模块中，有两个 trait：`Send` 和 `Sync`，它们与多线程安全相关。
 
@@ -377,7 +375,7 @@ fn remove_spaces<'a>(input: &'a str) -> Cow<'a, str> {
 
 Rust 正是通过这两大武器：`所有权和生命周期` + `Send 和 Sync`（本质上为类型系统）来为并发编程提供了安全可靠的基础设施。使得程序员可以放心在其上构建稳健的并发模型。这也正是 Rust 的核心设计观的体现：内核只提供最基础的原语，真正的实现能分离出去就分离出去。并发也是如此。
 
-## 参考文献
+# 参考文献
 
 1. https://github.com/rustcc/RustPrimer
 
