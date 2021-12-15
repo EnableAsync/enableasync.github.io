@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   <meta name="keywords" content="golang,java">
-  <meta name="description" content="换 MAC 地址有的时候需要更换 linux 的 ip...">
+  <meta name="description" content="常用的一些 gnome extensionsddter...">
   <meta name="author" content="EnableAsync">
   <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
@@ -185,19 +185,27 @@
   <div class="head-mask">
     <h1 class="head-title">Linux 的一些使用心得</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 11, 2021</span>
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 15, 2021</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>923</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1138</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h2 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h2><p>有的时候需要更换 linux 的 ip 地址：</p>
+        <h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><ul>
+<li>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</li>
+</ul>
+<h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
+<h2 id="Lock-Keys"><a href="#Lock-Keys" class="headerlink" title="Lock Keys"></a>Lock Keys</h2><p>可以显示当前大小写状况</p>
+<h2 id="NetSpeed"><a href="#NetSpeed" class="headerlink" title="NetSpeed"></a>NetSpeed</h2><p>显示当前网速</p>
+<h2 id="TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）"><a href="#TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）" class="headerlink" title="TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）"></a>TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</h2><p>在顶部显示图标</p>
+<h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
+<h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
 
 <p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
-<h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><h3 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h3><ol>
+<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ol>
 <li><p>使用 im-config 修复</p>
 </li>
 <li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
@@ -211,7 +219,7 @@
 <p>相关 issue，<a target="_blank" rel="noopener" href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
 </li>
 </ol>
-<h2 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h2><h3 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h3><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
+<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
    <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
 
 <p>   之后重启 gnome 即可解决</p>
@@ -245,7 +253,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2-MAC-%E5%9C%B0%E5%9D%80"><span class="toc-text">换 MAC 地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-text">输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fcitx-%E5%A4%B1%E6%95%88"><span class="toc-text">Fcitx 失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dash-to-dock"><span class="toc-text">Dash to dock</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dash-to-dock-%E9%87%8D%E5%8F%A0%E9%97%AE%E9%A2%98"><span class="toc-text">Dash to dock 重叠问题</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B-gnome-extensions"><span class="toc-text">常用的一些 gnome extensions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ddterm"><span class="toc-text">ddterm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Desktop-Icons-NG-DING"><span class="toc-text">Desktop Icons NG(DING)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lock-Keys"><span class="toc-text">Lock Keys</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NetSpeed"><span class="toc-text">NetSpeed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TopIcons-Plus%EF%BC%88%E5%9C%A8-gnome-40-%E4%B9%8B%E5%90%8E%E4%BD%BF%E7%94%A8-Ubuntu-Appindicators-%E6%9B%BF%E4%BB%A3%EF%BC%89"><span class="toc-text">TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dash-to-Dock"><span class="toc-text">Dash to Dock</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8D%A2-MAC-%E5%9C%B0%E5%9D%80"><span class="toc-text">换 MAC 地址</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-text">输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fcitx-%E5%A4%B1%E6%95%88"><span class="toc-text">Fcitx 失效</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Dash-to-dock"><span class="toc-text">Dash to dock</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dash-to-dock-%E9%87%8D%E5%8F%A0%E9%97%AE%E9%A2%98"><span class="toc-text">Dash to dock 重叠问题</span></a></li></ol></li></ol>
   </aside>
 
         
