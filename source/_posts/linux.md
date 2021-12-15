@@ -3,6 +3,32 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+## 常用的一些 gnome extensions
+
+### ddterm
+
+- 按 `F10` 快速启动命令行，再按 `F10` 隐藏，十分方便
+
+### Desktop Icons NG(DING)
+
+在桌面上显示图标
+
+### Lock Keys
+
+可以显示当前大小写状况
+
+### NetSpeed
+
+显示当前网速
+
+### TopIcons Plus
+
+在顶部显示图标
+
+### Dash to Dock
+
+在底部智能显示一个 Dock
+
 ## 换 MAC 地址
 
 有的时候需要更换 linux 的 ip 地址：
