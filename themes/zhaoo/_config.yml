@@ -256,7 +256,7 @@ highlight:
 
 # SEO
 seo:
-  baidu_auto_push: true
+  baidu_auto_push: false
 
 # Analytics
 analytics:
