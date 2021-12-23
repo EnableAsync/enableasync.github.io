@@ -79,3 +79,8 @@ sudo ifconfig wlo1 up
 
    之后重启 gnome 即可解决
 
+# Alt + Tab 时阻止相同应用叠加
+
+在 gnome 设置中，打开 keyboard shortcut，将 `Switch windows` 设置为 `Alt + Tab` ，而不是默认的 `Switch applications`。
+
+参考：https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps
