@@ -48,7 +48,9 @@
   <entry>
     <title>Linux 的一些使用心得</title>
     <url>/linux/linux/</url>
-    <content><![CDATA[<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><ul>
+    <content><![CDATA[<h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(ls -1t /var/<span class="hljs-built_in">log</span>/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |tac |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
+
+<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><ul>
 <li>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</li>
 </ul>
 <h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
@@ -80,6 +82,31 @@
 <p>   之后重启 gnome 即可解决</p>
 <h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
 <p>参考：<a href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
+<h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
+
+<p>执行上述命令后再运行 fluxion 即可。</p>
+<h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
+<li>先停用 systemd-resolved 服务</li>
+</ol>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino">systemctl stop systemd-resolved<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>编辑 /etc/systemd/resolved.conf 文件</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
+</ol>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>最后运行下面命令即可。</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>linux</category>
