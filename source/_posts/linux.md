@@ -3,6 +3,14 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+# 按时间降序最近安装的程序
+
+```bash
+for x in $(ls -1t /var/log/dpkg.log*); do 
+      zcat -f $x |tac |grep -e " install " -e " upgrade "; 
+done | awk -F ":a" '{print $1 " :a" $2}' |column -t
+```
+
 # 常用的一些 gnome extensions
 
 ## ddterm
@@ -84,3 +92,53 @@ sudo ifconfig wlo1 up
 在 gnome 设置中，打开 keyboard shortcut，将 `Switch windows` 设置为 `Alt + Tab` ，而不是默认的 `Switch applications`。
 
 参考：https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps
+
+# fluxion
+
+## 扫描不到热点
+
+```bash
+sudo airmon-ng
+sudo airmon-ng start fluxwl0
+```
+
+```bash
+export FLUXIONAirmonNG=1
+```
+
+执行上述命令后再运行 fluxion 即可。
+
+## 解除 53 端口被 systemd-resolved 占用
+
+1. 先停用 systemd-resolved 服务
+
+```
+systemctl stop systemd-resolved
+```
+
+2. 编辑 /etc/systemd/resolved.conf 文件
+
+```
+vi /etc/systemd/resolved.conf
+```
+
+3. 换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。
+
+```
+[Resolve]
+DNS=8.8.8.8  #取消注释，增加dns
+#FallbackDNS=
+#Domains=
+#LLMNR=no
+#MulticastDNS=no
+#DNSSEC=no
+#Cache=yes
+DNSStubListener=no  #取消注释，把yes改为no
+```
+
+4. 最后运行下面命令即可。
+
+```
+ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+```
+
