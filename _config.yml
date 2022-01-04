@@ -107,3 +107,8 @@ theme: zhaoo
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+  
+# MathJax Support
+mathjax:
+  enable: true
+  per_page: true
