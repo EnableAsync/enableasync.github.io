@@ -103,6 +103,9 @@ ignore:
 #theme: landscape
 theme: zhaoo
 
+plugins:
+- hexo-renderer-mathjax
+
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
