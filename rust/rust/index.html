@@ -180,7 +180,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 08, 2021</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>7977</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>7963</span>
     </div>
   </div>
 </section>
@@ -188,16 +188,13 @@
       <section class="content">
         <h1 id="Rust-标准库-trait"><a href="#Rust-标准库-trait" class="headerlink" title="Rust 标准库 trait"></a>Rust 标准库 trait</h1><p>假设有以下变量：</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> t = T::new()<br></code></pre></td></tr></table></figure>
-
 <h2 id="impl-From-lt-U-gt-for-T"><a href="#impl-From-lt-U-gt-for-T" class="headerlink" title="impl From&lt;U&gt; for T"></a><code>impl From&lt;U&gt; for T</code></h2><p>如果为 <code>T</code> 实现了 <code>From&lt;U&gt;</code> 则可以通过 <code>T::from(U)</code> 得到 <code>T</code>。</p>
 <p>例如 <code>String</code> 实现了 <code>From&lt;&amp;str&gt;</code>，所以 <code>String</code> 可以从 <code>&amp;str</code> 生成。</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> string = <span class="hljs-string">&quot;hello&quot;</span>.to_string();<br><span class="hljs-keyword">let</span> other_string = <span class="hljs-built_in">String</span>::from(<span class="hljs-string">&quot;hello&quot;</span>);<br><br><span class="hljs-built_in">assert_eq!</span>(string, other_string);<br></code></pre></td></tr></table></figure>
-
 <p><code>impl Into&lt;U&gt; for T</code></p>
 <p>如果为 <code>T</code> 实现了 <code>Into&lt;U&gt;</code> 则可以通过 <code>t.into()</code> 消耗自己得到 <code>U</code>。</p>
 <p>例如 <code>String</code> 类型实现了 <code>Into&lt;Vec&lt;u8&gt;&gt;</code>。</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">is_hello</span></span>&lt;T: <span class="hljs-built_in">Into</span>&lt;<span class="hljs-built_in">Vec</span>&lt;<span class="hljs-built_in">u8</span>&gt;&gt;&gt;(s: T) &#123;<br>   <span class="hljs-keyword">let</span> bytes = <span class="hljs-string">b&quot;hello&quot;</span>.to_vec();<br>   <span class="hljs-built_in">assert_eq!</span>(bytes, s.into());<br>&#125;<br><br><span class="hljs-keyword">let</span> s = <span class="hljs-string">&quot;hello&quot;</span>.to_string();<br>is_hello(s);<br></code></pre></td></tr></table></figure>
-
 <p>在实际编程中，用来接收多种类型的参数，如 <code>Into&lt;String&gt;</code> 可以同时接收 <code>String</code> 和 <code>&amp;str</code>。</p>
 <h2 id="impl-AsRef-lt-U-gt-for-T"><a href="#impl-AsRef-lt-U-gt-for-T" class="headerlink" title="impl AsRef&lt;U&gt; for T"></a><code>impl AsRef&lt;U&gt; for T</code></h2><p>如果为 <code>T</code> 实现了 <code>AsRef&lt;U&gt;</code> 则可以通过 <code>t.as_ref()</code> 得到 <code>&amp;U</code>。</p>
 <p>注：</p>
@@ -207,7 +204,6 @@
 </ol>
 <p>例如 <code>String</code> 和 <code>&amp;str</code> 都实现了 <code>AsRef&lt;str&gt;</code>：</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">is_hello</span></span>&lt;T: <span class="hljs-built_in">AsRef</span>&lt;<span class="hljs-built_in">str</span>&gt;&gt;(s: T) &#123;<br>   <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-string">&quot;hello&quot;</span>, s.as_ref());<br>&#125;<br><br><span class="hljs-keyword">let</span> s = <span class="hljs-string">&quot;hello&quot;</span>;<br>is_hello(s);<br><br><span class="hljs-keyword">let</span> s = <span class="hljs-string">&quot;hello&quot;</span>.to_string();<br>is_hello(s);<br></code></pre></td></tr></table></figure>
-
 <h2 id="impl-AsMut-lt-U-gt-for-T"><a href="#impl-AsMut-lt-U-gt-for-T" class="headerlink" title="impl AsMut&lt;U&gt; for T"></a><code>impl AsMut&lt;U&gt; for T</code></h2><p>如果为 <code>T</code> 实现了 <code>AsRef&lt;U&gt;</code> 则可以通过 <code>t.as_mut()</code> 得到 <code>&amp;mut U</code>。</p>
 <h2 id="impl-Borror-lt-U-gt-for-T"><a href="#impl-Borror-lt-U-gt-for-T" class="headerlink" title="impl Borror&lt;U&gt; for T"></a><code>impl Borror&lt;U&gt; for T</code></h2><p>如果 <code>T</code> 实现了 <code>Borrow&lt;U&gt;</code>，那么，<code>t</code> 可执行 <code>.borrow()</code> 操作，即 <code>t.borrow()</code>。操作的结果，我们得到了一个类型为 <code>&amp;U</code> 的新引用。</p>
 <p><code>Borrow</code> 可以认为是 <code>AsRef</code> 的严格版本，它对普适引用操作的前后类型之间附加了一些其它限制。</p>
@@ -215,7 +211,6 @@
 <p><code>AsRef</code> 更通用，更普遍，覆盖类型更多，是 <code>Borrow</code> 的超集。</p>
 <p>举例：</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::borrow::Borrow;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">check</span></span>&lt;T: Borrow&lt;<span class="hljs-built_in">str</span>&gt;&gt;(s: T) &#123;<br>    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-string">&quot;Hello&quot;</span>, s.borrow());<br>&#125;<br><br><span class="hljs-keyword">let</span> s = <span class="hljs-string">&quot;Hello&quot;</span>.to_string();<br><br>check(s);<br><br><span class="hljs-keyword">let</span> s = <span class="hljs-string">&quot;Hello&quot;</span>;<br><br>check(s);<br></code></pre></td></tr></table></figure>
-
 <h2 id="impl-BorrowMut-lt-U-gt-for-T"><a href="#impl-BorrowMut-lt-U-gt-for-T" class="headerlink" title="impl BorrowMut&lt;U&gt; for T"></a><code>impl BorrowMut&lt;U&gt; for T</code></h2><p>如果 <code>T</code> 实现了 <code>BorrowMut&lt;U&gt;</code>，那么，<code>t</code> 可执行 <code>.borrow_mut()</code> 操作，即 <code>t.borrow_mut()</code>。操作的结果我们得到类型为 <code>&amp;mut U</code> 的一个可变（mutable）引用。</p>
 <h2 id="impl-ToOwned-for-T"><a href="#impl-ToOwned-for-T" class="headerlink" title="impl ToOwned for T"></a><code>impl ToOwned for T</code></h2><p><code>ToOwned</code> 为 <code>Clone</code> 的普适版本。它提供了 <code>.to_owned()</code> 方法，用于类型转换。</p>
 <p>有些实现了 <code>Clone</code> 的类型 <code>T</code> 可以从引用状态实例 <code>&amp;T</code> 通过 <code>.clone()</code> 方法，生成具有所有权的 <code>T</code> 的实例。但是它只能由 <code>&amp;T</code> 生成 <code>T</code>。而对于其它形式的引用，<code>Clone</code> 就无能为力了。</p>
@@ -237,16 +232,12 @@
 <p>使用引用进行过渡也是为了能够防止不必要的拷贝。</p>
 <p>下面举一些例子：</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">foo</span></span>(s: &amp;<span class="hljs-built_in">str</span>) &#123;<br>    <span class="hljs-comment">// borrow a string for a second</span><br>&#125;<br><br><span class="hljs-comment">// String implements Deref&lt;Target=str&gt;</span><br><span class="hljs-keyword">let</span> owned = <span class="hljs-string">&quot;Hello&quot;</span>.to_string();<br><br><span class="hljs-comment">// therefore, this works:</span><br>foo(&amp;owned);<br></code></pre></td></tr></table></figure>
-
 <p>因为 <code>String</code> 实现了 <code>Deref&lt;Target=str&gt;</code>。</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::rc::Rc;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">foo</span></span>(s: &amp;<span class="hljs-built_in">str</span>) &#123;<br>    <span class="hljs-comment">// borrow a string for a second</span><br>&#125;<br><br><span class="hljs-comment">// String implements Deref&lt;Target=str&gt;</span><br><span class="hljs-keyword">let</span> owned = <span class="hljs-string">&quot;Hello&quot;</span>.to_string();<br><span class="hljs-keyword">let</span> counted = Rc::new(owned);<br><br><span class="hljs-comment">// therefore, this works:</span><br>foo(&amp;counted);<br></code></pre></td></tr></table></figure>
-
 <p>因为 <code>Rc&lt;T&gt;</code> 实现了 <code>Deref&lt;Target=T&gt;</code>。</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">foo</span></span>(s: &amp;[<span class="hljs-built_in">i32</span>]) &#123;<br>    <span class="hljs-comment">// borrow a slice for a second</span><br>&#125;<br><br><span class="hljs-comment">// Vec&lt;T&gt; implements Deref&lt;Target=[T]&gt;</span><br><span class="hljs-keyword">let</span> owned = <span class="hljs-built_in">vec!</span>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br><br>foo(&amp;owned);<br></code></pre></td></tr></table></figure>
-
 <p>因为 <code>Vec&lt;T&gt;</code> 实现了 <code>Deref&lt;Target=[T]&gt;</code>。</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Foo</span></span>;<br><br><span class="hljs-keyword">impl</span> Foo &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">foo</span></span>(&amp;<span class="hljs-keyword">self</span>) &#123; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Foo&quot;</span>); &#125;<br>&#125;<br><br><span class="hljs-keyword">let</span> f = &amp;&amp;Foo;<br><br>f.foo();<br>(&amp;f).foo();<br>(&amp;&amp;f).foo();<br>(&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;f).foo();<br></code></pre></td></tr></table></figure>
-
 <p>上面那几种函数的调用，效果是一样的。</p>
 <p><code>coercion</code> 的设计，是 Rust 中仅有的类型隐式转换，设计它的目的，是为了简化程序的书写，让代码不至于过于繁琐。把人从无尽的类型细节中解脱出来，让书写 Rust 代码变成一件快乐的事情。</p>
 <h2 id="Cow"><a href="#Cow" class="headerlink" title="Cow"></a><code>Cow</code></h2><p><code>Clone-on-write</code>，即写时克隆。本质上是一个智能指针。</p>
@@ -278,17 +269,13 @@
 </ol>
 <h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p><code>.to_mut()</code> 举例</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::borrow::Cow;<br><br><span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> cow: Cow&lt;[_]&gt; = Cow::Owned(<span class="hljs-built_in">vec!</span>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);<br><br><span class="hljs-keyword">let</span> hello = cow.to_mut();<br><br><span class="hljs-built_in">assert_eq!</span>(hello, &amp;[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);<br></code></pre></td></tr></table></figure>
-
 <p><code>.into_owned()</code> 举例</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::borrow::Cow;<br><br><span class="hljs-keyword">let</span> cow: Cow&lt;[_]&gt; = Cow::Owned(<span class="hljs-built_in">vec!</span>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);<br><br><span class="hljs-keyword">let</span> hello = cow.into_owned();<br><br><span class="hljs-built_in">assert_eq!</span>(<span class="hljs-built_in">vec!</span>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], hello);<br></code></pre></td></tr></table></figure>
-
 <p>综合举例</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::borrow::Cow;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">abs_all</span></span>(input: &amp;<span class="hljs-keyword">mut</span> Cow&lt;[<span class="hljs-built_in">i32</span>]&gt;) &#123;<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-number">0</span>..input.len() &#123;<br>        <span class="hljs-keyword">let</span> v = input[i];<br>        <span class="hljs-keyword">if</span> v &lt; <span class="hljs-number">0</span> &#123;<br>            <span class="hljs-comment">// clones into a vector the first time (if not already owned)</span><br>            input.to_mut()[i] = -v;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <h3 id="更多的例子"><a href="#更多的例子" class="headerlink" title="更多的例子"></a>更多的例子</h3><p>题目：写一个函数，过滤掉输入的字符串中的所有空格字符，并返回过滤后的字符串。</p>
 <p>对这个简单的问题，不用思考，我们都可以很快写出代码：</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">remove_spaces</span></span>(input: &amp;<span class="hljs-built_in">str</span>) -&gt; <span class="hljs-built_in">String</span> &#123;<br>   <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> buf = <span class="hljs-built_in">String</span>::with_capacity(input.len());<br><br>   <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> input.chars() &#123;<br>      <span class="hljs-keyword">if</span> c != <span class="hljs-string">&#x27; &#x27;</span> &#123;<br>         buf.push(c);<br>      &#125;<br>   &#125;<br><br>   buf<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <p>设计函数输入参数的时候，我们会停顿一下，这里，用 <code>&amp;str</code> 好呢，还是 <code>String</code> 好呢？思考一番，从性能上考虑，有如下结论：</p>
 <ol>
 <li>如果使用 <code>String</code> 则外部在调用此函数的时候，<ol>
@@ -303,7 +290,6 @@
 <p>于是我们心想改进这个算法。很快，又遇到了另一个问题，返回值是 <code>String</code> 的嘛，我不论怎样，要把 <code>&amp;str</code> 转换成 <code>String</code> 返回，始终都要经历一次复制。于是我们快要放弃了。</p>
 <p>好吧，<code>Cow</code> 君这时出马了。写出了如下代码：</p>
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::borrow::Cow;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">remove_spaces</span></span>&lt;<span class="hljs-symbol">&#x27;a</span>&gt;(input: &amp;<span class="hljs-symbol">&#x27;a</span> <span class="hljs-built_in">str</span>) -&gt; Cow&lt;<span class="hljs-symbol">&#x27;a</span>, <span class="hljs-built_in">str</span>&gt; &#123;<br>    <span class="hljs-keyword">if</span> input.contains(<span class="hljs-string">&#x27; &#x27;</span>) &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> buf = <span class="hljs-built_in">String</span>::with_capacity(input.len());<br><br>        <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> input.chars() &#123;<br>            <span class="hljs-keyword">if</span> c != <span class="hljs-string">&#x27; &#x27;</span> &#123;<br>                buf.push(c);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> Cow::Owned(buf);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> Cow::Borrowed(input);<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <p>完美解决了业务逻辑与返回值类型冲突的问题。本例可细细品味。</p>
 <p>外部程序，拿到这个 <code>Cow</code> 返回值后，按照我们上文描述的 <code>Cow</code> 的特性使用就好了。</p>
 <h2 id="Send-和-Sync"><a href="#Send-和-Sync" class="headerlink" title="Send 和 Sync"></a><code>Send</code> 和 <code>Sync</code></h2><p><code>std::marker</code> 模块中，有两个 trait：<code>Send</code> 和 <code>Sync</code>，它们与多线程安全相关。</p>
@@ -429,6 +415,21 @@
   </div>
 </div>
   
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 
 <script src="/lib/jquery/jquery.js"></script>

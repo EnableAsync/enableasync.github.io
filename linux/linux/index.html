@@ -179,14 +179,13 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 04, 2022</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2126</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2116</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
         <h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(ls -1t /var/<span class="hljs-built_in">log</span>/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |tac |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
-
 <h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><ul>
 <li>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</li>
 </ul>
@@ -197,7 +196,6 @@
 <h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
 <h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
-
 <p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
 <h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ol>
 <li><p>使用 im-config 修复</p>
@@ -207,7 +205,6 @@
 <li><p>删除 /etc/profile.d/pop-im-ibus.sh</p>
 <p><code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
-
 <p>因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
 <p><code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
 <p>相关 issue，<a target="_blank" rel="noopener" href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
@@ -215,35 +212,28 @@
 </ol>
 <h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
    <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
-
 <p>   之后重启 gnome 即可解决</p>
 <h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
 <p>参考：<a target="_blank" rel="noopener" href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
 <h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
-
 <p>执行上述命令后再运行 fluxion 即可。</p>
 <h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
 <li>先停用 systemd-resolved 服务</li>
 </ol>
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">systemctl stop systemd-resolved<br></code></pre></td></tr></table></figure>
-
-<ol start="2">
+<ol>
 <li>编辑 /etc/systemd/resolved.conf 文件</li>
 </ol>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
-
-<ol start="3">
+<ol>
 <li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
 </ol>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
-
-<ol start="4">
+<ol>
 <li>最后运行下面命令即可。</li>
 </ol>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
-
 
       </section>
       <section class="extra">
@@ -328,6 +318,21 @@
   </div>
 </div>
   
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 
 <script src="/lib/jquery/jquery.js"></script>
