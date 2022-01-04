@@ -181,7 +181,7 @@ d p[i][...">
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 04, 2022</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6614</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6616</span>
     </div>
   </div>
 </section>
@@ -222,7 +222,7 @@ d p[i-1][j-1]+1, \text { 当且仅当 } x[i]=y[j] \\
 </li>
 <li><p>$P[i]$ 遇到了原字符串的左边界</p>
 <p><img    class="lazyload" data-original="../leetcode/714e6f768e67304fb7162ecac3ae85fcf23ad82a21456e8ca55ac2c8cfd2609e-image.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image.png</span></p>
-<p>此时$P [ i<em>{mirror} ] = 1$，但是 $P [ i ]$ 赋值成 1 是不正确的，出现这种情况的原因是 $P [ i</em>{mirror} ]$ 在扩展的时候首先是 “#” == “#”，之后遇到了 “^” 和另一个字符比较，也就是到了边界，才终止循环的。而 $P [ i ]$ 并没有遇到边界，所以我们可以继续通过中心扩展法一步一步向两边扩展就行了。</p>
+<p>此时$P [ i_{mirror} ] = 1$，但是 $P [ i ]$ 赋值成 1 是不正确的，出现这种情况的原因是 $P [ i_{mirror} ]$ 在扩展的时候首先是 “#” == “#”，之后遇到了 “^” 和另一个字符比较，也就是到了边界，才终止循环的。而 $P [ i ]$ 并没有遇到边界，所以我们可以继续通过中心扩展法一步一步向两边扩展就行了。</p>
 </li>
 <li><p>$i = r$</p>
 <p>此时我们先把 P [ i ] 赋值为 0，然后通过中心扩展法一步一步扩展就行了。</p>
