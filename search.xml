@@ -35,6 +35,63 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux 的一些使用心得</title>
+    <url>/linux/linux/</url>
+    <content><![CDATA[<h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(ls -1t /var/<span class="hljs-built_in">log</span>/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |tac |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
+<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><ul>
+<li>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</li>
+</ul>
+<h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
+<h2 id="Lock-Keys"><a href="#Lock-Keys" class="headerlink" title="Lock Keys"></a>Lock Keys</h2><p>可以显示当前大小写状况</p>
+<h2 id="NetSpeed"><a href="#NetSpeed" class="headerlink" title="NetSpeed"></a>NetSpeed</h2><p>显示当前网速</p>
+<h2 id="TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）"><a href="#TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）" class="headerlink" title="TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）"></a>TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</h2><p>在顶部显示图标</p>
+<h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
+<h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
+<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
+<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ol>
+<li><p>使用 im-config 修复</p>
+</li>
+<li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
+</li>
+<li><p>删除 /etc/profile.d/pop-im-ibus.sh</p>
+<p><code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+<p>因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
+<p><code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
+<p>相关 issue，<a href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
+</li>
+</ol>
+<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
+   <figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
+<p>   之后重启 gnome 即可解决</p>
+<h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
+<p>参考：<a href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
+<h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
+<p>执行上述命令后再运行 fluxion 即可。</p>
+<h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
+<li>先停用 systemd-resolved 服务</li>
+</ol>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino">systemctl stop systemd-resolved<br></code></pre></td></tr></table></figure>
+<ol>
+<li>编辑 /etc/systemd/resolved.conf 文件</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
+<ol>
+<li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
+</ol>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>最后运行下面命令即可。</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>算法整理</title>
     <url>/uncategorized/leetcode/</url>
     <content><![CDATA[<h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><h2 id="最长公共子串"><a href="#最长公共子串" class="headerlink" title="最长公共子串"></a>最长公共子串</h2><p>状态转移方程如下：</p>
@@ -103,73 +160,40 @@ d p[i-1][j-1]+1, & t e x t_{1}[i-1]=t e x t_{2}[j-1] \\
 </ul>
 <p>代码如下：</p>
 <figure class="highlight rust"><table><tr><td class="code"><pre><code class="hljs rust"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Solution</span></span>;<br><br><span class="hljs-keyword">impl</span> Solution &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">longest_common_subsequence</span></span>(text1: <span class="hljs-built_in">String</span>, text2: <span class="hljs-built_in">String</span>) -&gt; <span class="hljs-built_in">i32</span> &#123;<br>        <span class="hljs-keyword">let</span> text1 = text1.as_bytes();<br>        <span class="hljs-keyword">let</span> text2 = text2.as_bytes();<br>        <span class="hljs-keyword">let</span> m = text1.len();<br>        <span class="hljs-keyword">let</span> n = text2.len();<br>        <span class="hljs-comment">// dp[i][j] 代表 text1[0..i] 与 text2[0..j] 的最大子序列，注意不包括第 i 和第 j 个字符</span><br>        <span class="hljs-comment">// 同理，dp 数组要循环到 m 与 n 才结束</span><br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> dp = <span class="hljs-built_in">vec!</span>[<span class="hljs-built_in">vec!</span>[<span class="hljs-number">0</span>; n + <span class="hljs-number">1</span>]; m + <span class="hljs-number">1</span>];<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>..=m &#123;<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>..=n &#123;<br>                <span class="hljs-comment">// 这里要注意，比较的是第 i-1 与第 j-1 个字符</span><br>                <span class="hljs-keyword">if</span> text1[i - <span class="hljs-number">1</span>] == text2[j - <span class="hljs-number">1</span>] &#123;<br>                    dp[i][j] = dp[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>] + <span class="hljs-number">1</span>;<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    dp[i][j] = std::cmp::max(dp[i][j - <span class="hljs-number">1</span>], dp[i - <span class="hljs-number">1</span>][j]);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> dp[m][n];<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="数学"><a href="#数学" class="headerlink" title="数学"></a>数学</h1><h2 id="寻找两个正序数组的中位数3"><a href="#寻找两个正序数组的中位数3" class="headerlink" title="寻找两个正序数组的中位数3"></a>寻找两个正序数组的中位数<sup><a href="#fn_3" id="reffn_3">3</a></sup></h2><p>中位数定义：将一个集合划分为两个长度相等的子集，其中一个子集中的元素总是大于另一个子集中的元素。</p>
+<pre><code>      left_part          |         right_part
+A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
+B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
+</code></pre><p>根据中位数的定义，我们需要找到以上的划分（设两个数组总长度为偶数）使得</p>
+<ul>
+<li>$\text{len}(left_part) = \text{len}(right_part)$</li>
+<li>$\max(left_part)=\max(right_part)$</li>
+</ul>
+<p>此时的中位数为：</p>
+<script type="math/tex; mode=display">\text{median} = \frac{\max(left\_part)+\min(right\_part)}{2}</script><p>所以现在的问题关键在于寻找这样一个划分。要寻找这样一个划分需要根据这个划分满足的两个条件：</p>
+<ul>
+<li>左边元素共有 $i + j$ 个，右边元素共有 $(m-i)+(n-j)$ 个，所以由第一个式子可以得到 $i+j=(m-i)+(n-j)$。变形得到 $i+j=\frac{m+n}{2}$。假设 $m &lt; n$，即 B 数组长于 A 数组，则 $i\in[0,m]$，有 $j = \frac{m+n}{2}-i$ 且 $j \in [0,n]$，所以只要知道 $i$ 的值，那么 $j$ 的值也是确定的。</li>
+<li>在 $(0, m)$ 中找到 $i$，满足 $A[i-1] \le B[j]$ 且 $A[i] \ge B[j-1]$ 。</li>
+</ul>
+<p>注意到第一个条件中，当 $i$ 增大的时候，$j$ 会减小以此来保证左右两部分的元素个数相同。同时 A、B 数组都是单调不递减的，所以一定存在一个最大的 $i$ 满足 $A[i-1] \le B[j]$。（当 $i$ 取 $i+1$ 时 $A[i] &gt; B[j-1]$）</p>
+<p>所以问题转化为：找一个最大的 $i$ 使得 $A[i-1] \le B[j]$。</p>
+<p>对于这个问题，我们容易枚举 $i$，同时 A、B 都是单调递增的，所以我们还能知道枚举出的 $i$ 是不是满足条件（$A[i-1] \le B[j]$），并从中找出满足条件的最大 $i$ 值即可。</p>
+<p>对于两个数组总长度为奇数的情况，可以使得 $j = \lfloor \frac{m+n+1}{2}-i \rfloor$。</p>
+<p>代码如下：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#[warn(dead_code)]</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Solution</span></span>;<br><br><span class="hljs-keyword">impl</span> Solution &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">find_median_sorted_arrays</span></span>(nums1: <span class="hljs-built_in">Vec</span>&lt;<span class="hljs-built_in">i32</span>&gt;, nums2: <span class="hljs-built_in">Vec</span>&lt;<span class="hljs-built_in">i32</span>&gt;) -&gt; <span class="hljs-built_in">f64</span> &#123;<br>        <span class="hljs-keyword">if</span> nums1.len() &gt; nums2.len() &#123;<br>            <span class="hljs-keyword">return</span> Solution::find_median_sorted_arrays(nums2, nums1);<br>        &#125;<br>        <span class="hljs-comment">// m &lt; n</span><br>        <span class="hljs-keyword">let</span> (m, n) = (nums1.len(), nums2.len());<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> left = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> right = m;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> pos = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> median1 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> median2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> left &lt;= right &#123;<br>            <span class="hljs-keyword">let</span> i = (left + right) / <span class="hljs-number">2</span>;<br>            <span class="hljs-keyword">let</span> j = (m + n + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> - i;<br>            <span class="hljs-keyword">let</span> nums_im1 = <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> &#123; -<span class="hljs-number">0x3f3f3f3f</span> &#125; <span class="hljs-keyword">else</span> &#123; nums1[i - <span class="hljs-number">1</span>] &#125;;<br>            <span class="hljs-keyword">let</span> nums_i = <span class="hljs-keyword">if</span> i == m &#123; <span class="hljs-number">0x3f3f3f3f</span> &#125; <span class="hljs-keyword">else</span> &#123; nums1[i] &#125;;<br>            <span class="hljs-keyword">let</span> nums_jm1 = <span class="hljs-keyword">if</span> j == <span class="hljs-number">0</span> &#123; -<span class="hljs-number">0x3f3f3f3f</span> &#125; <span class="hljs-keyword">else</span> &#123; nums2[j - <span class="hljs-number">1</span>] &#125;;<br>            <span class="hljs-keyword">let</span> nums_j = <span class="hljs-keyword">if</span> j == n &#123; <span class="hljs-number">0x3f3f3f3f</span> &#125; <span class="hljs-keyword">else</span> &#123; nums2[j] &#125;;<br>            <span class="hljs-keyword">if</span> nums_im1 &lt;= nums_j &#123;<br>                median1 = std::cmp::max(nums_im1, nums_jm1);<br>                median2 = std::cmp::min(nums_i, nums_j);<br>                left = i + <span class="hljs-number">1</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                right = i - <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (m + n) &amp; <span class="hljs-number">1</span> == <span class="hljs-number">0</span> &#123;<br>            (median1 + median2) <span class="hljs-keyword">as</span> <span class="hljs-built_in">f64</span> / <span class="hljs-number">2.0</span><br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            median1 <span class="hljs-keyword">as</span> <span class="hljs-built_in">f64</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><blockquote id="fn_1">
 <sup>1</sup>. <a href="https://leetcode-cn.com/problems/longest-palindromic-substring/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-bao-gu">https://leetcode-cn.com/problems/longest-palindromic-substring/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-bao-gu</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
 </blockquote>
 <blockquote id="fn_2">
 <sup>2</sup>. <a href="https://oi-wiki.org/string/manacher/">https://oi-wiki.org/string/manacher/</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
 </blockquote>
+<blockquote id="fn_3">
+<sup>3</sup>. <a href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays/solution/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/">https://leetcode-cn.com/problems/median-of-two-sorted-arrays/solution/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/</a><a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
+</blockquote>
 ]]></content>
       <tags>
         <tag>data structure, algorithm</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Linux 的一些使用心得</title>
-    <url>/linux/linux/</url>
-    <content><![CDATA[<h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(ls -1t /var/<span class="hljs-built_in">log</span>/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |tac |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
-<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><ul>
-<li>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</li>
-</ul>
-<h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
-<h2 id="Lock-Keys"><a href="#Lock-Keys" class="headerlink" title="Lock Keys"></a>Lock Keys</h2><p>可以显示当前大小写状况</p>
-<h2 id="NetSpeed"><a href="#NetSpeed" class="headerlink" title="NetSpeed"></a>NetSpeed</h2><p>显示当前网速</p>
-<h2 id="TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）"><a href="#TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）" class="headerlink" title="TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）"></a>TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</h2><p>在顶部显示图标</p>
-<h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
-<h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
-<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
-<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ol>
-<li><p>使用 im-config 修复</p>
-</li>
-<li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
-</li>
-<li><p>删除 /etc/profile.d/pop-im-ibus.sh</p>
-<p><code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
-<p>因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
-<p><code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
-<p>相关 issue，<a href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
-</li>
-</ol>
-<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
-   <figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
-<p>   之后重启 gnome 即可解决</p>
-<h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
-<p>参考：<a href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
-<h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
-<p>执行上述命令后再运行 fluxion 即可。</p>
-<h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
-<li>先停用 systemd-resolved 服务</li>
-</ol>
-<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino">systemctl stop systemd-resolved<br></code></pre></td></tr></table></figure>
-<ol>
-<li>编辑 /etc/systemd/resolved.conf 文件</li>
-</ol>
-<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
-<ol>
-<li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
-</ol>
-<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
-<ol>
-<li>最后运行下面命令即可。</li>
-</ol>
-<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
   </entry>
   <entry>
     <title>Rust的一些学习心得</title>
