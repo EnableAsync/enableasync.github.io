@@ -273,7 +273,83 @@ impl Solution {
 }
 ```
 
+# 数学
+
+## 寻找两个正序数组的中位数[^3]
+
+中位数定义：将一个集合划分为两个长度相等的子集，其中一个子集中的元素总是大于另一个子集中的元素。
+
+          left_part          |         right_part
+    A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
+    B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
+
+根据中位数的定义，我们需要找到以上的划分（设两个数组总长度为偶数）使得
+
+- $\text{len}(left\_part) = \text{len}(right\_part)$
+- $\max(left\_part)=\max(right\_part)$
+
+此时的中位数为：
+
+$$\text{median} = \frac{\max(left\_part)+\min(right\_part)}{2}$$
+
+所以现在的问题关键在于寻找这样一个划分。要寻找这样一个划分需要根据这个划分满足的两个条件：
+
+- 左边元素共有 $i + j$ 个，右边元素共有 $(m-i)+(n-j)$ 个，所以由第一个式子可以得到 $i+j=(m-i)+(n-j)$。变形得到 $i+j=\frac{m+n}{2}$。假设 $m < n$，即 B 数组长于 A 数组，则 $i\in[0,m]$，有 $j = \frac{m+n}{2}-i$ 且 $j \in [0,n]$，所以只要知道 $i$ 的值，那么 $j$ 的值也是确定的。
+- 在 $(0, m)$ 中找到 $i$，满足 $A[i-1] \le B[j]$ 且 $A[i] \ge B[j-1]$ 。
+
+注意到第一个条件中，当 $i$ 增大的时候，$j$ 会减小以此来保证左右两部分的元素个数相同。同时 A、B 数组都是单调不递减的，所以一定存在一个最大的 $i$ 满足 $A[i-1] \le B[j]$。（当 $i$ 取 $i+1$ 时 $A[i] > B[j-1]$）
+
+所以问题转化为：找一个最大的 $i$ 使得 $A[i-1] \le B[j]$。
+
+对于这个问题，我们容易枚举 $i$，同时 A、B 都是单调递增的，所以我们还能知道枚举出的 $i$ 是不是满足条件（$A[i-1] \le B[j]$），并从中找出满足条件的最大 $i$ 值即可。
+
+对于两个数组总长度为奇数的情况，可以使得 $j = \lfloor \frac{m+n+1}{2}-i \rfloor$。
+
+代码如下：
+
+```rust
+#[warn(dead_code)]
+struct Solution;
+
+impl Solution {
+    pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
+        if nums1.len() > nums2.len() {
+            return Solution::find_median_sorted_arrays(nums2, nums1);
+        }
+        // m < n
+        let (m, n) = (nums1.len(), nums2.len());
+        let mut left = 0;
+        let mut right = m;
+        let mut pos = 0;
+        let mut median1 = 0;
+        let mut median2 = 0;
+        while left <= right {
+            let i = (left + right) / 2;
+            let j = (m + n + 1) / 2 - i;
+            let nums_im1 = if i == 0 { -0x3f3f3f3f } else { nums1[i - 1] };
+            let nums_i = if i == m { 0x3f3f3f3f } else { nums1[i] };
+            let nums_jm1 = if j == 0 { -0x3f3f3f3f } else { nums2[j - 1] };
+            let nums_j = if j == n { 0x3f3f3f3f } else { nums2[j] };
+            if nums_im1 <= nums_j {
+                median1 = std::cmp::max(nums_im1, nums_jm1);
+                median2 = std::cmp::min(nums_i, nums_j);
+                left = i + 1;
+            } else {
+                right = i - 1;
+            }
+        }
+        if (m + n) & 1 == 0 {
+            (median1 + median2) as f64 / 2.0
+        } else {
+            median1 as f64
+        }
+    }
+}
+```
 
 # 参考
+
 [^1]: https://leetcode-cn.com/problems/longest-palindromic-substring/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-bao-gu
 [^2]: https://oi-wiki.org/string/manacher/
+
+[^3]: https://leetcode-cn.com/problems/median-of-two-sorted-arrays/solution/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/
