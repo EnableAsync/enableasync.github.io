@@ -6,6 +6,12 @@ image: https://dingxuewen.com/leetcode-js-leviding/leetcode.png
 mathjax: true
 ---
 
+# 注意事项
+
+## `rust` 中 `dbg!` 超时
+
+在 `rust` 中使用 `dbg!` 的时候，在题目判定时，可能会因为 `dbg!` 超时，提交代码的时候要去掉 `dbg!`
+
 # 字符串
 
 ## 最长公共子串
@@ -346,6 +352,59 @@ impl Solution {
     }
 }
 ```
+
+## 三数之和
+
+### 朴素算法
+
+排序之后三重循环，判断三个数之和是否为 $0$，时间复杂度 $O(n^3)$。
+
+排序的目的是为了容易地去除重复数字，因为排序之后只需要判断当前和前一个元素是否相等就可以知道是否是重复数字。
+
+### 排序后双指针
+
+注意到排序之后整个数组是单调非递减的，我们需要 $a+b+c=0$，当固定了 $a$ 和 $b$ 的时候，$c$ 从大到小地判断是否有 $a+b+c=0$ 即可。看似是最外层对应 $a$ 的循环嵌套对应 $b$ 的循环，并在其中加上了 $c$ 递减的循环，但是实际上注意到当 $b$ 与 $c$ 是同一个元素时，如果仍然不满足 $a+b+c=0$，那么 $c$ 继续向左减小就与之前的数字重复了，所以对于每一次 $b$ 中的循环，最多运行 $n$ 次，外边再嵌套 $a$ 的循环，时间复杂度为 $O(n^2)$。
+
+代码如下：
+
+```rust
+#[warn(dead_code)]
+struct Solution;
+
+impl Solution {
+    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        nums.sort();
+        let len = nums.len();
+        let mut ans = Vec::new();
+        for i in 0..len {
+            // 防止取到相同的数字
+            if i > 0 && nums[i - 1] == nums[i] {
+                continue;
+            }
+            let mut third = len - 1;
+            // 注意这里开始位置是 i+1，目的是为了不与 a 取重
+            for j in i + 1..len {
+                // 注意这里判定条件是 j > i+1 否则会取不到与 a 相同的数字
+                if j > i + 1 && nums[j - 1] == nums[j] {
+                    continue;
+                }
+                while j < third && nums[i] + nums[j] + nums[third] > 0 {
+                    third = third - 1;
+                }
+                if j == third {
+                    break;
+                }
+                if nums[i] + nums[j] + nums[third] == 0 {
+                    ans.push(vec![nums[i], nums[j], nums[third]]);
+                }
+            }
+        }
+        ans
+    }
+}
+```
+
+
 
 # 参考
 
