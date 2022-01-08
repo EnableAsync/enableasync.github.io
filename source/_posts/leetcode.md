@@ -404,7 +404,29 @@ impl Solution {
 }
 ```
 
+## 盛最多水的容器[^4]
 
+$$
+area = (right - left) * \min (height[left], height[right])
+$$
+
+由上面的公式可以知道，面积由两部分共同决定：
+
+- 宽度
+- 高度
+
+所以考虑尽可能地增加宽度和高度。假设左指针指向的数为 $x$，右指针指向的数为 $y$，假设 $x < y$，距离为 $t$，接下来进行具体分析：
+
+1. $area = \min(x, y) * t = x * t$，当左指针不变的时候，右指针无论在哪都不会影响容器的水量了，水量是固定的 $x*t$。
+2. 所以考虑左指针向右移动，这样才有可能取到更大的水量。
+3. 同理左指针指向的数大于右指针指向的数的时候，左移右指针才有可能取到更大的水量。
+4. 重复以上步骤就可以得到最大水量。
+
+总时间复杂度为 $O(n)$。
+
+注解：
+
+- 对于双指针问题，两个指针的初始位置不一定都在最左或者最右，要灵活地设置指针位置。
 
 # 参考
 
@@ -412,3 +434,5 @@ impl Solution {
 [^2]: https://oi-wiki.org/string/manacher/
 
 [^3]: https://leetcode-cn.com/problems/median-of-two-sorted-arrays/solution/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/
+[^4]: https://leetcode-cn.com/problems/container-with-most-water/solution/sheng-zui-duo-shui-de-rong-qi-by-leetcode-solution/
+
