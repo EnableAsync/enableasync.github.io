@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 04, 2022</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>13054</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>13056</span>
     </div>
   </div>
 </section>
@@ -286,7 +286,7 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 </ul>
 <p>所以考虑尽可能地增加宽度和高度。假设左指针指向的数为 $x$，右指针指向的数为 $y$，假设 $x &lt; y$，距离为 $t$，接下来进行具体分析：</p>
 <ol>
-<li>$area = \min(x, y) <em> t = x </em> t$，当左指针不变的时候，右指针无论在哪都不会影响容器的水量了，水量是固定的 $x*t$。</li>
+<li>$ area = \min(x, y) <em> t = x </em> t $，当左指针不变的时候，右指针无论在哪都不会影响容器的水量了，水量是固定的 $x*t$。</li>
 <li>所以考虑左指针向右移动，这样才有可能取到更大的水量。</li>
 <li>同理左指针指向的数大于右指针指向的数的时候，左移右指针才有可能取到更大的水量。</li>
 <li>重复以上步骤就可以得到最大水量。</li>
