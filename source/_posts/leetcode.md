@@ -428,6 +428,59 @@ $$
 
 - 对于双指针问题，两个指针的初始位置不一定都在最左或者最右，要灵活地设置指针位置。
 
+## 最接近三数之和
+
+与「盛最多水的容器」和「三数之和」类似，代码如下：
+
+```rust
+#[warn(dead_code)]
+struct Solution;
+
+impl Solution {
+    pub fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
+        nums.sort();
+        let len = nums.len();
+        let mut ans = 0;
+        let mut diff = 0x3f3f3f3f;
+        for i in 0..len {
+            if i > 0 && nums[i] == nums[i - 1] {
+                continue;
+            }
+            let mut j = i + 1;
+            let mut k = len - 1;
+            while j < k {
+                //dbg!((i, j , k));
+                let sum = nums[i] + nums[j] + nums[k];
+                if sum == target {
+                    return sum;
+                }
+                let tmp = (sum - target).abs();
+                if tmp < diff {
+                    diff = tmp;
+                    ans = sum;
+                }
+                if sum > target {
+                    let mut k0 = k - 1;
+                    while j < k0 && nums[k0] == nums[k] {
+                        k0 = k0 - 1;
+                    }
+                    k = k0;
+                } else {
+                    let mut j0 = j + 1;
+                    while j0 < k && nums[j0] == nums[j] {
+                        j0 = j0 + 1;
+                    }
+                    j = j0;
+                }
+            }
+        }
+        ans
+    }
+}
+```
+
+
+
 # 参考
 
 [^1]: https://leetcode-cn.com/problems/longest-palindromic-substring/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-bao-gu
