@@ -479,6 +479,36 @@ impl Solution {
 }
 ```
 
+# 数据结构
+
+## 合并K个升序链表
+
+使用优先队列即可。
+
+```rust
+use std::{cmp::Reverse, collections::BinaryHeap};
+impl Solution {
+    pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
+        let mut priority_queue = BinaryHeap::new();
+        let mut ret = Box::new(ListNode::new(0));
+        let mut ptr = &mut ret;
+        for list in lists {
+            let mut plist = &list;
+            while let Some(node) = plist {
+                priority_queue.push(Reverse(node.val));
+                plist = &node.next;
+            }
+        }
+
+        while let Some(Reverse(node)) = priority_queue.pop() {
+            ptr.next = Some(Box::new(ListNode::new(node)));
+            ptr = ptr.next.as_mut().unwrap();
+        }
+        ret.next
+    }
+}
+```
+
 
 
 # 参考
