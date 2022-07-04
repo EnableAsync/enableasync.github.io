@@ -3,6 +3,48 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+# 更新 ubuntu 22.04 之后网易云音乐无法使用
+修改 `/opt/netease/netease-cloud-music/netease-cloud-music.bash` 为以下内容
+```bash
+#!/bin/sh
+HERE="$(dirname "$(readlink -f "${0}")")"
+export LD_LIBRARY_PATH="${HERE}"/libs
+export QT_PLUGIN_PATH="${HERE}"/plugins 
+export QT_QPA_PLATFORM_PLUGIN_PATH="${HERE}"/plugins/platforms
+cd /lib/x86_64-linux-gnu/
+exec "${HERE}"/netease-cloud-music $@
+
+```
+
+# 关闭无用启动项
+
+```bash
+# 查看启动项
+ls -l /etc/xdg/autostart
+
+# 重命名
+sudo mv something something.bak
+```
+
+
+
+# Vmware 更新内核失败
+
+```bash
+git clone https://github.com/mkubecek/vmware-host-modules.git
+git checkout <your_version>
+sudo make
+sudo make install
+```
+
+
+
+# 双系统 Windows 更新失败
+
+我这里双系统 Windows 更新失败的原因是 Windows 引导出现了问题，可以进入 Windows 输入 `msconfig` 查看引导选项卡下是否有内容，我是用过 systemd boot 来引导的 Windows，所以没有出现内容。
+
+在 BIOS 中更改成直接引导 Windows 之后便可以正常更新了。
+
 # 按时间降序最近安装的程序
 
 ```bash
