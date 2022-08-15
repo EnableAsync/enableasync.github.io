@@ -3,7 +3,21 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+# Linux 下抓 HTTPS 包
+
+## 使用 MITMProxy
+
+1. 运行 MITMProxy
+
+```bash
+docker run --rm -it -p 18080:8080 -p 127.0.0.1:8081:8081 -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy  mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0 --set block_global=false --set ssl_insecure=true
+```
+
+2. 导入证书至浏览器或其他工具
+2. 使用代理访问 HTTPS 页面
+
 # 更新 ubuntu 22.04 之后网易云音乐无法使用
+
 修改 `/opt/netease/netease-cloud-music/netease-cloud-music.bash` 为以下内容
 ```bash
 #!/bin/sh
@@ -55,9 +69,17 @@ done | awk -F ":a" '{print $1 " :a" $2}' |column -t
 
 # 常用的一些 gnome extensions
 
+## Unite
+
+最大化时隐藏标题栏
+
+## Clear Top Bar
+
+状态栏变成透明的
+
 ## ddterm
 
-- 按 `F10` 快速启动命令行，再按 `F10` 隐藏，十分方便
+按 `F10` 快速启动命令行，再按 `F10` 隐藏，十分方便
 
 ## Desktop Icons NG(DING)
 

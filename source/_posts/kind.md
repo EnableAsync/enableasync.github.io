@@ -74,6 +74,7 @@ kind export kubeconfig
 ```bash
 # Add kubernetes-dashboard repository
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+helm repo update
 # Deploy a Helm Release named "dashboard" using the kubernetes-dashboard chart
 helm install dashboard kubernetes-dashboard/kubernetes-dashboard
 ```
@@ -96,6 +97,14 @@ Forwarding from [::1]:8443 -> 8443
 ```
 
 说明转发成功，此时访问 https://127.0.0.1:8443/ ，注意是 https
+
+### 2.1 或者可以不转发使用 service 暴露服务
+
+这里为了测试使用了 NodePort 方式暴露
+
+```bash
+kubectl expose deploy dashboard-kubernetes-dashboard --name dashboard-nodeport --port 8443 --target-port=8443 --type=NodePort
+```
 
 ### 3. 生成 token
 
