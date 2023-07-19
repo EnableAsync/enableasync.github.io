@@ -117,11 +117,13 @@ sudo ifconfig wlo1 up
 
 ## Fcitx 失效
 
-1. 使用 im-config 修复
+- 使用 im-config 修复
 
-2. 可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment
+- 可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment
 
-3. 删除 /etc/profile.d/pop-im-ibus.sh
+- 使用 `fcitx5-diagnose` 命令根据提示设置环境变量
+
+- 删除 `/etc/profile.d/pop-im-ibus.sh` （pop os）
    
    `/etc/profile.d/pop-im-ibus.sh` （源文件： /etc/gdm3/Xsession ）设置了环境变量 `XMODIFIERS` ，在 `/etc/X11/Xsession.d/70im-config_launch` 中有如下代码：
    
