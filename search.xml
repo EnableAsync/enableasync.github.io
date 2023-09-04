@@ -39,7 +39,8 @@
   <entry>
     <title>Linux 的一些使用心得</title>
     <url>/linux/linux/</url>
-    <content><![CDATA[<h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
+    <content><![CDATA[<h1 id="关闭-kde-文件索引程序"><a href="#关闭-kde-文件索引程序" class="headerlink" title="关闭 kde 文件索引程序"></a>关闭 kde 文件索引程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">balooctl <span class="hljs-built_in">suspend</span><br>balooctl <span class="hljs-built_in">disable</span><br></code></pre></td></tr></table></figure>
+<h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
 <li>运行 MITMProxy</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">docker run --<span class="hljs-built_in">rm</span> -it -p 18080:8080 -p 127.0.0.1:8081:8081 -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy  mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0 --<span class="hljs-built_in">set</span> block_global=<span class="hljs-literal">false</span> --<span class="hljs-built_in">set</span> ssl_insecure=<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
