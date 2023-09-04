@@ -3,6 +3,12 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+# 关闭 kde 文件索引程序
+```bash
+balooctl suspend
+balooctl disable
+```
+
 # Linux 下抓 HTTPS 包
 
 ## 使用 MITMProxy
