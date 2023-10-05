@@ -267,6 +267,10 @@
     <title>算法整理</title>
     <url>/uncategorized/leetcode/</url>
     <content><![CDATA[<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><h2 id="rust-中-dbg-超时"><a href="#rust-中-dbg-超时" class="headerlink" title="rust 中 dbg! 超时"></a><code>rust</code> 中 <code>dbg!</code> 超时</h2><p>在 <code>rust</code> 中使用 <code>dbg!</code> 的时候，在题目判定时，可能会因为 <code>dbg!</code> 超时，提交代码的时候要去掉 <code>dbg!</code></p>
+<h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><h2 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h2><p>第 27、977 题就是经典的双指针题目。</p>
+<h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h2><p>注意，使用滑动窗口的时候，for 循环代表滑动窗口的结尾，否则又会陷入两个 for 的困境。</p>
+<h1 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h1><p>链表对于有插入、交换或者删除的操作的时候，一般加一个虚拟头节点更好处理。</p>
+<h2 id="双指针-1"><a href="#双指针-1" class="headerlink" title="双指针"></a>双指针</h2><p>经典的一个 pre 指针，一个 cur 指针：可以解决反转链表、交换节点等问题。<br>还有一个 fast 指针，一个 slow 指针：可以解决删除第 n 个元素的问题。</p>
 <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><h2 id="最长公共子串"><a href="#最长公共子串" class="headerlink" title="最长公共子串"></a>最长公共子串</h2><p>状态转移方程如下：</p>
 <script type="math/tex; mode=display">
 d p[i][j]=\left\{\begin{array}{l}
