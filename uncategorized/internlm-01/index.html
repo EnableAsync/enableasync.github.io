@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>internlm-01-书生·浦语大模型全链路开源体系 - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="书生·浦语大模型全链路开源体系大模型概述大模型成为了热...">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">internlm-01-书生·浦语大模型全链路开源体系</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">internlm-01-书生·浦语大模型全链路开源体系</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 04, 2024</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1261</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
+<p><img    class="lazyload" data-original="internlm-01/image.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">大模型成为热门关键词</span></p>
+<h3 id="大模型成为了发展通用人工智能的重要途径"><a href="#大模型成为了发展通用人工智能的重要途径" class="headerlink" title="大模型成为了发展通用人工智能的重要途径"></a>大模型成为了发展通用人工智能的重要途径</h3><p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104194412083.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104194412083</span></p>
+<h2 id="书生·浦语大模型"><a href="#书生·浦语大模型" class="headerlink" title="书生·浦语大模型"></a>书生·浦语大模型</h2><h3 id="开源历程"><a href="#开源历程" class="headerlink" title="开源历程"></a>开源历程</h3><p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104194442165.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104194442165</span></p>
+<p>书生·浦语大模型从 6.7 开始，开源了 InternLM-7B、InternLM-Chat-7B、Lagent、InternLM-20B 等项目。</p>
+<h3 id="系列模型"><a href="#系列模型" class="headerlink" title="系列模型"></a>系列模型</h3><p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104194623711.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104194623711</span></p>
+<h3 id="性能比较"><a href="#性能比较" class="headerlink" title="性能比较"></a>性能比较</h3><p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104194715248.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104194715248</span></p>
+<p>可以看出，书生·浦语 20B 模型全面领先相近量级的开源模型，并且达到了和 Llama2-70B 相近的水平。</p>
+<h2 id="书生·浦语全链条开源体系"><a href="#书生·浦语全链条开源体系" class="headerlink" title="书生·浦语全链条开源体系"></a>书生·浦语全链条开源体系</h2><h3 id="体系概述"><a href="#体系概述" class="headerlink" title="体系概述"></a>体系概述</h3><p><a target="_blank" rel="noopener" href="https://github.com/orgs/InternLM/repositories?type=all">InternLM (github.com)</a></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104194911061.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104194911061</span></p>
+<h3 id="数据开源"><a href="#数据开源" class="headerlink" title="数据开源"></a>数据开源</h3><p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104194948553.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104194948553</span></p>
+<h3 id="预训练开源"><a href="#预训练开源" class="headerlink" title="预训练开源"></a>预训练开源</h3><p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195041865.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195041865</span></p>
+<h3 id="微调开源"><a href="#微调开源" class="headerlink" title="微调开源"></a>微调开源</h3><p><a target="_blank" rel="noopener" href="https://github.com/InternLM/xtuner">InternLM/xtuner: A toolkit for efficiently fine-tuning LLM (InternLM, Llama, Baichuan, Qwen, ChatGLM) (github.com)</a></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195250624.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195250624</span></p>
+<h3 id="评测开源"><a href="#评测开源" class="headerlink" title="评测开源"></a>评测开源</h3><p><a target="_blank" rel="noopener" href="https://github.com/open-compass/OpenCompass/">open-compass/opencompass: OpenCompass is an LLM evaluation platform, supporting a wide range of models (LLaMA, LLaMa2, ChatGLM2, ChatGPT, Claude, etc) over 50+ datasets. (github.com)</a></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195322676.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195322676</span></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195342281.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195342281</span></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195354357.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195354357</span></p>
+<h3 id="部署开源"><a href="#部署开源" class="headerlink" title="部署开源"></a>部署开源</h3><p><a target="_blank" rel="noopener" href="https://github.com/InternLM/lmdeploy">InternLM/lmdeploy: LMDeploy is a toolkit for compressing, deploying, and serving LLMs. (github.com)</a></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195614821.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195614821</span></p>
+<h3 id="智能体开源"><a href="#智能体开源" class="headerlink" title="智能体开源"></a>智能体开源</h3><p><a target="_blank" rel="noopener" href="https://github.com/InternLM/lagent">InternLM/lagent: A lightweight framework for building LLM-based agents (github.com)</a></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195658280.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195658280</span></p>
+<h3 id="智能体工具箱"><a href="#智能体工具箱" class="headerlink" title="智能体工具箱"></a>智能体工具箱</h3><p><a target="_blank" rel="noopener" href="https://github.com/InternLM/agentlego">InternLM/agentlego: Enhance LLM agents with versatile tool APIs (github.com)</a></p>
+<p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104195750076.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104195750076</span></p>
+<h2 id="从模型到应用"><a href="#从模型到应用" class="headerlink" title="从模型到应用"></a>从模型到应用</h2><p><img    class="lazyload" data-original="./internlm-01.assets/image-20240104194844022.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20240104194844022</span></p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/uncategorized/internlm-01/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;internlm-01&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;internlm-01&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+        
+  <nav class="nav">
+    <a href="/linux/linux/"><i class="iconfont iconleft"></i>Linux 的一些使用心得</a>
+    <a href="/uncategorized/leetcode/">算法整理<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%A6%E7%94%9F%C2%B7%E6%B5%A6%E8%AF%AD%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%85%A8%E9%93%BE%E8%B7%AF%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB"><span class="toc-text">书生·浦语大模型全链路开源体系</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%A6%82%E8%BF%B0"><span class="toc-text">大模型概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%88%90%E4%B8%BA%E4%BA%86%E7%83%AD%E9%97%A8%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-text">大模型成为了热门关键词</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%88%90%E4%B8%BA%E4%BA%86%E5%8F%91%E5%B1%95%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E9%87%8D%E8%A6%81%E9%80%94%E5%BE%84"><span class="toc-text">大模型成为了发展通用人工智能的重要途径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%A6%E7%94%9F%C2%B7%E6%B5%A6%E8%AF%AD%E5%A4%A7%E6%A8%A1%E5%9E%8B"><span class="toc-text">书生·浦语大模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E5%8E%86%E7%A8%8B"><span class="toc-text">开源历程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-text">系列模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83"><span class="toc-text">性能比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%A6%E7%94%9F%C2%B7%E6%B5%A6%E8%AF%AD%E5%85%A8%E9%93%BE%E6%9D%A1%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB"><span class="toc-text">书生·浦语全链条开源体系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%93%E7%B3%BB%E6%A6%82%E8%BF%B0"><span class="toc-text">体系概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BC%80%E6%BA%90"><span class="toc-text">数据开源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E5%BC%80%E6%BA%90"><span class="toc-text">预训练开源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E8%B0%83%E5%BC%80%E6%BA%90"><span class="toc-text">微调开源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E5%BC%80%E6%BA%90"><span class="toc-text">评测开源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E5%BC%80%E6%BA%90"><span class="toc-text">部署开源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%80%E6%BA%90"><span class="toc-text">智能体开源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93%E5%B7%A5%E5%85%B7%E7%AE%B1"><span class="toc-text">智能体工具箱</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%A8%A1%E5%9E%8B%E5%88%B0%E5%BA%94%E7%94%A8"><span class="toc-text">从模型到应用</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
