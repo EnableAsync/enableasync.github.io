@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
-    <url>/uncategorized/internlm-01/</url>
+    <url>/internlm/internlm-01/</url>
     <content><![CDATA[<h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
 <p><img  src="image.png"  ><span class="image-caption">大模型成为热门关键词</span></p>
 <h3 id="大模型成为了发展通用人工智能的重要途径"><a href="#大模型成为了发展通用人工智能的重要途径" class="headerlink" title="大模型成为了发展通用人工智能的重要途径"></a>大模型成为了发展通用人工智能的重要途径</h3><p><img  src="image-20240104194412083.png"  ><span class="image-caption">大模型成为了发展通用人工智能的重要途径</span></p>
@@ -29,6 +29,9 @@
 <p><img  src="image-20240104195750076.png"  ><span class="image-caption">智能体工具箱</span></p>
 <h2 id="从模型到应用"><a href="#从模型到应用" class="headerlink" title="从模型到应用"></a>从模型到应用</h2><p><img  src="image-20240104194844022.png"  ><span class="image-caption">如何从模型到应用</span></p>
 ]]></content>
+      <categories>
+        <category>internlm</category>
+      </categories>
   </entry>
   <entry>
     <title>Kind 的一些使用心得</title>
