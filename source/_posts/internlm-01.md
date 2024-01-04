@@ -2,6 +2,7 @@
 title: Internlm-01-书生·浦语大模型全链路开源体系
 date: 2024-01-04 19:37:42
 tags:
+categories: internlm
 typora-root-url: ./internlm-01
 ---
 
