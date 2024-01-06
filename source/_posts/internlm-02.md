@@ -1,5 +1,5 @@
 ---
-title: Internlm-01-浦语大模型趣味 Demo
+title: Internlm-02-浦语大模型趣味 Demo
 date: 2024-01-04 19:37:42
 tags:
 categories: internlm
