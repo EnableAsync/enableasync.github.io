@@ -585,3 +585,17 @@ demo.launch()
 ![Langchain+InternLM问答](Langchain+InternLM问答.png)
 
 如图，能够正确地回答知识库中的知识。
+
+## 问题解决以及 Langchain 调试
+
+我们在遇到奇怪问题的时候，想要调试 Langchain，这个时候可以借助 Langchain 的全局设置设置调试模式，设置方式如下所示：
+
+[Debugging | 🦜️🔗 Langchain](https://python.langchain.com/docs/guides/debugging)
+
+```python
+from langchain.globals import set_verbose
+
+set_verbose(True)
+```
+
+![langchain 的调试输出](langchain-debug.png)
