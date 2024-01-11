@@ -618,7 +618,7 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 ![加载模型](loading.png)
 
-因为目前在 OpenXLab 上无法使用 GPU，所以模型等待进一步部署中。
+因为目前在 OpenXLab 上无法使用 GPU，在等待开发人员审批使用 GPU，所以模型等待进一步部署中。
 
 ## 参考内容
 
