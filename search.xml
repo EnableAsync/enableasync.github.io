@@ -428,7 +428,7 @@
 <p>如图，能够正确地回答知识库中的知识。</p>
 <h2 id="问题解决以及-Langchain-调试"><a href="#问题解决以及-Langchain-调试" class="headerlink" title="问题解决以及 Langchain 调试"></a>问题解决以及 Langchain 调试</h2><p>我们在遇到奇怪问题的时候，想要调试 Langchain，这个时候可以借助 Langchain 的全局设置设置调试模式，设置方式如下所示：</p>
 <p><a href="https://python.langchain.com/docs/guides/debugging">Debugging | 🦜️🔗 Langchain</a></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> langchain.<span class="hljs-built_in">globals</span> <span class="hljs-keyword">import</span> set_verbose<br><br>set_verbose(<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> langchain.<span class="hljs-built_in">globals</span> <span class="hljs-keyword">import</span> set_verbose <span class="hljs-comment"># 我这里用的 langchain 版本为 0.1.0</span><br><br>set_verbose(<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
 <p><img  src="langchain-debug.png"  ><span class="image-caption">langchain 的调试输出</span></p>
 <h2 id="将应用部署在-OpenXLab-上"><a href="#将应用部署在-OpenXLab-上" class="headerlink" title="将应用部署在 OpenXLab 上"></a>将应用部署在 OpenXLab 上</h2><p><a href="https://openxlab.org.cn/apps/detail/EnableAsync/network-bot">计算机网络问答机器人</a></p>
 <h3 id="Sqlite-问题1"><a href="#Sqlite-问题1" class="headerlink" title="Sqlite 问题1"></a>Sqlite 问题<sup><a href="#fn_1" id="reffn_1">1</a></sup></h3><p>OpenXLab 上的 sqlite3 版本低于我们项目用的 Chroma 要求。可参考<a href="https://link.zhihu.com/?target=https%3A//docs.trychroma.com/troubleshooting%23sqlite"> Troubleshooting | Chroma (trychroma.com)</a>，在 <code>requirements.txt</code> 中添加 <code>pysqlite3-binary</code> ，之后加载 sqlite3 库来绕过这个问题。否则就要写脚本在运行时自己安装上更新版本的sqlite3了。下面是修改加载 sqlite3 库的 trick 命令：</p>
@@ -440,6 +440,407 @@
 <h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a>参考内容</h2><blockquote id="fn_1">
 <sup>1</sup>. <a href="https://zhuanlan.zhihu.com/p/676719586">书生・浦语大模型实战营第三课作业(基础+进阶) - 知乎 (zhihu.com)</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
 </blockquote>
+]]></content>
+      <categories>
+        <category>internlm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>XTuner 大模型单卡低成本微调实战</title>
+    <url>/internlm/internlm-04/</url>
+    <content><![CDATA[<h1 id="XTuner-大模型单卡低成本微调实战"><a href="#XTuner-大模型单卡低成本微调实战" class="headerlink" title="XTuner 大模型单卡低成本微调实战"></a>XTuner 大模型单卡低成本微调实战</h1><p>微调前<br><img  src="官方回答.png"  ><span class="image-caption">官方回答</span></p>
+<p>微调后<br><img  src="微调后.png"  ><span class="image-caption">微调后.png</span></p>
+<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1 概述"></a>1 概述</h2><h3 id="1-1-XTuner"><a href="#1-1-XTuner" class="headerlink" title="1.1 XTuner"></a>1.1 XTuner</h3><p>一个大语言模型微调工具箱。由 MMRazor 和 MMDeploy 联合开发。</p>
+<h3 id="1-2-支持的开源LLM-2023-11-01"><a href="#1-2-支持的开源LLM-2023-11-01" class="headerlink" title="1.2 支持的开源LLM (2023.11.01)"></a>1.2 支持的开源LLM (2023.11.01)</h3><ul>
+<li><a href="https://huggingface.co/internlm/internlm-7b">InternLM</a></li>
+<li><a href="https://huggingface.co/meta-llama">Llama，Llama2</a></li>
+<li><a href="https://huggingface.co/THUDM/chatglm2-6b">ChatGLM2</a>，<a href="https://huggingface.co/THUDM/chatglm3-6b-base">ChatGLM3</a></li>
+<li><a href="https://huggingface.co/Qwen/Qwen-7B">Qwen</a></li>
+<li><a href="https://huggingface.co/baichuan-inc/Baichuan-7B">Baichuan</a>，<a href="https://huggingface.co/baichuan-inc/Baichuan2-7B-Base">Baichuan2</a></li>
+<li><a href="https://huggingface.co/HuggingFaceH4/zephyr-7b-beta">Zephyr</a> </li>
+</ul>
+<h3 id="1-3-特色"><a href="#1-3-特色" class="headerlink" title="1.3 特色"></a>1.3 特色</h3><ul>
+<li><strong>傻瓜化：</strong> 以 配置文件 的形式封装了大部分微调场景，<strong>0基础的非专业人员也能一键开始微调</strong>。</li>
+<li><strong>轻量级：</strong> 对于 7B 参数量的LLM，<strong>微调所需的最小显存仅为 8GB</strong></li>
+</ul>
+<h3 id="1-4-微调原理"><a href="#1-4-微调原理" class="headerlink" title="1.4 微调原理"></a>1.4 微调原理</h3><blockquote>
+<p>想象一下，你有一个超大的玩具，现在你想改造这个超大的玩具。但是，<strong>对整个玩具进行全面的改动会非常昂贵</strong>。</p>
+</blockquote>
+<p>※ 因此，你找到了一种叫 <strong>LoRA</strong> 的方法：<strong>只对玩具中的某些零件进行改动，而不是对整个玩具进行全面改动</strong>。</p>
+<p>※ 而 <strong>QLoRA</strong> 是 LoRA 的一种改进</p>
+<h2 id="2-快速上手"><a href="#2-快速上手" class="headerlink" title="2 快速上手"></a>2 快速上手</h2><h3 id="2-1-平台"><a href="#2-1-平台" class="headerlink" title="2.1 平台"></a>2.1 平台</h3><p>Ubuntu + Anaconda + CUDA/CUDNN + 8GB nvidia显卡</p>
+<h3 id="2-2-安装"><a href="#2-2-安装" class="headerlink" title="2.2 安装"></a>2.2 安装</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 如果你是在 InternStudio 平台，则从本地 clone 一个已有 pytorch 2.0.1 的环境：</span><br>/root/share/install_conda_env_internlm_base.sh xtuner0.1.9<br><span class="hljs-comment"># 如果你是在其他平台：</span><br>conda create --name xtuner0.1.9 python=3.10 -y<br><br><span class="hljs-comment"># 激活环境</span><br>conda activate xtuner0.1.9<br><span class="hljs-comment"># 进入家目录 （~的意思是 “当前用户的home路径”）</span><br><span class="hljs-built_in">cd</span> ~<br><span class="hljs-comment"># 创建版本文件夹并进入，以跟随本教程</span><br><span class="hljs-built_in">mkdir</span> xtuner019 &amp;&amp; <span class="hljs-built_in">cd</span> xtuner019<br><br><br><span class="hljs-comment"># 拉取 0.1.9 的版本源码</span><br>git <span class="hljs-built_in">clone</span> -b v0.1.9  https://github.com/InternLM/xtuner<br><span class="hljs-comment"># 无法访问github的用户请从 gitee 拉取:</span><br><span class="hljs-comment"># git clone -b v0.1.9 https://gitee.com/Internlm/xtuner</span><br><br><span class="hljs-comment"># 进入源码目录</span><br><span class="hljs-built_in">cd</span> xtuner<br><br><span class="hljs-comment"># 从源码安装 XTuner</span><br>pip install -e <span class="hljs-string">&#x27;.[all]&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>安装完后，就开始搞搞准备工作了。（准备在 oasst1 数据集上微调 internlm-7b-chat）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建一个微调 oasst1 数据集的工作路径，进入</span><br><span class="hljs-built_in">mkdir</span> ~/ft-oasst1 &amp;&amp; <span class="hljs-built_in">cd</span> ~/ft-oasst1<br></code></pre></td></tr></table></figure>
+<h3 id="2-3-微调"><a href="#2-3-微调" class="headerlink" title="2.3 微调"></a>2.3 微调</h3><h4 id="2-3-1-准备配置文件"><a href="#2-3-1-准备配置文件" class="headerlink" title="2.3.1 准备配置文件"></a>2.3.1 准备配置文件</h4><p>XTuner 提供多个开箱即用的配置文件，用户可以通过下列命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash"><span class="hljs-comment"># 列出所有内置配置</span><br>xtuner list-cfg<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>假如显示bash: xtuner: command not found的话可以考虑在终端输入 export PATH=$PATH:’/root/.local/bin’</p>
+</blockquote>
+<p><img  src="cfg-list.png"  ><span class="image-caption">部分配置文件展示</span></p>
+<p>拷贝一个配置文件到当前目录：<br><code># xtuner copy-cfg $&#123;CONFIG_NAME&#125; $&#123;SAVE_PATH&#125;</code></p>
+<p>在本案例中即：（注意最后有个英文句号，代表复制到当前路径）<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash"><span class="hljs-built_in">cd</span> ~/ft-oasst1<br>xtuner copy-cfg internlm_chat_7b_qlora_oasst1_e3 .<br></code></pre></td></tr></table></figure></p>
+<p>配置文件名的解释：</p>
+<blockquote>
+<p>xtuner copy-cfg internlm_chat_7b_qlora_oasst1_e3 .</p>
+</blockquote>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>模型名</th>
+<th>internlm_chat_7b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>使用算法</td>
+<td>qlora</td>
+</tr>
+<tr>
+<td>数据集</td>
+<td>oasst1</td>
+</tr>
+<tr>
+<td>把数据集跑几次</td>
+<td>跑3次：e3 (epoch 3 )</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>*无 chat比如 <code>internlm-7b</code> 代表是基座(base)模型</p>
+<h4 id="2-3-2-模型下载"><a href="#2-3-2-模型下载" class="headerlink" title="2.3.2 模型下载"></a>2.3.2 模型下载</h4><blockquote>
+<p>由于下载模型很慢，用教学平台的同学可以直接复制模型。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash"><span class="hljs-built_in">cp</span> -r /root/share/temp/model_repos/internlm-chat-7b ~/ft-oasst1/<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>以下是自己下载模型的步骤。</p>
+</blockquote>
+<p>不用 xtuner 默认的<code>从 huggingface 拉取模型</code>，而是提前从 ModelScope 下载模型到本地</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash"><span class="hljs-comment"># 创建一个目录，放模型文件，防止散落一地</span><br><span class="hljs-built_in">mkdir</span> ~/ft-oasst1/internlm-chat-7b<br><br><span class="hljs-comment"># 装一下拉取模型文件要用的库</span><br>pip install modelscope<br><br><span class="hljs-comment"># 从 modelscope 下载下载模型文件</span><br><span class="hljs-built_in">cd</span> ~/ft-oasst1<br>apt install git git-lfs -y<br>git lfs install<br>git lfs <span class="hljs-built_in">clone</span> https://modelscope.cn/Shanghai_AI_Laboratory/internlm-chat-7b.git -b v1.0.3<br></code></pre></td></tr></table></figure>
+<h4 id="2-3-3-数据集下载"><a href="#2-3-3-数据集下载" class="headerlink" title="2.3.3 数据集下载"></a>2.3.3 数据集下载</h4><blockquote>
+<p><a href="https://huggingface.co/datasets/timdettmers/openassistant-guanaco/tree/main">https://huggingface.co/datasets/timdettmers/openassistant-guanaco/tree/main</a></p>
+</blockquote>
+<p>由于 huggingface 网络问题，咱们已经给大家提前下载好了，复制到正确位置即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/ft-oasst1<br><span class="hljs-comment"># ...-guanaco 后面有个空格和英文句号啊</span><br><span class="hljs-built_in">cp</span> -r /root/share/temp/datasets/openassistant-guanaco .<br></code></pre></td></tr></table></figure>
+<p>此时，当前路径的文件应该长这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">|-- internlm-chat-7b<br>|   |-- README.md<br>|   |-- config.json<br>|   |-- configuration.json<br>|   |-- configuration_internlm.py<br>|   |-- generation_config.json<br>|   |-- modeling_internlm.py<br>|   |-- pytorch_model-00001-of-00008.bin<br>|   |-- pytorch_model-00002-of-00008.bin<br>|   |-- pytorch_model-00003-of-00008.bin<br>|   |-- pytorch_model-00004-of-00008.bin<br>|   |-- pytorch_model-00005-of-00008.bin<br>|   |-- pytorch_model-00006-of-00008.bin<br>|   |-- pytorch_model-00007-of-00008.bin<br>|   |-- pytorch_model-00008-of-00008.bin<br>|   |-- pytorch_model.bin.index.json<br>|   |-- special_tokens_map.json<br>|   |-- tokenization_internlm.py<br>|   |-- tokenizer.model<br>|   `-- tokenizer_config.json<br>|-- internlm_chat_7b_qlora_oasst1_e3_copy.py<br>`-- openassistant-guanaco<br>    |-- openassistant_best_replies_eval.jsonl<br>    `-- openassistant_best_replies_train.jsonl<br></code></pre></td></tr></table></figure>
+<h4 id="2-3-4-修改配置文件"><a href="#2-3-4-修改配置文件" class="headerlink" title="2.3.4 修改配置文件"></a>2.3.4 修改配置文件</h4><p>修改其中的模型和数据集为 本地路径</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/ft-oasst1<br>vim internlm_chat_7b_qlora_oasst1_e3_copy.py<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>在vim界面完成修改后，请输入:wq退出。假如认为改错了可以用:q!退出且不保存。当然我们也可以考虑打开python文件直接修改，但注意修改完后需要按下Ctrl+S进行保存。</p>
+</blockquote>
+<p>减号代表要删除的行，加号代表要增加的行。<br><figure class="highlight diff"><table><tr><td class="code"><pre><code class="hljs diff"># 修改模型为本地路径<br><span class="hljs-deletion">- pretrained_model_name_or_path = &#x27;internlm/internlm-chat-7b&#x27;</span><br><span class="hljs-addition">+ pretrained_model_name_or_path = &#x27;./internlm-chat-7b&#x27;</span><br><br># 修改训练数据集为本地路径<br><span class="hljs-deletion">- data_path = &#x27;timdettmers/openassistant-guanaco&#x27;</span><br><span class="hljs-addition">+ data_path = &#x27;./openassistant-guanaco&#x27;</span><br></code></pre></td></tr></table></figure></p>
+<p><strong>常用超参</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>data_path</strong></td>
+<td>数据路径或 HuggingFace 仓库名</td>
+</tr>
+<tr>
+<td>max_length</td>
+<td>单条数据最大 Token 数，超过则截断</td>
+</tr>
+<tr>
+<td>pack_to_max_length</td>
+<td>是否将多条短数据拼接到 max_length，提高 GPU 利用率</td>
+</tr>
+<tr>
+<td>accumulative_counts</td>
+<td>梯度累积，每多少次 backward 更新一次参数</td>
+</tr>
+<tr>
+<td>evaluation_inputs</td>
+<td>训练过程中，会根据给定的问题进行推理，便于观测训练状态</td>
+</tr>
+<tr>
+<td>evaluation_freq</td>
+<td>Evaluation 的评测间隔 iter 数</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>如果想把显卡的现存吃满，充分利用显卡资源，可以将 <code>max_length</code> 和 <code>batch_size</code> 这两个参数调大。</p>
+</blockquote>
+<h4 id="2-3-5-开始微调"><a href="#2-3-5-开始微调" class="headerlink" title="2.3.5 开始微调"></a>2.3.5 开始微调</h4><p><strong>训练：</strong></p>
+<p>xtuner train ${CONFIG_NAME_OR_PATH}</p>
+<p><strong>也可以增加 deepspeed 进行训练加速：</strong></p>
+<p>xtuner train ${CONFIG_NAME_OR_PATH} —deepspeed deepspeed_zero2</p>
+<p>例如，我们可以利用 QLoRA 算法在 oasst1 数据集上微调 InternLM-7B：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash"><span class="hljs-comment"># 单卡</span><br><span class="hljs-comment">## 用刚才改好的config文件训练</span><br>xtuner train ./internlm_chat_7b_qlora_oasst1_e3_copy.py<br><br><span class="hljs-comment"># 多卡</span><br>NPROC_PER_NODE=<span class="hljs-variable">$&#123;GPU_NUM&#125;</span> xtuner train ./internlm_chat_7b_qlora_oasst1_e3_copy.py<br><br><span class="hljs-comment"># 若要开启 deepspeed 加速，增加 --deepspeed deepspeed_zero2 即可</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>微调得到的 PTH 模型文件和其他杂七杂八的文件都默认在当前的 <code>./work_dirs</code> 中。</p>
+</blockquote>
+<p><img  src="train.png"  ><span class="image-caption">训练截图</span></p>
+<p>跑完训练后，当前路径应该长这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash">|-- internlm-chat-7b<br>|-- internlm_chat_7b_qlora_oasst1_e3_copy.py<br>|-- openassistant-guanaco<br>|   |-- openassistant_best_replies_eval.jsonl<br>|   `-- openassistant_best_replies_train.jsonl<br>`-- work_dirs<br>    `-- internlm_chat_7b_qlora_oasst1_e3_copy<br>        |-- 20231101_152923<br>        |   |-- 20231101_152923.<span class="hljs-built_in">log</span><br>        |   `-- vis_data<br>        |       |-- 20231101_152923.json<br>        |       |-- config.py<br>        |       `-- scalars.json<br>        |-- epoch_1.pth<br>        |-- epoch_2.pth<br>        |-- epoch_3.pth<br>        |-- internlm_chat_7b_qlora_oasst1_e3_copy.py<br>        `-- last_checkpoint<br></code></pre></td></tr></table></figure>
+<h4 id="2-3-6-将得到的-PTH-模型转换为-HuggingFace-模型，即：生成-Adapter-文件夹"><a href="#2-3-6-将得到的-PTH-模型转换为-HuggingFace-模型，即：生成-Adapter-文件夹" class="headerlink" title="2.3.6 将得到的 PTH 模型转换为 HuggingFace 模型，即：生成 Adapter 文件夹"></a>2.3.6 将得到的 PTH 模型转换为 HuggingFace 模型，<strong>即：生成 Adapter 文件夹</strong></h4><p><code>xtuner convert pth_to_hf $&#123;CONFIG_NAME_OR_PATH&#125; $&#123;PTH_file_dir&#125; $&#123;SAVE_PATH&#125;</code></p>
+<p>在本示例中，为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> hf<br><span class="hljs-built_in">export</span> MKL_SERVICE_FORCE_INTEL=1<br><br>xtuner convert pth_to_hf ./internlm_chat_7b_qlora_oasst1_e3_copy.py ./work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_1.pth ./hf<br></code></pre></td></tr></table></figure><br>此时，路径中应该长这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash">|-- internlm-chat-7b<br>|-- internlm_chat_7b_qlora_oasst1_e3_copy.py<br>|-- openassistant-guanaco<br>|   |-- openassistant_best_replies_eval.jsonl<br>|   `-- openassistant_best_replies_train.jsonl<br>|-- hf<br>|   |-- README.md<br>|   |-- adapter_config.json<br>|   |-- adapter_model.bin<br>|   `-- xtuner_config.py<br>`-- work_dirs<br>    `-- internlm_chat_7b_qlora_oasst1_e3_copy<br>        |-- 20231101_152923<br>        |   |-- 20231101_152923.<span class="hljs-built_in">log</span><br>        |   `-- vis_data<br>        |       |-- 20231101_152923.json<br>        |       |-- config.py<br>        |       `-- scalars.json<br>        |-- epoch_1.pth<br>        |-- epoch_2.pth<br>        |-- epoch_3.pth<br>        |-- internlm_chat_7b_qlora_oasst1_e3_copy.py<br>        `-- last_checkpoint<br></code></pre></td></tr></table></figure>
+<p><span style="color: red;"><strong>此时，hf 文件夹即为我们平时所理解的所谓 “LoRA 模型文件”</strong></span></p>
+<blockquote>
+<p>可以简单理解：LoRA 模型文件 = Adapter</p>
+</blockquote>
+<h3 id="2-4-部署与测试"><a href="#2-4-部署与测试" class="headerlink" title="2.4 部署与测试"></a>2.4 部署与测试</h3><h4 id="2-4-1-将-HuggingFace-adapter-合并到大语言模型："><a href="#2-4-1-将-HuggingFace-adapter-合并到大语言模型：" class="headerlink" title="2.4.1 将 HuggingFace adapter 合并到大语言模型："></a>2.4.1 将 HuggingFace adapter 合并到大语言模型：</h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash">xtuner convert merge ./internlm-chat-7b ./hf ./merged --max-shard-size 2GB<br><span class="hljs-comment"># xtuner convert merge \</span><br><span class="hljs-comment">#     $&#123;NAME_OR_PATH_TO_LLM&#125; \</span><br><span class="hljs-comment">#     $&#123;NAME_OR_PATH_TO_ADAPTER&#125; \</span><br><span class="hljs-comment">#     $&#123;SAVE_PATH&#125; \</span><br><span class="hljs-comment">#     --max-shard-size 2GB</span><br></code></pre></td></tr></table></figure>
+<h4 id="2-4-2-与合并后的模型对话："><a href="#2-4-2-与合并后的模型对话：" class="headerlink" title="2.4.2 与合并后的模型对话："></a>2.4.2 与合并后的模型对话：</h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash"><span class="hljs-comment"># 加载 Adapter 模型对话（Float 16）</span><br>xtuner chat ./merged --prompt-template internlm_chat<br><br><span class="hljs-comment"># 4 bit 量化加载</span><br><span class="hljs-comment"># xtuner chat ./merged --bits 4 --prompt-template internlm_chat</span><br></code></pre></td></tr></table></figure>
+<h4 id="2-4-3-Demo"><a href="#2-4-3-Demo" class="headerlink" title="2.4.3 Demo"></a>2.4.3 Demo</h4><ul>
+<li>修改 <code>cli_demo.py</code> 中的模型路径<figure class="highlight diff"><table><tr><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">- model_name_or_path = &quot;/root/model/Shanghai_AI_Laboratory/internlm-chat-7b&quot;</span><br><span class="hljs-addition">+ model_name_or_path = &quot;merged&quot;</span><br></code></pre></td></tr></table></figure></li>
+<li>运行 <code>cli_demo.py</code> 以目测微调效果<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">python ./cli_demo.py<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong><code>xtuner chat</code></strong> <strong>的启动参数</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>启动参数</th>
+<th>干哈滴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>—prompt-template</strong></td>
+<td>指定对话模板</td>
+</tr>
+<tr>
+<td>—system</td>
+<td>指定SYSTEM文本</td>
+</tr>
+<tr>
+<td>—system-template</td>
+<td>指定SYSTEM模板</td>
+</tr>
+<tr>
+<td>-<strong>-bits</strong></td>
+<td>LLM位数</td>
+</tr>
+<tr>
+<td>—bot-name</td>
+<td>bot名称</td>
+</tr>
+<tr>
+<td>—with-plugins</td>
+<td>指定要使用的插件</td>
+</tr>
+<tr>
+<td><strong>—no-streamer</strong></td>
+<td>是否启用流式传输</td>
+</tr>
+<tr>
+<td><strong>—lagent</strong></td>
+<td>是否使用lagent</td>
+</tr>
+<tr>
+<td>—command-stop-word</td>
+<td>命令停止词</td>
+</tr>
+<tr>
+<td>—answer-stop-word</td>
+<td>回答停止词</td>
+</tr>
+<tr>
+<td>—offload-folder</td>
+<td>存放模型权重的文件夹（或者已经卸载模型权重的文件夹）</td>
+</tr>
+<tr>
+<td>—max-new-tokens</td>
+<td>生成文本中允许的最大 <code>token</code> 数量</td>
+</tr>
+<tr>
+<td><strong>—temperature</strong></td>
+<td>温度值</td>
+</tr>
+<tr>
+<td>—top-k</td>
+<td>保留用于顶k筛选的最高概率词汇标记数</td>
+</tr>
+<tr>
+<td>—top-p</td>
+<td>如果设置为小于1的浮点数，仅保留概率相加高于 <code>top_p</code> 的最小一组最有可能的标记</td>
+</tr>
+<tr>
+<td>—seed</td>
+<td>用于可重现文本生成的随机种子</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="3-自定义微调"><a href="#3-自定义微调" class="headerlink" title="3 自定义微调"></a>3 自定义微调</h2><blockquote>
+<p>以 <strong><a href="https://github.com/abachaa/Medication_QA_MedInfo2019">Medication QA</a></strong> <strong>数据集</strong>为例</p>
+</blockquote>
+<h3 id="3-1-概述"><a href="#3-1-概述" class="headerlink" title="3.1 概述"></a>3.1 概述</h3><h4 id="3-1-1-场景需求"><a href="#3-1-1-场景需求" class="headerlink" title="3.1.1 场景需求"></a>3.1.1 <strong>场景需求</strong></h4><p>   基于 InternLM-chat-7B 模型，用 MedQA 数据集进行微调，将其往<code>医学问答</code>领域对齐。</p>
+<h4 id="3-1-2-真实数据预览"><a href="#3-1-2-真实数据预览" class="headerlink" title="3.1.2 真实数据预览"></a>3.1.2 <strong>真实数据预览</strong></h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>答案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What are ketorolac eye drops?（什么是酮咯酸滴眼液？）</td>
+<td>Ophthalmic   ketorolac is used to treat itchy eyes caused by allergies. It also is used to   treat swelling and redness (inflammation) that can occur after cataract   surgery. Ketorolac is in a class of medications called nonsteroidal   anti-inflammatory drugs (NSAIDs). It works by stopping the release of   substances that cause allergy symptoms and inflammation.</td>
+</tr>
+<tr>
+<td>What medicines raise blood sugar? （什么药物会升高血糖？）</td>
+<td>Some   medicines for conditions other than diabetes can raise your blood sugar   level. This is a concern when you have diabetes. Make sure every doctor you   see knows about all of the medicines, vitamins, or herbal supplements you   take. This means anything you take with or without a prescription. Examples include:     Barbiturates.     Thiazide diuretics.     Corticosteroids.     Birth control pills (oral contraceptives) and progesterone.     Catecholamines.     Decongestants that contain beta-adrenergic agents, such as pseudoephedrine.     The B vitamin niacin. The risk of high blood sugar from niacin lowers after you have taken it for a few months. The antipsychotic medicine olanzapine (Zyprexa).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="3-2-数据准备"><a href="#3-2-数据准备" class="headerlink" title="3.2 数据准备"></a>3.2 数据准备</h3><blockquote>
+<p><strong>以</strong> <strong><a href="https://github.com/abachaa/Medication_QA_MedInfo2019">Medication QA</a></strong> <strong>数据集为例</strong></p>
+</blockquote>
+<p><strong>原格式：(.xlsx)</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>问题</strong></th>
+<th>药物类型</th>
+<th>问题类型</th>
+<th><strong>回答</strong></th>
+<th>主题</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aaa</td>
+<td>bbb</td>
+<td>ccc</td>
+<td>ddd</td>
+<td>eee</td>
+<td>fff</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="3-2-1-将数据转为-XTuner-的数据格式"><a href="#3-2-1-将数据转为-XTuner-的数据格式" class="headerlink" title="3.2.1 将数据转为 XTuner 的数据格式"></a>3.2.1 将数据转为 XTuner 的数据格式</h4><p><strong>目标格式：(.jsonL)</strong></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs JSON"><span class="hljs-punctuation">[</span><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;conversation&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;system&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;xxx&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;input&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;xxx&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;output&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;xxx&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;conversation&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;system&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;xxx&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;input&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;xxx&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;output&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;xxx&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
+<p>通过 pytho n脚本：将 <code>.xlsx</code> 中的 问题 和 回答 两列 提取出来，再放入 <code>.jsonL</code> 文件的每个 conversation 的 input 和 output 中。</p>
+<blockquote>
+<p>这一步的 python 脚本可以请 ChatGPT 来完成。</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><code class="hljs text">Write a python file for me. using openpyxl. input file name is MedQA2019.xlsx<br>Step1: The input file is .xlsx. Exact the column A and column D in the sheet named &quot;DrugQA&quot; .<br>Step2: Put each value in column A into each &quot;input&quot; of each &quot;conversation&quot;. Put each value in column D into each &quot;output&quot; of each &quot;conversation&quot;.<br>Step3: The output file is .jsonL. It looks like:<br>[&#123;<br>    &quot;conversation&quot;:[<br>        &#123;<br>            &quot;system&quot;: &quot;xxx&quot;,<br>            &quot;input&quot;: &quot;xxx&quot;,<br>            &quot;output&quot;: &quot;xxx&quot;<br>        &#125;<br>    ]<br>&#125;,<br>&#123;<br>    &quot;conversation&quot;:[<br>        &#123;<br>            &quot;system&quot;: &quot;xxx&quot;,<br>            &quot;input&quot;: &quot;xxx&quot;,<br>            &quot;output&quot;: &quot;xxx&quot;<br>        &#125;<br>    ]<br>&#125;]<br>Step4: All &quot;system&quot; value changes to &quot;You are a professional, highly experienced doctor professor. You always provide accurate, comprehensive, and detailed answers based on the patients&#x27; questions.&quot;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>ChatGPT 生成的 python 代码见本仓库的 <a href="./xlsx2jsonl.py">xlsx2jsonl.py</a></p>
+</blockquote>
+<p>执行 python 脚本，获得格式化后的数据集：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">python xlsx2jsonl.py<br></code></pre></td></tr></table></figure></p>
+<p>此时，当然也可以对数据进行训练集和测试集的分割，同样可以让 ChatGPT 写 python 代码。当然如果你没有严格的科研需求、不在乎“训练集泄露”的问题，也可以不做训练集与测试集的分割。</p>
+<h4 id="3-2-2-划分训练集和测试集"><a href="#3-2-2-划分训练集和测试集" class="headerlink" title="3.2.2 划分训练集和测试集"></a>3.2.2 划分训练集和测试集</h4><figure class="highlight text"><table><tr><td class="code"><pre><code class="hljs text">my .jsonL file looks like:<br>[&#123;<br>    &quot;conversation&quot;:[<br>        &#123;<br>            &quot;system&quot;: &quot;xxx&quot;,<br>            &quot;input&quot;: &quot;xxx&quot;,<br>            &quot;output&quot;: &quot;xxx&quot;<br>        &#125;<br>    ]<br>&#125;,<br>&#123;<br>    &quot;conversation&quot;:[<br>        &#123;<br>            &quot;system&quot;: &quot;xxx&quot;,<br>            &quot;input&quot;: &quot;xxx&quot;,<br>            &quot;output&quot;: &quot;xxx&quot;<br>        &#125;<br>    ]<br>&#125;]<br>Step1, read the .jsonL file.<br>Step2, count the amount of the &quot;conversation&quot; elements.<br>Step3, randomly split all &quot;conversation&quot; elements by 7:3. Targeted structure is same as the input.<br>Step4, save the 7/10 part as train.jsonl. save the 3/10 part as test.jsonl<br></code></pre></td></tr></table></figure>
+<p>生成的python代码见 <a href="./split2train_and_test.py">split2train_and_test.py</a></p>
+<h3 id="3-3-开始自定义微调"><a href="#3-3-开始自定义微调" class="headerlink" title="3.3 开始自定义微调"></a>3.3 开始自定义微调</h3><p>此时，我们重新建一个文件夹来玩“微调自定义数据集”<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> ~/ft-medqa &amp;&amp; <span class="hljs-built_in">cd</span> ~/ft-medqa<br></code></pre></td></tr></table></figure></p>
+<p>把前面下载好的internlm-chat-7b模型文件夹拷贝过来。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> -r ~/ft-oasst1/internlm-chat-7b .<br></code></pre></td></tr></table></figure>
+<p>别忘了把自定义数据集，即几个 <code>.jsonL</code>，也传到服务器上。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/InternLM/tutorial<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> ~/tutorial/xtuner/MedQA2019-structured-train.jsonl .<br></code></pre></td></tr></table></figure>
+<h4 id="3-3-1-准备配置文件"><a href="#3-3-1-准备配置文件" class="headerlink" title="3.3.1 准备配置文件"></a>3.3.1 准备配置文件</h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 复制配置文件到当前目录</span><br>xtuner copy-cfg internlm_chat_7b_qlora_oasst1_e3 .<br><span class="hljs-comment"># 改个文件名</span><br><span class="hljs-built_in">mv</span> internlm_chat_7b_qlora_oasst1_e3_copy.py internlm_chat_7b_qlora_medqa2019_e3.py<br><br><span class="hljs-comment"># 修改配置文件内容</span><br>vim internlm_chat_7b_qlora_medqa2019_e3.py<br></code></pre></td></tr></table></figure>
+<p>减号代表要删除的行，加号代表要增加的行。<br><figure class="highlight diff"><table><tr><td class="code"><pre><code class="hljs diff"># 修改import部分<br><span class="hljs-deletion">- from xtuner.dataset.map_fns import oasst1_map_fn, template_map_fn_factory</span><br><span class="hljs-addition">+ from xtuner.dataset.map_fns import template_map_fn_factory</span><br><br># 修改模型为本地路径<br><span class="hljs-deletion">- pretrained_model_name_or_path = &#x27;internlm/internlm-chat-7b&#x27;</span><br><span class="hljs-addition">+ pretrained_model_name_or_path = &#x27;./internlm-chat-7b&#x27;</span><br><br># 修改训练数据为 MedQA2019-structured-train.jsonl 路径<br><span class="hljs-deletion">- data_path = &#x27;timdettmers/openassistant-guanaco&#x27;</span><br><span class="hljs-addition">+ data_path = &#x27;MedQA2019-structured-train.jsonl&#x27;</span><br><br># 修改 train_dataset 对象<br>train_dataset = dict(<br>    type=process_hf_dataset,<br><span class="hljs-deletion">-   dataset=dict(type=load_dataset, path=data_path),</span><br><span class="hljs-addition">+   dataset=dict(type=load_dataset, path=&#x27;json&#x27;, data_files=dict(train=data_path)),</span><br>    tokenizer=tokenizer,<br>    max_length=max_length,<br><span class="hljs-deletion">-   dataset_map_fn=alpaca_map_fn,</span><br><span class="hljs-addition">+   dataset_map_fn=None,</span><br>    template_map_fn=dict(<br>        type=template_map_fn_factory, template=prompt_template),<br>    remove_unused_columns=True,<br>    shuffle_before_pack=True,<br>    pack_to_max_length=pack_to_max_length)<br></code></pre></td></tr></table></figure></p>
+<h4 id="3-3-2-XTuner！启动！"><a href="#3-3-2-XTuner！启动！" class="headerlink" title="3.3.2 XTuner！启动！"></a>3.3.2 <strong>XTuner！启动！</strong></h4><p><img  src="imgs/ysqd.png"  ><span class="image-caption">tH8udZzECYl5are.png</span></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">xtuner train internlm_chat_7b_qlora_medqa2019_e3.py --deepspeed deepspeed_zero2<br></code></pre></td></tr></table></figure>
+<h4 id="3-3-3-pth-转-huggingface"><a href="#3-3-3-pth-转-huggingface" class="headerlink" title="3.3.3 pth 转 huggingface"></a>3.3.3 pth 转 huggingface</h4><p>同前述，这里不赘述了。<a href="#236-将得到的-pth-模型转换为-huggingface-模型即生成adapter文件夹">将得到的-pth-模型转换为-huggingface-模型即生成adapter文件夹</a>  </p>
+<h4 id="3-3-4-部署与测试"><a href="#3-3-4-部署与测试" class="headerlink" title="3.3.4 部署与测试"></a>3.3.4 部署与测试</h4><p>同前述。<a href="#24-部署与测试">部署与测试</a></p>
+<h2 id="4-用-MS-Agent-数据集-赋予-LLM-以-Agent-能力"><a href="#4-用-MS-Agent-数据集-赋予-LLM-以-Agent-能力" class="headerlink" title="4 用 MS-Agent 数据集 赋予 LLM 以 Agent 能力"></a>4 用 MS-Agent 数据集 赋予 LLM 以 Agent 能力</h2><h3 id="4-1-概述"><a href="#4-1-概述" class="headerlink" title="4.1 概述"></a>4.1 概述</h3><p>MSAgent 数据集每条样本包含一个对话列表（conversations），其里面包含了 system、user、assistant 三种字段。其中：</p>
+<ul>
+<li><p>system: 表示给模型前置的人设输入，其中有告诉模型如何调用插件以及生成请求</p>
+</li>
+<li><p>user: 表示用户的输入 prompt，分为两种，通用生成的prompt和调用插件需求的 prompt</p>
+</li>
+<li><p>assistant: 为模型的回复。其中会包括插件调用代码和执行代码，调用代码是要 LLM 生成的，而执行代码是调用服务来生成结果的</p>
+</li>
+</ul>
+<p>一条调用网页搜索插件查询“上海明天天气”的数据样本示例如下图所示：<br><img  src="imgs/msagent_data.png"  ><span class="image-caption">BlgfEqpiRFO5G6L.png</span></p>
+<h3 id="4-2-微调步骤"><a href="#4-2-微调步骤" class="headerlink" title="4.2 微调步骤"></a>4.2 微调步骤</h3><h4 id="4-2-1-准备工作"><a href="#4-2-1-准备工作" class="headerlink" title="4.2.1 准备工作"></a>4.2.1 准备工作</h4><blockquote>
+<p>xtuner 是从国内的 ModelScope 平台下载 MS-Agent 数据集，因此不用提前手动下载数据集文件。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 准备工作</span><br><span class="hljs-built_in">mkdir</span> ~/ft-msagent &amp;&amp; <span class="hljs-built_in">cd</span> ~/ft-msagent<br><span class="hljs-built_in">cp</span> -r ~/ft-oasst1/internlm-chat-7b .<br><br><span class="hljs-comment"># 查看配置文件</span><br>xtuner list-cfg | grep msagent<br><br><span class="hljs-comment"># 复制配置文件到当前目录</span><br>xtuner copy-cfg internlm_7b_qlora_msagent_react_e3_gpu8 .<br><br><span class="hljs-comment"># 修改配置文件中的模型为本地路径</span><br>vim ./internlm_7b_qlora_msagent_react_e3_gpu8_copy.py <br></code></pre></td></tr></table></figure>
+<figure class="highlight diff"><table><tr><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">- pretrained_model_name_or_path = &#x27;internlm/internlm-chat-7b&#x27;</span><br><span class="hljs-addition">+ pretrained_model_name_or_path = &#x27;./internlm-chat-7b&#x27;</span><br></code></pre></td></tr></table></figure>
+<h4 id="4-2-2-开始微调"><a href="#4-2-2-开始微调" class="headerlink" title="4.2.2 开始微调"></a>4.2.2 开始微调</h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash">xtuner train ./internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2<br></code></pre></td></tr></table></figure>
+<h3 id="4-3-直接使用"><a href="#4-3-直接使用" class="headerlink" title="4.3 直接使用"></a>4.3 直接使用</h3><blockquote>
+<p>由于 msagent 的训练非常费时，大家如果想尽快把这个教程跟完，可以直接从 modelScope 拉取咱们已经微调好了的 Adapter。如下演示。</p>
+</blockquote>
+<h4 id="4-3-1-下载-Adapter"><a href="#4-3-1-下载-Adapter" class="headerlink" title="4.3.1 下载 Adapter"></a>4.3.1 下载 Adapter</h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs Bash"><span class="hljs-built_in">cd</span> ~/ft-msagent<br>apt install git git-lfs<br>git lfs install<br>git lfs <span class="hljs-built_in">clone</span> https://www.modelscope.cn/xtuner/internlm-7b-qlora-msagent-react.git<br></code></pre></td></tr></table></figure>
+<p>OK，现在目录应该长这样：</p>
+<ul>
+<li>internlm_7b_qlora_msagent_react_e3_gpu8_copy.py</li>
+<li>internlm-7b-qlora-msagent-react</li>
+<li>internlm-chat-7b</li>
+<li>work_dir（可有可无）</li>
+</ul>
+<p>有了这个在 msagent 上训练得到的Adapter，模型现在已经有 agent 能力了！就可以加 —lagent 以调用来自 lagent 的代理功能了！</p>
+<h4 id="4-3-2-添加-serper-环境变量"><a href="#4-3-2-添加-serper-环境变量" class="headerlink" title="4.3.2 添加 serper 环境变量"></a>4.3.2 添加 serper 环境变量</h4><blockquote>
+<p><strong>开始 chat 之前，还要加个 serper 的环境变量：</strong></p>
+<p>去 serper.dev 免费注册一个账号，生成自己的 api key。这个东西是用来给 lagent 去获取 google 搜索的结果的。等于是 serper.dev 帮你去访问 google，而不是从你自己本地去访问 google 了。</p>
+</blockquote>
+<p><img  src="imgs/serper.png"  ><span class="image-caption">kDSdpQrhHfTWYsc.png</span></p>
+<p>添加 serper api key 到环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> SERPER_API_KEY=abcdefg<br></code></pre></td></tr></table></figure>
+<h4 id="4-3-3-xtuner-agent，启动！"><a href="#4-3-3-xtuner-agent，启动！" class="headerlink" title="4.3.3 xtuner + agent，启动！"></a>4.3.3 xtuner + agent，启动！</h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">xtuner chat ./internlm-chat-7b --adapter internlm-7b-qlora-msagent-react --lagent<br></code></pre></td></tr></table></figure>
+<h2 id="5-注意事项"><a href="#5-注意事项" class="headerlink" title="5 注意事项"></a>5 注意事项</h2><p>本教程使用 xtuner 0.1.9 版本<br>若需要跟着本教程一步一步完成，建议严格遵循本教程的步骤！</p>
+<p>若出现莫名其妙报错，请尝试更换为以下包的版本：（如果有报错再检查，没报错不用看）<br><figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">torch</span>                         <span class="hljs-number">2</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">transformers</span>                  <span class="hljs-number">4</span>.<span class="hljs-number">34</span>.<span class="hljs-number">0</span><br><span class="hljs-attribute">transformers</span>-stream-generator <span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">4</span><br></code></pre></td></tr></table></figure><br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">pip install torch==2.1.1<br>pip install transformers==4.34.0<br>pip install transformers-stream-generator=0.0.4<br></code></pre></td></tr></table></figure><br>CUDA 相关：（如果有报错再检查，没报错不用看）<br><figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">NVIDIA</span>-SMI <span class="hljs-number">535</span>.<span class="hljs-number">54</span>.<span class="hljs-number">03</span>              <br><span class="hljs-attribute">Driver</span> Version: <span class="hljs-number">535</span>.<span class="hljs-number">54</span>.<span class="hljs-number">03</span>    <br><span class="hljs-attribute">CUDA</span> Version: <span class="hljs-number">12</span>.<span class="hljs-number">2</span><br><br><span class="hljs-attribute">nvidia</span>-cuda-cupti-cu12        <span class="hljs-number">12</span>.<span class="hljs-number">1</span>.<span class="hljs-number">105</span><br><span class="hljs-attribute">nvidia</span>-cuda-nvrtc-cu12        <span class="hljs-number">12</span>.<span class="hljs-number">1</span>.<span class="hljs-number">105</span><br><span class="hljs-attribute">nvidia</span>-cuda-runtime-cu12      <span class="hljs-number">12</span>.<span class="hljs-number">1</span>.<span class="hljs-number">105</span><br></code></pre></td></tr></table></figure></p>
+<h2 id="6-作业"><a href="#6-作业" class="headerlink" title="6 作业"></a>6 作业</h2><h3 id="1-概述-1"><a href="#1-概述-1" class="headerlink" title="1 概述"></a>1 概述</h3><p>目标：通过微调，让模型成为我们的小助手</p>
+<p>方式：使用 XTuner 进行微调</p>
+<p><strong>微调前</strong><br><img  src="官方回答.png"  ><span class="image-caption">官方回答</span></p>
+<p><strong>微调后</strong><br><img  src="微调后.png"  ><span class="image-caption">微调后.png</span></p>
+<h3 id="2-实操"><a href="#2-实操" class="headerlink" title="2 实操"></a>2 实操</h3><h4 id="微调环境准备"><a href="#微调环境准备" class="headerlink" title="微调环境准备"></a>微调环境准备</h4><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># InternStudio 平台中，从本地 clone 一个已有 pytorch 2.0.1 的环境（后续均在该环境执行，若为其他环境可作为参考）</span><br><span class="hljs-comment"># 进入环境后首先 bash</span><br><span class="hljs-comment"># 进入环境后首先 bash</span><br><span class="hljs-comment"># 进入环境后首先 bash</span><br>bash<br>conda create --name personal_assistant --<span class="hljs-built_in">clone</span>=/root/share/conda_envs/internlm-base<br><span class="hljs-comment"># 如果在其他平台：</span><br><span class="hljs-comment"># conda create --name personal_assistant python=3.10 -y</span><br><br><span class="hljs-comment"># 激活环境</span><br>conda activate personal_assistant<br><span class="hljs-comment"># 进入家目录 （~的意思是 “当前用户的home路径”）</span><br><span class="hljs-built_in">cd</span> ~<br><span class="hljs-comment"># 创建版本文件夹并进入，以跟随本教程</span><br><span class="hljs-comment"># personal_assistant用于存放本教程所使用的东西</span><br><span class="hljs-built_in">mkdir</span> /root/personal_assistant &amp;&amp; <span class="hljs-built_in">cd</span> /root/personal_assistant<br><span class="hljs-built_in">mkdir</span> /root/personal_assistant/xtuner019 &amp;&amp; <span class="hljs-built_in">cd</span> /root/personal_assistant/xtuner019<br><br><span class="hljs-comment"># 拉取 0.1.9 的版本源码</span><br>git <span class="hljs-built_in">clone</span> -b v0.1.9  https://github.com/InternLM/xtuner<br><span class="hljs-comment"># 无法访问github的用户请从 gitee 拉取:</span><br><span class="hljs-comment"># git clone -b v0.1.9 https://gitee.com/Internlm/xtuner</span><br><br><span class="hljs-comment"># 进入源码目录</span><br><span class="hljs-built_in">cd</span> xtuner<br><br><span class="hljs-comment"># 从源码安装 XTuner</span><br>pip install -e <span class="hljs-string">&#x27;.[all]&#x27;</span><br></code></pre></td></tr></table></figure>
+<h4 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h4><p>创建<code>data</code>文件夹用于存放用于训练的数据集</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /root/personal_assistant/data &amp;&amp; <span class="hljs-built_in">cd</span> /root/personal_assistant/data<br></code></pre></td></tr></table></figure>
+<p>在<code>data</code>目录下创建一个json文件<code>personal_assistant.json</code>作为本次微调所使用的数据集。json中内容可参考下方(复制粘贴n次做数据增广，数据量小无法有效微调，下面仅用于展示格式，下面也有生成脚本)</p>
+<p>其中<code>conversation</code>表示一次对话的内容，<code>input</code>为输入，即用户会问的问题，<code>output</code>为输出，即想要模型回答的答案。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">[</span><br>    <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;conversation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>            <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;input&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;请介绍一下你自己&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;output&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;我是不要葱姜蒜大佬的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&quot;</span><br>            <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;conversation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>            <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;input&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;请做一下自我介绍&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;output&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;我是不要葱姜蒜大佬的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&quot;</span><br>            <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
+<p>以下是一个python脚本，用于生成数据集。在<code>data</code>目录下新建一个generate_data.py文件，将以下代码复制进去，然后运行该脚本即可生成数据集。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json<br><br><span class="hljs-comment"># 输入你的名字</span><br>name = <span class="hljs-string">&#x27;Shengshenlan&#x27;</span><br><span class="hljs-comment"># 重复次数</span><br>n = <span class="hljs-number">10000</span><br><br>data = [<br>    &#123;<br>        <span class="hljs-string">&quot;conversation&quot;</span>: [<br>            &#123;<br>                <span class="hljs-string">&quot;input&quot;</span>: <span class="hljs-string">&quot;请做一下自我介绍&quot;</span>,<br>                <span class="hljs-string">&quot;output&quot;</span>: <span class="hljs-string">&quot;我是&#123;&#125;的小助手，内在是上海AI实验室书生·浦语的7B大模型哦&quot;</span>.<span class="hljs-built_in">format</span>(name)<br>            &#125;<br>        ]<br>    &#125;<br>]<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>    data.append(data[<span class="hljs-number">0</span>])<br><br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;personal_assistant.json&#x27;</span>, <span class="hljs-string">&#x27;w&#x27;</span>, encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>    json.dump(data, f, ensure_ascii=<span class="hljs-literal">False</span>, indent=<span class="hljs-number">4</span>)<br><br></code></pre></td></tr></table></figure>
+<h4 id="配置准备"><a href="#配置准备" class="headerlink" title="配置准备"></a>配置准备</h4><p>下载模型<code>InternLM-chat-7B</code></p>
+<p><a href="https://studio.intern-ai.org.cn/">InternStudio</a> 平台的 <code>share</code> 目录下已经为我们准备了全系列的 <code>InternLM</code> 模型，可以使用如下命令复制<code>internlm-chat-7b</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /root/personal_assistant/model/Shanghai_AI_Laboratory<br><span class="hljs-built_in">cp</span> -r /root/share/temp/model_repos/internlm-chat-7b /root/personal_assistant/model/Shanghai_AI_Laboratory<br></code></pre></td></tr></table></figure>
+<p>XTuner 提供多个开箱即用的配置文件，用户可以通过下列命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 列出所有内置配置</span><br>xtuner list-cfg<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#创建用于存放配置的文件夹config并进入</span><br><span class="hljs-built_in">mkdir</span> /root/personal_assistant/config &amp;&amp; <span class="hljs-built_in">cd</span> /root/personal_assistant/config<br></code></pre></td></tr></table></figure>
+<p>拷贝一个配置文件到当前目录：<code>xtuner copy-cfg $&#123;CONFIG_NAME&#125; $&#123;SAVE_PATH&#125;</code><br>在本例中：（注意最后有个英文句号，代表复制到当前路径）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">xtuner copy-cfg internlm_chat_7b_qlora_oasst1_e3 .<br></code></pre></td></tr></table></figure>
+<p>修改拷贝后的文件internlm_chat_7b_qlora_oasst1_e3_copy.py，修改下述位置：<br>(这是一份修改好的文件<a href="./internlm_chat_7b_qlora_oasst1_e3_copy.py">internlm_chat_7b_qlora_oasst1_e3_copy.py</a>)<br><img  src="修改配置.png"  ><span class="image-caption">修改配置</span></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># PART 1 中</span><br><span class="hljs-comment"># 预训练模型存放的位置</span><br>pretrained_model_name_or_path = <span class="hljs-string">&#x27;/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b&#x27;</span><br><br><span class="hljs-comment"># 微调数据存放的位置</span><br>data_path = <span class="hljs-string">&#x27;/root/personal_assistant/data/personal_assistant.json&#x27;</span><br><br><span class="hljs-comment"># 训练中最大的文本长度</span><br>max_length = 512<br><br><span class="hljs-comment"># 每一批训练样本的大小</span><br>batch_size = 2<br><br><span class="hljs-comment"># 最大训练轮数</span><br>max_epochs = 3<br><br><span class="hljs-comment"># 验证的频率</span><br>evaluation_freq = 90<br><br><span class="hljs-comment"># 用于评估输出内容的问题（用于评估的问题尽量与数据集的question保持一致）</span><br>evaluation_inputs = [ <span class="hljs-string">&#x27;请介绍一下你自己&#x27;</span>, <span class="hljs-string">&#x27;请做一下自我介绍&#x27;</span> ]<br><br><br><span class="hljs-comment"># PART 3 中</span><br>dataset=dict(<span class="hljs-built_in">type</span>=load_dataset, path=<span class="hljs-string">&#x27;json&#x27;</span>, data_files=dict(train=data_path))<br>dataset_map_fn=None<br></code></pre></td></tr></table></figure>
+<h4 id="微调启动"><a href="#微调启动" class="headerlink" title="微调启动"></a>微调启动</h4><p>用<code>xtuner train</code>命令启动训练、</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">xtuner train /root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py<br></code></pre></td></tr></table></figure>
+<p><img  src="训练过程.png"  ><span class="image-caption">训练数据样例</span></p>
+<blockquote>
+<p>会在训练完成后，输出用于验证的Sample output</p>
+<h4 id="微调后参数转换-合并"><a href="#微调后参数转换-合并" class="headerlink" title="微调后参数转换/合并"></a>微调后参数转换/合并</h4></blockquote>
+<p>训练后的pth格式参数转Hugging Face格式</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建用于存放Hugging Face格式参数的hf文件夹</span><br><span class="hljs-built_in">mkdir</span> /root/personal_assistant/config/work_dirs/hf<br><br><span class="hljs-built_in">export</span> MKL_SERVICE_FORCE_INTEL=1<br><br><span class="hljs-comment"># 配置文件存放的位置</span><br><span class="hljs-built_in">export</span> CONFIG_NAME_OR_PATH=/root/personal_assistant/config/internlm_chat_7b_qlora_oasst1_e3_copy.py<br><br><span class="hljs-comment"># 模型训练后得到的pth格式参数存放的位置</span><br><span class="hljs-built_in">export</span> PTH=/root/personal_assistant/config/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth<br><br><span class="hljs-comment"># pth文件转换为Hugging Face格式后参数存放的位置</span><br><span class="hljs-built_in">export</span> SAVE_PATH=/root/personal_assistant/config/work_dirs/hf<br><br><span class="hljs-comment"># 执行参数转换</span><br>xtuner convert pth_to_hf <span class="hljs-variable">$CONFIG_NAME_OR_PATH</span> <span class="hljs-variable">$PTH</span> <span class="hljs-variable">$SAVE_PATH</span><br></code></pre></td></tr></table></figure>
+<p>Merge模型参数<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> MKL_SERVICE_FORCE_INTEL=1<br><span class="hljs-built_in">export</span> MKL_THREADING_LAYER=<span class="hljs-string">&#x27;GNU&#x27;</span><br><br><span class="hljs-comment"># 原始模型参数存放的位置</span><br><span class="hljs-built_in">export</span> NAME_OR_PATH_TO_LLM=/root/personal_assistant/model/Shanghai_AI_Laboratory/internlm-chat-7b<br><br><span class="hljs-comment"># Hugging Face格式参数存放的位置</span><br><span class="hljs-built_in">export</span> NAME_OR_PATH_TO_ADAPTER=/root/personal_assistant/config/work_dirs/hf<br><br><span class="hljs-comment"># 最终Merge后的参数存放的位置</span><br><span class="hljs-built_in">mkdir</span> /root/personal_assistant/config/work_dirs/hf_merge<br><span class="hljs-built_in">export</span> SAVE_PATH=/root/personal_assistant/config/work_dirs/hf_merge<br><br><span class="hljs-comment"># 执行参数Merge</span><br>xtuner convert merge \<br>    <span class="hljs-variable">$NAME_OR_PATH_TO_LLM</span> \<br>    <span class="hljs-variable">$NAME_OR_PATH_TO_ADAPTER</span> \<br>    <span class="hljs-variable">$SAVE_PATH</span> \<br>    --max-shard-size 2GB<br></code></pre></td></tr></table></figure></p>
+<h4 id="网页DEMO"><a href="#网页DEMO" class="headerlink" title="网页DEMO"></a>网页DEMO</h4><p>安装网页Demo所需依赖</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">pip install streamlit==1.24.0<br></code></pre></td></tr></table></figure>
+<p>下载 InternLM 项目代码</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建code文件夹用于存放InternLM项目代码</span><br><span class="hljs-built_in">mkdir</span> /root/personal_assistant/code &amp;&amp; <span class="hljs-built_in">cd</span> /root/personal_assistant/code<br>git <span class="hljs-built_in">clone</span> https://github.com/InternLM/InternLM.git<br></code></pre></td></tr></table></figure>
+<p>将 <code>/root/code/InternLM/web_demo.py</code> 中 29 行和 33 行的模型路径更换为Merge后存放参数的路径 <code>/root/personal_assistant/config/work_dirs/hf_merge</code><br>运行 <code>/root/personal_assistant/code/InternLM</code> 目录下的 <code>web_demo.py</code> 文件，之后将端口映射到本地。在本地浏览器输入 <code>http://127.0.0.1:6006</code> 即可。</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus">streamlit run /root/personal_assistant/code/InternLM/web_demo<span class="hljs-selector-class">.py</span> <span class="hljs-attr">--server</span><span class="hljs-selector-class">.address</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-attr">--server</span><span class="hljs-selector-class">.port</span> <span class="hljs-number">6006</span><br></code></pre></td></tr></table></figure>
+<p>注意：要在浏览器打开 <code>http://127.0.0.1:6006</code> 页面后，模型才会加载。<br>在加载完模型之后，就可以与微调后的 InternLM-Chat-7B 进行对话了</p>
+<h3 id="3-效果"><a href="#3-效果" class="headerlink" title="3 效果"></a>3 效果</h3><p>微调前<br><img  src="官方回答.png"  ><span class="image-caption">官方回答</span></p>
+<p>微调后<br><img  src="微调后.png"  ><span class="image-caption">微调后.png</span></p>
+<h2 id="7-进阶作业"><a href="#7-进阶作业" class="headerlink" title="7 进阶作业"></a>7 进阶作业</h2><h3 id="1-模型上传"><a href="#1-模型上传" class="headerlink" title="1 模型上传"></a>1 模型上传</h3><p><img  src="model-upload.png"  ><span class="image-caption">model-upload.png</span></p>
+<h3 id="2-修改启动文件"><a href="#2-修改启动文件" class="headerlink" title="2 修改启动文件"></a>2 修改启动文件</h3><p>接下来需要修改启动文件以下载模型以及合并 lora 层，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">from</span> openxlab.model <span class="hljs-keyword">import</span> download<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Download</span>():<br>    download(model_repo=<span class="hljs-string">&#x27;OpenLMLab/InternLM-chat-7b&#x27;</span>,output=<span class="hljs-string">&#x27;/home/xlab-app-center/InternLM-chat-7b&#x27;</span>)<br>    download(model_repo=<span class="hljs-string">&#x27;EnableAsync/openxlab-assistant&#x27;</span>,output=<span class="hljs-string">&quot;/home/xlab-app-center/hf&quot;</span>)<br><br>Download()<br><br>os.system(<span class="hljs-string">&#x27;xtuner convert merge /home/xlab-app-center/InternLM-chat-7b /home/xlab-app-center/hf /home/xlab-app-center/hf-merge --max-shard-size 2GB&#x27;</span>)<br>os.system(<span class="hljs-string">&#x27;streamlit run /home/xlab-app-center/openxlab-assistant/InternLM/app.py --server.address=0.0.0.0 --server.port 7860&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<h3 id="3-构建并运行"><a href="#3-构建并运行" class="headerlink" title="3 构建并运行"></a>3 构建并运行</h3><p><img  src="./build.png"  ><span class="image-caption">构建及运行</span></p>
+<p>Github 地址如下：</p>
+<p><a href="https://github.com/EnableAsync/openxlab-assistant">EnableAsync/openxlab-assistant (github.com)</a></p>
+<p>等待 GPU 资源审批即可运行。</p>
 ]]></content>
       <categories>
         <category>internlm</category>

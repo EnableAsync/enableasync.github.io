@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 10, 2024</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>17547</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>17575</span>
     </div>
   </div>
 </section>
@@ -266,7 +266,7 @@
 <p>如图，能够正确地回答知识库中的知识。</p>
 <h2 id="问题解决以及-Langchain-调试"><a href="#问题解决以及-Langchain-调试" class="headerlink" title="问题解决以及 Langchain 调试"></a>问题解决以及 Langchain 调试</h2><p>我们在遇到奇怪问题的时候，想要调试 Langchain，这个时候可以借助 Langchain 的全局设置设置调试模式，设置方式如下所示：</p>
 <p><a target="_blank" rel="noopener" href="https://python.langchain.com/docs/guides/debugging">Debugging | 🦜️🔗 Langchain</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> langchain.<span class="hljs-built_in">globals</span> <span class="hljs-keyword">import</span> set_verbose<br><br>set_verbose(<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> langchain.<span class="hljs-built_in">globals</span> <span class="hljs-keyword">import</span> set_verbose <span class="hljs-comment"># 我这里用的 langchain 版本为 0.1.0</span><br><br>set_verbose(<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
 <p><img    class="lazyload" data-original="langchain-debug.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">langchain 的调试输出</span></p>
 <h2 id="将应用部署在-OpenXLab-上"><a href="#将应用部署在-OpenXLab-上" class="headerlink" title="将应用部署在 OpenXLab 上"></a>将应用部署在 OpenXLab 上</h2><p><a target="_blank" rel="noopener" href="https://openxlab.org.cn/apps/detail/EnableAsync/network-bot">计算机网络问答机器人</a></p>
 <h3 id="Sqlite-问题1"><a href="#Sqlite-问题1" class="headerlink" title="Sqlite 问题1"></a>Sqlite 问题<sup><a href="#fn_1" id="reffn_1">1</a></sup></h3><p>OpenXLab 上的 sqlite3 版本低于我们项目用的 Chroma 要求。可参考<a href="https://link.zhihu.com/?target=https%3A//docs.trychroma.com/troubleshooting%23sqlite"> Troubleshooting | Chroma (trychroma.com)</a>，在 <code>requirements.txt</code> 中添加 <code>pysqlite3-binary</code> ，之后加载 sqlite3 库来绕过这个问题。否则就要写脚本在运行时自己安装上更新版本的sqlite3了。下面是修改加载 sqlite3 库的 trick 命令：</p>
@@ -294,7 +294,7 @@
         
         
   <nav class="nav">
-    <a href="/linux/linux/"><i class="iconfont iconleft"></i>Linux 的一些使用心得</a>
+    <a href="/internlm/internlm-04/"><i class="iconfont iconleft"></i>XTuner 大模型单卡低成本微调实战</a>
     <a href="/internlm/internlm-01/">Internlm-01-书生·浦语大模型全链路开源体系<i class="iconfont iconright"></i></a>
   </nav>
 
