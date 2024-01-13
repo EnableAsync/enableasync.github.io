@@ -1,5 +1,5 @@
 ---
-title: XTuner 大模型单卡低成本微调实战
+title: Internlm-04-XTuner 大模型单卡低成本微调实战
 date: 2024-01-12 15:00:00
 tags:
 categories: internlm
