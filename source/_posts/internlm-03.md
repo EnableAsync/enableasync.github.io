@@ -599,3 +599,32 @@ set_verbose(True)
 ```
 
 ![langchain 的调试输出](langchain-debug.png)
+
+## 将应用部署在 OpenXLab 上
+
+[计算机网络问答机器人](https://openxlab.org.cn/apps/detail/EnableAsync/network-bot)
+
+### Sqlite 问题[^1]
+
+OpenXLab 上的 sqlite3 版本低于我们项目用的 Chroma 要求。可参考[ Troubleshooting | Chroma (trychroma.com)](https://link.zhihu.com/?target=https%3A//docs.trychroma.com/troubleshooting%23sqlite)，在 `requirements.txt` 中添加 `pysqlite3-binary` ，之后加载 sqlite3 库来绕过这个问题。否则就要写脚本在运行时自己安装上更新版本的sqlite3了。下面是修改加载 sqlite3 库的 trick 命令：
+
+```python
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+```
+
+### 运行截图
+
+![openxlab-deploy](openxlab-deploy.png)
+
+![加载模型](loading.png)
+
+![部署](部署.png)
+
+![运行日志](运行日志.png)
+
+## 参考内容
+
+[^1]: [书生・浦语大模型实战营第三课作业(基础+进阶) - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/676719586)
+
