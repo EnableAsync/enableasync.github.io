@@ -593,7 +593,7 @@ demo.launch()
 [Debugging | 🦜️🔗 Langchain](https://python.langchain.com/docs/guides/debugging)
 
 ```python
-from langchain.globals import set_verbose
+from langchain.globals import set_verbose # 我这里用的 langchain 版本为 0.1.0
 
 set_verbose(True)
 ```
