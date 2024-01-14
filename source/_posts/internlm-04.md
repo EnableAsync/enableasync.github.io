@@ -985,5 +985,7 @@ Github 地址如下：
 
 [EnableAsync/openxlab-assistant (github.com)](https://github.com/EnableAsync/openxlab-assistant)
 
-等待 GPU 资源审批即可运行。
+运行地址如下：
+
+[应用中心-OpenXLab-小卡的助手](https://openxlab.org.cn/apps/detail/EnableAsync/openxlab-assistant)
 
