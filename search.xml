@@ -1292,7 +1292,9 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Gradio+TritonServer（注意是gRPC协议，不要用http）</span><br>lmdeploy serve gradio localhost:33337 \<br>	--server_name 0.0.0.0 \<br>	--server_port 6006<br></code></pre></td></tr></table></figure>
 <p>结果如下图所示。</p>
 <p><img src="triton-client-web.png" alt=""></p>
-<h2 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h2><p><img  src="story.png"  ><span class="image-caption">部署并使用 api 生成 300 字小故事</span></p>
+<h2 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h2><h3 id="TurboMind推理-API服务"><a href="#TurboMind推理-API服务" class="headerlink" title="TurboMind推理+API服务"></a>TurboMind推理+API服务</h3><p><img  src="story.png"  ><span class="image-caption">部署并使用 api 生成 300 字小故事</span></p>
+<h3 id="TurboMind-推理-命令行本地对话"><a href="#TurboMind-推理-命令行本地对话" class="headerlink" title="TurboMind 推理+命令行本地对话"></a>TurboMind 推理+命令行本地对话</h3><p><img  src="chat.png"  ><span class="image-caption">与本地部署的模型进行对话</span></p>
+<h3 id="TurboMind-推理-gradio"><a href="#TurboMind-推理-gradio" class="headerlink" title="TurboMind 推理+gradio"></a>TurboMind 推理+gradio</h3><p><img  src="gradio.png"  ><span class="image-caption">Gradio 部署</span></p>
 ]]></content>
       <categories>
         <category>internlm</category>
