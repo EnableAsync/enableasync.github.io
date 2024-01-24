@@ -758,4 +758,14 @@ lmdeploy serve gradio localhost:33337 \
 
 ## 作业
 
+### TurboMind推理+API服务
+
 ![部署并使用 api 生成 300 字小故事](story.png)
+
+### TurboMind 推理+命令行本地对话
+
+![与本地部署的模型进行对话](chat.png)
+
+### TurboMind 推理+gradio
+
+![Gradio 部署](gradio.png)
