@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 14, 2024</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>19358</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>19456</span>
     </div>
   </div>
 </section>
@@ -641,6 +641,7 @@
 <p><img    class="lazyload" data-original="qparam.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">获取量化参数</span></p>
 <p>之后修改 <code>weights/config.ini</code> 文件 <code>quant_policy=4</code> 表示开启 KV Cache 量化。</p>
 <p>部署运行内存占用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">watch vgpu-smi<br></code></pre></td></tr></table></figure>
 <p><img    class="lazyload" data-original="kv-cache-memory.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">KV Cache 内存占用</span></p>
 <h3 id="W4A16-量化"><a href="#W4A16-量化" class="headerlink" title="W4A16 量化"></a>W4A16 量化</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 计算 minmax</span><br>lmdeploy lite calibrate \<br>  --model  /root/share/temp/model_repos/internlm-chat-7b/ \<br>  --calib_dataset <span class="hljs-string">&quot;c4&quot;</span> \<br>  --calib_samples 128 \<br>  --calib_seqlen 2048 \<br>  --work_dir ./quant_output_awq<br></code></pre></td></tr></table></figure>
 <p>之后量化权重</p>
@@ -653,6 +654,11 @@
 <p><img    class="lazyload" data-original="convert-awq.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">转换为 TurboMind 格式</span></p>
 <p>目录结构如下：</p>
 <p><img    class="lazyload" data-original="tree-awq.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">转换为 TurboMind 格式的 AWQ 模型结构</span></p>
+<p>部署使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">lmdeploy chat turbomind ./workspace_quant_awq4<br></code></pre></td></tr></table></figure>
+<p>内存占用</p>
+<p><img    class="lazyload" data-original="awq-memory.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">AWQ 量化内存占用</span></p>
+<p>可见内存占用只有 6G。</p>
 
       </section>
       <section class="extra">
