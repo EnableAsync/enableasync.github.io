@@ -659,3 +659,6 @@ models = [internlm2_chat_7b]
 python run.py configs/eval_internlm2_my_deploy.py --debug
 ```
 
+![AWQ 量化评测](awq-result.png)
+
+能够发现 AWQ 量化后的模型在 ceval 数据集上的得分比原模型要好。精度不仅没有明显下降，相反在不少任务上还有一定的提升。可能得原因是，量化会导致一定的误差，有时候这种误差可能会减少模型对训练数据的拟合，从而提高泛化性能。量化可以被视为引入轻微噪声的正则化方法。或者，也有可能量化后的模型正好对某些数据集具有更好的性能。
