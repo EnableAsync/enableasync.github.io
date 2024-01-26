@@ -803,6 +803,12 @@ lmdeploy lite kv_qparams \
 
 部署运行内存占用
 
+```bash
+watch vgpu-smi
+```
+
+
+
 ![KV Cache 内存占用](kv-cache-memory.png)
 
 ### W4A16 量化
@@ -848,3 +854,15 @@ lmdeploy convert  internlm-chat-7b ./quant_output_awq \
 目录结构如下：
 
 ![转换为 TurboMind 格式的 AWQ 模型结构](tree-awq.png)
+
+部署使用
+
+```bash
+lmdeploy chat turbomind ./workspace_quant_awq4
+```
+
+内存占用
+
+![AWQ 量化内存占用](awq-memory.png)
+
+可见内存占用只有 6G。
