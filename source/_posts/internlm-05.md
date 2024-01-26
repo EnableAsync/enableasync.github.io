@@ -13,7 +13,7 @@ typora-root-url: ./internlm-05
 这里 `/share/conda_envs` 目录下的环境是官方未大家准备好的基础环境，因为该目录是共享只读的，而我们后面需要在此基础上安装新的软件包，所以需要复制到我们自己的 conda 环境（该环境下我们是可写的）。
 
 ```bash
-conda create -n CONDA_ENV_NAME --clone /share/conda_envs/internlm-base
+conda create -n lmdeploy --clone /share/conda_envs/internlm-base
 ```
 
 - 如果clone操作过慢，可采用如下操作:
@@ -544,7 +544,7 @@ lmdeploy lite kv_qparams \
 | Understanding | eprstmt-dev     | accuracy      | 90.62 | 88.75 | +1.87 |
 | Safety        | crows_pairs     | accuracy      | 32.56 | 31.43 | +1.13 |
 
-可以看出，精度不仅没有明显下降，相反在不少任务上还有一定的提升。可能得原因是，量化会导致一定的误差，有时候这种误差可能会减少模型对训练数据的拟合，从而提高泛化性能。量化可以被视为引入轻微噪声的正则化方法。或者，也有可能量化后的模型正好对某些数据集具有更好的性能。
+可以看出，精度不仅没有明显下降，相反在不少任务上还有一定的提升。可能的原因是，量化会导致一定的误差，有时候这种误差可能会减少模型对训练数据的拟合，从而提高泛化性能。量化可以被视为引入轻微噪声的正则化方法。或者，也有可能量化后的模型正好对某些数据集具有更好的性能。
 
 总结一下，KV Cache 量化既能明显降低显存占用，还有可能同时带来精准度（Accuracy）的提升。
 
@@ -769,3 +769,33 @@ lmdeploy serve gradio localhost:33337 \
 ### TurboMind 推理+gradio
 
 ![Gradio 部署](gradio.png)
+
+### KV Cache 量化部署
+
+```bash
+# 计算 minmax
+lmdeploy lite calibrate \
+  --model  /root/share/temp/model_repos/internlm-chat-7b/ \
+  --calib_dataset "c4" \
+  --calib_samples 128 \
+  --calib_seqlen 2048 \
+  --work_dir ./quant_output
+```
+
+这里在计算的时候需要下载 calibrate 数据集 c4，国内经常不成功。所以需要手动下载后对读取数据集的代码文件做一下替换。共包括两步：
+- 第一步：复制 `calib_dataloader.py` 到安装目录替换该文件：`cp /root/share/temp/datasets/c4/calib_dataloader.py  /root/.conda/envs/lmdeploy/lib/python3.10/site-packages/lmdeploy/lite/utils/`
+- 第二步：将用到的数据集（c4）复制到下面的目录：`cp -r /root/share/temp/datasets/c4/ /root/.cache/huggingface/datasets/`
+
+
+
+```bash
+# 通过 minmax 获取量化参数
+lmdeploy lite kv_qparams \
+  --work_dir ./quant_output  \
+  --turbomind_dir workspace/triton_models/weights/ \
+  --kv_sym False \
+  --num_tp 1
+```
+
+之后修改 config.ini 文件表示开启量化
+
