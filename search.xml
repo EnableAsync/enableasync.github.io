@@ -1098,6 +1098,7 @@
 <p>发现显存不够用，尝试改小 batch size 为 1。</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">python run.py \<br>--datasets ceval_gen \<br>--hf-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-kwargs padding_side=<span class="hljs-string">&#x27;left&#x27;</span> truncation=<span class="hljs-string">&#x27;left&#x27;</span> trust_remote_code=True \<br>--model-kwargs device_map=<span class="hljs-string">&#x27;auto&#x27;</span> trust_remote_code=True \<br>--max-seq-len 2048 \<br>--max-out-len 16 \<br>--batch-size 1  \<br>--num-gpus 1 \<br>--debug<br></code></pre></td></tr></table></figure>
 <p><img  src="run.png"  ><span class="image-caption">运行截图</span></p>
+<p><img  src="result.png"  ><span class="image-caption">评测结果</span></p>
 <p><strong>进阶作业</strong></p>
 <ul>
 <li>使用 OpenCompass 评测 InternLM2-Chat-7B 模型使用 LMDeploy 0.2.0 部署后在 C-Eval 数据集上的性能</li>
@@ -1543,7 +1544,7 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <p>可以看出，精度不仅没有明显下降，相反在不少任务上还有一定的提升。可能的原因是，量化会导致一定的误差，有时候这种误差可能会减少模型对训练数据的拟合，从而提高泛化性能。量化可以被视为引入轻微噪声的正则化方法。或者，也有可能量化后的模型正好对某些数据集具有更好的性能。</p>
 <p>总结一下，KV Cache 量化既能明显降低显存占用，还有可能同时带来精准度（Accuracy）的提升。</p>
 <h3 id="3-2-W4A16-量化"><a href="#3-2-W4A16-量化" class="headerlink" title="3.2 W4A16 量化"></a>3.2 W4A16 量化</h3><h4 id="3-2-1-量化步骤"><a href="#3-2-1-量化步骤" class="headerlink" title="3.2.1 量化步骤"></a>3.2.1 量化步骤</h4><p>W4A16中的A是指Activation，保持FP16，只对参数进行 4bit 量化。使用过程也可以看作是三步。</p>
-<p>第一步：同 1.3.1，不再赘述。</p>
+<p>第一步：同 3.1.1，不再赘述。</p>
 <p>第二步：量化权重模型。利用第一步得到的统计值对参数进行量化，具体又包括两小步：</p>
 <ul>
 <li>缩放参数。主要是性能上的考虑（回顾 PPT）。</li>
@@ -1700,8 +1701,23 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <li>第一步：复制 <code>calib_dataloader.py</code> 到安装目录替换该文件：<code>cp /root/share/temp/datasets/c4/calib_dataloader.py  /root/.conda/envs/lmdeploy/lib/python3.10/site-packages/lmdeploy/lite/utils/</code></li>
 <li>第二步：将用到的数据集（c4）复制到下面的目录：<code>cp -r /root/share/temp/datasets/c4/ /root/.cache/huggingface/datasets/</code></li>
 </ul>
+<p><img  src="max.png"  ><span class="image-caption">计算每一层的最大 GPU 占用</span></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 通过 minmax 获取量化参数</span><br>lmdeploy lite kv_qparams \<br>  --work_dir ./quant_output  \<br>  --turbomind_dir workspace/triton_models/weights/ \<br>  --kv_sym False \<br>  --num_tp 1<br></code></pre></td></tr></table></figure>
-<p>之后修改 config.ini 文件表示开启量化</p>
+<p><img  src="qparam.png"  ><span class="image-caption">获取量化参数</span></p>
+<p>之后修改 <code>weights/config.ini</code> 文件 <code>quant_policy=4</code> 表示开启 KV Cache 量化。</p>
+<p>部署运行内存占用</p>
+<p><img  src="kv-cache-memory.png"  ><span class="image-caption">KV Cache 内存占用</span></p>
+<h3 id="W4A16-量化"><a href="#W4A16-量化" class="headerlink" title="W4A16 量化"></a>W4A16 量化</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 计算 minmax</span><br>lmdeploy lite calibrate \<br>  --model  /root/share/temp/model_repos/internlm-chat-7b/ \<br>  --calib_dataset <span class="hljs-string">&quot;c4&quot;</span> \<br>  --calib_samples 128 \<br>  --calib_seqlen 2048 \<br>  --work_dir ./quant_output_awq<br></code></pre></td></tr></table></figure>
+<p>之后量化权重</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 量化权重模型</span><br>lmdeploy lite auto_awq \<br>  --model  /root/share/temp/model_repos/internlm-chat-7b/ \<br>  --w_bits 4 \<br>  --w_group_size 128 \<br>  --work_dir ./quant_output_awq<br></code></pre></td></tr></table></figure>
+<p>命令中 <code>w_bits</code> 表示量化的位数，<code>w_group_size</code> 表示量化分组统计的尺寸，<code>work_dir</code> 是量化后模型输出的位置。这里需要特别说明的是，因为没有 <code>torch.int4</code>，所以实际存储时，8个 4bit 权重会被打包到一个 int32 值中。所以，如果你把这部分量化后的参数加载进来就会发现它们是 int32 类型的。</p>
+<p><img  src="awq.png"  ><span class="image-caption">AWQ 量化</span></p>
+<p>最后一步：转换成 TurboMind 格式。</p>
+<p>这个 <code>group-size</code> 就是上一步的那个 <code>w_group_size</code>。如果不想和之前的 <code>workspace</code> 重复，可以指定输出目录：<code>--dst_path</code>，比如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">lmdeploy convert  internlm-chat-7b ./quant_output_awq \<br>    --model-format awq \<br>    --group-size 128 \<br>    --dst_path ./workspace_quant_awq4<br></code></pre></td></tr></table></figure>
+<p><img  src="convert-awq.png"  ><span class="image-caption">转换为 TurboMind 格式</span></p>
+<p>目录结构如下：</p>
+<p><img  src="tree-awq.png"  ><span class="image-caption">转换为 TurboMind 格式的 AWQ 模型结构</span></p>
 ]]></content>
       <categories>
         <category>internlm</category>

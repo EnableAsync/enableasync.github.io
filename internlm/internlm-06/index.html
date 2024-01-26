@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 14, 2024</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>20932</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>20937</span>
     </div>
   </div>
 </section>
@@ -433,6 +433,7 @@
 <p>发现显存不够用，尝试改小 batch size 为 1。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">python run.py \<br>--datasets ceval_gen \<br>--hf-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-kwargs padding_side=<span class="hljs-string">&#x27;left&#x27;</span> truncation=<span class="hljs-string">&#x27;left&#x27;</span> trust_remote_code=True \<br>--model-kwargs device_map=<span class="hljs-string">&#x27;auto&#x27;</span> trust_remote_code=True \<br>--max-seq-len 2048 \<br>--max-out-len 16 \<br>--batch-size 1  \<br>--num-gpus 1 \<br>--debug<br></code></pre></td></tr></table></figure>
 <p><img    class="lazyload" data-original="run.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">运行截图</span></p>
+<p><img    class="lazyload" data-original="result.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">评测结果</span></p>
 <p><strong>进阶作业</strong></p>
 <ul>
 <li>使用 OpenCompass 评测 InternLM2-Chat-7B 模型使用 LMDeploy 0.2.0 部署后在 C-Eval 数据集上的性能</li>
