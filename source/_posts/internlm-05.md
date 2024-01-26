@@ -554,7 +554,7 @@ lmdeploy lite kv_qparams \
 
 W4A16中的A是指Activation，保持FP16，只对参数进行 4bit 量化。使用过程也可以看作是三步。
 
-第一步：同 1.3.1，不再赘述。
+第一步：同 3.1.1，不再赘述。
 
 第二步：量化权重模型。利用第一步得到的统计值对参数进行量化，具体又包括两小步：
 
@@ -786,7 +786,7 @@ lmdeploy lite calibrate \
 - 第一步：复制 `calib_dataloader.py` 到安装目录替换该文件：`cp /root/share/temp/datasets/c4/calib_dataloader.py  /root/.conda/envs/lmdeploy/lib/python3.10/site-packages/lmdeploy/lite/utils/`
 - 第二步：将用到的数据集（c4）复制到下面的目录：`cp -r /root/share/temp/datasets/c4/ /root/.cache/huggingface/datasets/`
 
-
+![计算每一层的最大 GPU 占用](max.png)
 
 ```bash
 # 通过 minmax 获取量化参数
@@ -797,5 +797,54 @@ lmdeploy lite kv_qparams \
   --num_tp 1
 ```
 
-之后修改 config.ini 文件表示开启量化
+![获取量化参数](qparam.png)
 
+之后修改 `weights/config.ini` 文件 `quant_policy=4` 表示开启 KV Cache 量化。
+
+部署运行内存占用
+
+![KV Cache 内存占用](kv-cache-memory.png)
+
+### W4A16 量化
+
+```bash
+# 计算 minmax
+lmdeploy lite calibrate \
+  --model  /root/share/temp/model_repos/internlm-chat-7b/ \
+  --calib_dataset "c4" \
+  --calib_samples 128 \
+  --calib_seqlen 2048 \
+  --work_dir ./quant_output_awq
+```
+
+之后量化权重
+
+```bash
+# 量化权重模型
+lmdeploy lite auto_awq \
+  --model  /root/share/temp/model_repos/internlm-chat-7b/ \
+  --w_bits 4 \
+  --w_group_size 128 \
+  --work_dir ./quant_output_awq
+```
+
+命令中 `w_bits` 表示量化的位数，`w_group_size` 表示量化分组统计的尺寸，`work_dir` 是量化后模型输出的位置。这里需要特别说明的是，因为没有 `torch.int4`，所以实际存储时，8个 4bit 权重会被打包到一个 int32 值中。所以，如果你把这部分量化后的参数加载进来就会发现它们是 int32 类型的。
+
+![AWQ 量化](awq.png)
+
+最后一步：转换成 TurboMind 格式。
+
+这个 `group-size` 就是上一步的那个 `w_group_size`。如果不想和之前的 `workspace` 重复，可以指定输出目录：`--dst_path`，比如：
+
+```bash
+lmdeploy convert  internlm-chat-7b ./quant_output_awq \
+    --model-format awq \
+    --group-size 128 \
+    --dst_path ./workspace_quant_awq4
+```
+
+![转换为 TurboMind 格式](convert-awq.png)
+
+目录结构如下：
+
+![转换为 TurboMind 格式的 AWQ 模型结构](tree-awq.png)

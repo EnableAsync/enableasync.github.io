@@ -530,6 +530,8 @@ python run.py \
 
 ![运行截图](run.png)
 
+![评测结果](result.png)
+
 **进阶作业**
 
 - 使用 OpenCompass 评测 InternLM2-Chat-7B 模型使用 LMDeploy 0.2.0 部署后在 C-Eval 数据集上的性能
