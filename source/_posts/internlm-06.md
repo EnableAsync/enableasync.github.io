@@ -532,6 +532,130 @@ python run.py \
 
 ![评测结果](result.png)
 
-**进阶作业**
+## 进阶作业
 
-- 使用 OpenCompass 评测 InternLM2-Chat-7B 模型使用 LMDeploy 0.2.0 部署后在 C-Eval 数据集上的性能
+安装 lmdeploy，这一步是必须的，否则无法加载 TurboMind 模型
+
+```bash
+pip install lmdeploy==0.2.0
+```
+
+编写 config 文件如下：
+
+```python
+from mmengine.config import read_base
+from opencompass.models.turbomind import TurboMindModel
+
+with read_base():
+    # choose a list of datasets
+    from .datasets.ceval.ceval_gen_5f30c7 import ceval_datasets
+
+
+datasets = [*ceval_datasets]
+
+internlm_meta_template = dict(round=[
+    dict(role='HUMAN', begin='<|User|>:', end='\n'),
+    dict(role='BOT', begin='<|Bot|>:', end='<eoa>\n', generate=True),
+],
+                              eos_token_id=103028)
+
+# config for internlm-chat-7b
+internlm_chat_7b = dict(
+    type=TurboMindModel,
+    abbr='internlm-chat-7b',
+    path='/root/workspace_quant_awq4', # 这里的 path 是上一节课中的 awq 模型
+    engine_config=dict(session_len=2048,
+                       max_batch_size=32,
+                       rope_scaling_factor=1.0),
+    gen_config=dict(top_k=1,
+                    top_p=0.8,
+                    temperature=1.0,
+                    max_new_tokens=100),
+    max_out_len=100,
+    max_seq_len=1024,
+    batch_size=2,
+    concurrency=32,
+    meta_template=internlm_meta_template,
+    run_cfg=dict(num_gpus=1, num_procs=1),
+)
+
+models = [internlm_chat_7b]
+```
+
+运行评测：
+
+```bash
+python run.py configs/eval_internlm_my_deploy.py --debug
+```
+
+![加载量化后的模型](awq.png)
+
+![评判 internlm-awq](result-internlm-awq.png)
+
+可见 internlm-AWQ 在 ceval 上的得分并不如 internlm2。
+
+### 使用 lmdeploy 0.2.0 转换 internlm2 为 awq 模型并进行评测
+
+使用 lmdeploy 0.2 的时候与 0.1 版本进行 AWQ 量化的方式略有不同，同时要从 huggingface 上下载测试数据集，所以国内可以使用镜像：
+
+```bash
+export HF_ENDPOINT=https://hf-mirror.com
+lmdeploy lite auto_awq /root/share/model_repos/internlm2-chat-7b  --work-dir internlm2-chat-7b-4bit
+```
+
+之后对模型进行转化：
+
+```bash
+lmdeploy convert  internlm2-chat-7b ./internlm2-chat-7b-4bit/ --model-format awq --group-size 128  --dst-path  ./workspace_awq_internlm2
+```
+
+![转换模型](convert.png)
+
+之后编写新的 config.py
+
+```python
+from mmengine.config import read_base
+from opencompass.models.turbomind import TurboMindModel
+
+with read_base():
+    # choose a list of datasets
+    from .datasets.ceval.ceval_gen_5f30c7 import ceval_datasets
+
+
+datasets = [*ceval_datasets]
+
+internlm_meta_template = dict(round=[
+    dict(role='HUMAN', begin='<|User|>:', end='\n'),
+    dict(role='BOT', begin='<|Bot|>:', end='<eoa>\n', generate=True),
+],
+                              eos_token_id=103028)
+
+# config for internlm2-chat-7b-awq
+internlm2_chat_7b = dict(
+    type=TurboMindModel,
+    abbr='internlm-chat-7b',
+    path='/root/workspace_awq_internlm2',
+    engine_config=dict(session_len=2048,
+                       max_batch_size=32,
+                       rope_scaling_factor=1.0),
+    gen_config=dict(top_k=1,
+                    top_p=0.8,
+                    temperature=1.0,
+                    max_new_tokens=100),
+    max_out_len=100,
+    max_seq_len=1024,
+    batch_size=2,
+    concurrency=32,
+    meta_template=internlm_meta_template,
+    run_cfg=dict(num_gpus=1, num_procs=1),
+)
+
+models = [internlm2_chat_7b]
+```
+
+进行评测：
+
+```bash
+python run.py configs/eval_internlm2_my_deploy.py --debug
+```
+
