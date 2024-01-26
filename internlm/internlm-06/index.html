@@ -1,0 +1,587 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Internlm-06-使用 OpenCompass 对大模型进行评测 - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="使用 OpenCompass 对大模型进行评测大模型评...">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Internlm-06-使用 OpenCompass 对大模型进行评测</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Internlm-06-使用 OpenCompass 对大模型进行评测</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 14, 2024</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>20932</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="使用-OpenCompass-对大模型进行评测"><a href="#使用-OpenCompass-对大模型进行评测" class="headerlink" title="使用 OpenCompass 对大模型进行评测"></a>使用 OpenCompass 对大模型进行评测</h1><h2 id="大模型评测概要"><a href="#大模型评测概要" class="headerlink" title="大模型评测概要"></a>大模型评测概要</h2><h3 id="人工智能技术的发展和主要模型的演变"><a href="#人工智能技术的发展和主要模型的演变" class="headerlink" title="人工智能技术的发展和主要模型的演变"></a>人工智能技术的发展和主要模型的演变</h3><ul>
+<li><strong>OpenAI GPT系列：</strong><ul>
+<li>2018年：发布第一代GPT模型，开启自然语言模型生成式预训练。</li>
+<li>随后：发布GPT-2和GPT-3模型。</li>
+</ul>
+</li>
+<li><strong>谷歌的预训练模型：</strong><ul>
+<li>探索不同的大规模预训练模型，如T5, Flan等。</li>
+</ul>
+</li>
+<li><strong>OpenAI的ChatGPT和GPT-4：</strong><ul>
+<li>2022年11月：发布ChatGPT，展示问答、逻辑推理和内容创作能力。</li>
+<li>2023年4月：发布GPT-4，引入多模态能力，拓展语言模型能力。</li>
+</ul>
+</li>
+</ul>
+<h3 id="大模型的国际竞争和应用"><a href="#大模型的国际竞争和应用" class="headerlink" title="大模型的国际竞争和应用"></a>大模型的国际竞争和应用</h3><ul>
+<li><strong>OpenAI和微软的集成：</strong><ul>
+<li>将ChatGPT和GPT-4集成进搜索引擎和Office办公套件，推出New Bing和Office Copilot。</li>
+</ul>
+</li>
+<li><strong>谷歌的Bard：</strong><ul>
+<li>基于PaLM和PaLM-2模型，与OpenAI和微软竞争。</li>
+</ul>
+</li>
+<li><strong>中国企业和高校的发展：</strong><ul>
+<li>百度、阿里、华为、商汤、讯飞等发布国产大模型。</li>
+<li>清华、复旦等高校发布GLM, MOSS等模型。</li>
+</ul>
+</li>
+</ul>
+<h3 id="大模型评测的国际和国内进展"><a href="#大模型评测的国际和国内进展" class="headerlink" title="大模型评测的国际和国内进展"></a>大模型评测的国际和国内进展</h3><ul>
+<li><strong>国际评测框架和数据集：</strong><ul>
+<li>斯坦福大学的HELM评测框架。</li>
+<li>纽约大学与谷歌、Meta的SuperGLUE评测集。</li>
+<li>加州大学伯克利分校的MMLU测试集。</li>
+<li>谷歌的Big-Bench评测集。</li>
+</ul>
+</li>
+<li><strong>中国的评测数据集：</strong><ul>
+<li>如CLUE, CUGE等，评测中文语言模型能力。</li>
+</ul>
+</li>
+</ul>
+<h3 id="面临的挑战和OpenCompass的提议"><a href="#面临的挑战和OpenCompass的提议" class="headerlink" title="面临的挑战和OpenCompass的提议"></a>面临的挑战和OpenCompass的提议</h3><ul>
+<li><strong>当前挑战：</strong><ul>
+<li>大模型应用场景广泛，但评测方案往往缺乏系统化。</li>
+</ul>
+</li>
+<li><strong>OpenCompass的提议：</strong><ul>
+<li>设计全面、高效、可拓展的评测方案。</li>
+<li>提供分布式自动化评测系统，支持全面系统的能力评估。</li>
+</ul>
+</li>
+</ul>
+<h1 id="OpenCompass介绍"><a href="#OpenCompass介绍" class="headerlink" title="OpenCompass介绍"></a>OpenCompass介绍</h1><h2 id="评测对象"><a href="#评测对象" class="headerlink" title="评测对象"></a>评测对象</h2><p>本算法库的主要评测对象为语言大模型与多模态大模型。我们以语言大模型为例介绍评测的具体模型类型。</p>
+<ul>
+<li><p><strong>基座模型</strong>：一般是经过海量的文本数据以自监督学习的方式进行训练获得的模型（如OpenAI的GPT-3，Meta的LLaMA），往往具有强大的文字续写能力。</p>
+</li>
+<li><p><strong>对话模型</strong>：一般是在的基座模型的基础上，经过指令微调或人类偏好对齐获得的模型（如OpenAI的ChatGPT、上海人工智能实验室的书生·浦语），能理解人类指令，具有较强的对话能力。</p>
+</li>
+</ul>
+<h2 id="工具架构"><a href="#工具架构" class="headerlink" title="工具架构"></a>工具架构</h2><p><img    class="lazyload" data-original="工具架构.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">工具架构</span></p>
+<h3 id="大模型评测的层级结构"><a href="#大模型评测的层级结构" class="headerlink" title="大模型评测的层级结构"></a>大模型评测的层级结构</h3><ul>
+<li><p>模型层</p>
+<ul>
+<li>重点评测对象：<ul>
+<li>基座模型</li>
+<li>对话模型</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>能力层</p>
+<ul>
+<li><p>通用能力：</p>
+<ul>
+<li>语言</li>
+<li>知识</li>
+<li>理解</li>
+<li>推理</li>
+<li>安全</li>
+</ul>
+</li>
+<li><p>特色能力：</p>
+<ul>
+<li>长文本处理</li>
+<li>编码能力</li>
+<li>工具使用</li>
+<li>知识增强</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>方法层</p>
+<ul>
+<li><p>客观评测：</p>
+<ul>
+<li>评估模型在确定答案任务（如选择题、填空、封闭式问答）上的能力。</li>
+</ul>
+</li>
+<li><p>主观评测：</p>
+<ul>
+<li>评估用户对模型回复的真实满意度。</li>
+<li>方法包括：<ul>
+<li>基于模型辅助的主观评测</li>
+<li>基于人类反馈的主观评测</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>工具层</p>
+<ul>
+<li>自动化评测支持：<ul>
+<li>分布式评测技术</li>
+<li>提示词工程</li>
+<li>对接评测数据库</li>
+<li>评测榜单发布</li>
+<li>评测报告生成</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="评测方法"><a href="#评测方法" class="headerlink" title="评测方法"></a>评测方法</h2><h3 id="客观评测"><a href="#客观评测" class="headerlink" title="客观评测"></a>客观评测</h3><h4 id="评测客观问题的方法"><a href="#评测客观问题的方法" class="headerlink" title="评测客观问题的方法"></a>评测客观问题的方法</h4><ul>
+<li><strong>定量比较：</strong><ul>
+<li>使用定量指标比较模型输出与标准答案的差异。</li>
+<li>根据差异结果衡量模型性能。</li>
+</ul>
+</li>
+<li><p><strong>输入输出规范：</strong></p>
+<ul>
+<li>在评测阶段规范模型的输入和输出。</li>
+<li>尽量减少噪声输出，以便更客观地评价模型能力。</li>
+</ul>
+<h4 id="模型能力的激发与引导"><a href="#模型能力的激发与引导" class="headerlink" title="模型能力的激发与引导"></a>模型能力的激发与引导</h4></li>
+<li><p>提示词工程（Prompt Engineering）：</p>
+<ul>
+<li>使用特定提示词引导模型输出。</li>
+</ul>
+</li>
+<li><p>语境学习（In-Context Learning）：</p>
+<ul>
+<li>利用上下文环境提升模型的输出质量。</li>
+</ul>
+<h4 id="客观评测的具体实践"><a href="#客观评测的具体实践" class="headerlink" title="客观评测的具体实践"></a>客观评测的具体实践</h4></li>
+<li><p><strong>判别式评测：</strong></p>
+<ul>
+<li>结合问题和候选答案。</li>
+<li>计算困惑度（perplexity），选择困惑度最小的答案。</li>
+</ul>
+</li>
+<li><strong>生成式评测：</strong><ul>
+<li>用于生成类任务（如语言翻译、程序生成、逻辑分析）。</li>
+<li>使用问题作为输入，留白答案区域由模型补全。</li>
+<li>对模型输出进行后处理，确保满足数据集要求。</li>
+</ul>
+</li>
+</ul>
+<h3 id="主观评测"><a href="#主观评测" class="headerlink" title="主观评测"></a>主观评测</h3><h4 id="主观评测的重要性"><a href="#主观评测的重要性" class="headerlink" title="主观评测的重要性"></a>主观评测的重要性</h4><ul>
+<li>场景和能力多样性：<ul>
+<li>语言表达丰富多变，很多场景和能力难以通过客观指标评测。</li>
+</ul>
+</li>
+<li>模型安全和语言能力：<ul>
+<li>需要依赖人的主观感受进行评测，以更真实地反映模型能力。</li>
+</ul>
+</li>
+</ul>
+<h4 id="OpenCompass的主观评测方案"><a href="#OpenCompass的主观评测方案" class="headerlink" title="OpenCompass的主观评测方案"></a>OpenCompass的主观评测方案</h4><ul>
+<li>评测实施：<ul>
+<li>使用受试者的主观判断对大语言模型进行评测。</li>
+<li>构建主观测试问题集，对比不同模型的回复。</li>
+</ul>
+</li>
+<li>成本与效率：<ul>
+<li>高成本的人类主观评测。</li>
+<li>结合使用性能优异的大语言模型进行主观打分。</li>
+</ul>
+</li>
+</ul>
+<h4 id="主观评测的具体实践"><a href="#主观评测的具体实践" class="headerlink" title="主观评测的具体实践"></a>主观评测的具体实践</h4><ul>
+<li>单模型回复满意度统计：<ul>
+<li>对单一模型的回复进行满意度评分。</li>
+</ul>
+</li>
+<li>多模型满意度比较：<ul>
+<li>比较不同模型回复的满意度。</li>
+</ul>
+</li>
+</ul>
+<h1 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1><p><img    class="lazyload" data-original="opencompass流程.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">opencompass 评判流程</span></p>
+<h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>在 OpenCompass 中评估一个模型通常包括以下几个阶段：<strong>配置</strong> -&gt; <strong>推理</strong> -&gt; <strong>评估</strong> -&gt; <strong>可视化</strong>。</p>
+<p><strong>配置</strong>：这是整个工作流的起点。您需要配置整个评估过程，选择要评估的模型和数据集。此外，还可以选择评估策略、计算后端等，并定义显示结果的方式。</p>
+<p><strong>推理与评估</strong>：在这个阶段，OpenCompass 将会开始对模型和数据集进行并行推理和评估。<strong>推理</strong>阶段主要是让模型从数据集产生输出，而<strong>评估</strong>阶段则是衡量这些输出与标准答案的匹配程度。这两个过程会被拆分为多个同时运行的“任务”以提高效率，但请注意，如果计算资源有限，这种策略可能会使评测变得更慢。</p>
+<p><strong>可视化</strong>：评估完成后，OpenCompass 将结果整理成易读的表格，并将其保存为 CSV 和 TXT 文件。你也可以激活飞书状态上报功能，此后可以在飞书客户端中及时获得评测状态报告。</p>
+<p>接下来，我们将展示 OpenCompass 的基础用法，展示书生浦语在 <a target="_blank" rel="noopener" href="https://cevalbenchmark.com/index.html#home">C-Eval</a> 基准任务上的评估。它们的配置文件可以在 <a target="_blank" rel="noopener" href="https://github.com/open-compass/opencompass/blob/main/configs/eval_demo.py">configs/eval_demo.py</a> 中找到。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="面向GPU的环境安装"><a href="#面向GPU的环境安装" class="headerlink" title="面向GPU的环境安装"></a>面向GPU的环境安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda create --name opencompass --<span class="hljs-built_in">clone</span>=/root/share/conda_envs/internlm-base<br>conda activate opencompass<br>git <span class="hljs-built_in">clone</span> https://github.com/open-compass/opencompass<br><span class="hljs-built_in">cd</span> opencompass<br>pip install -e .<br></code></pre></td></tr></table></figure>
+<p>有部分第三方功能,如代码能力基准测试 Humaneval 以及 Llama格式的模型评测,可能需要额外步骤才能正常运行，如需评测，详细步骤请参考<a target="_blank" rel="noopener" href="https://opencompass.readthedocs.io/zh_CN/latest/get_started/installation.html">安装指南</a>。</p>
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 解压评测数据集到 data/ 处</span><br><span class="hljs-built_in">cp</span> /share/temp/datasets/OpenCompassData-core-20231110.zip /root/opencompass/<br>unzip OpenCompassData-core-20231110.zip<br><br><span class="hljs-comment"># 将会在opencompass下看到data文件夹</span><br></code></pre></td></tr></table></figure>
+<h3 id="查看支持的数据集和模型"><a href="#查看支持的数据集和模型" class="headerlink" title="查看支持的数据集和模型"></a>查看支持的数据集和模型</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 列出所有跟 internlm 及 ceval 相关的配置</span><br>python tools/list_configs.py internlm ceval<br></code></pre></td></tr></table></figure>
+<p>将会看到</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs text">+--------------------------+--------------------------------------------------------+<br>| Model                    | Config Path                                            |<br>|--------------------------+--------------------------------------------------------|<br>| hf_internlm_20b          | configs/models/hf_internlm/hf_internlm_20b.py          |<br>| hf_internlm_7b           | configs/models/hf_internlm/hf_internlm_7b.py           |<br>| hf_internlm_chat_20b     | configs/models/hf_internlm/hf_internlm_chat_20b.py     |<br>| hf_internlm_chat_7b      | configs/models/hf_internlm/hf_internlm_chat_7b.py      |<br>| hf_internlm_chat_7b_8k   | configs/models/hf_internlm/hf_internlm_chat_7b_8k.py   |<br>| hf_internlm_chat_7b_v1_1 | configs/models/hf_internlm/hf_internlm_chat_7b_v1_1.py |<br>| internlm_7b              | configs/models/internlm/internlm_7b.py                 |<br>| ms_internlm_chat_7b_8k   | configs/models/ms_internlm/ms_internlm_chat_7b_8k.py   |<br>+--------------------------+--------------------------------------------------------+<br>+----------------------------+------------------------------------------------------+<br>| Dataset                    | Config Path                                          |<br>|----------------------------+------------------------------------------------------|<br>| ceval_clean_ppl            | configs/datasets/ceval/ceval_clean_ppl.py            |<br>| ceval_gen                  | configs/datasets/ceval/ceval_gen.py                  |<br>| ceval_gen_2daf24           | configs/datasets/ceval/ceval_gen_2daf24.py           |<br>| ceval_gen_5f30c7           | configs/datasets/ceval/ceval_gen_5f30c7.py           |<br>| ceval_ppl                  | configs/datasets/ceval/ceval_ppl.py                  |<br>| ceval_ppl_578f8d           | configs/datasets/ceval/ceval_ppl_578f8d.py           |<br>| ceval_ppl_93e5ce           | configs/datasets/ceval/ceval_ppl_93e5ce.py           |<br>| ceval_zero_shot_gen_bd40ef | configs/datasets/ceval/ceval_zero_shot_gen_bd40ef.py |<br>+----------------------------+------------------------------------------------------+<br></code></pre></td></tr></table></figure>
+<h3 id="启动评测"><a href="#启动评测" class="headerlink" title="启动评测"></a>启动评测</h3><p>确保按照上述步骤正确安装 OpenCompass 并准备好数据集后，可以通过以下命令评测 InternLM-Chat-7B 模型在 C-Eval 数据集上的性能。由于 OpenCompass 默认并行启动评估过程，我们可以在第一次运行时以 <code>--debug</code> 模式启动评估，并检查是否存在问题。在 <code>--debug</code> 模式下，任务将按顺序执行，并实时打印输出。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python run.py --datasets ceval_gen --hf-path /share/temp/model_repos/internlm-chat-7b/ --tokenizer-path /share/temp/model_repos/internlm-chat-7b/ --tokenizer-kwargs padding_side=<span class="hljs-string">&#x27;left&#x27;</span> truncation=<span class="hljs-string">&#x27;left&#x27;</span> trust_remote_code=True --model-kwargs trust_remote_code=True device_map=<span class="hljs-string">&#x27;auto&#x27;</span> --max-seq-len 2048 --max-out-len 16 --batch-size 4 --num-gpus 1 --debug<br></code></pre></td></tr></table></figure>
+<p>命令解析<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">--datasets ceval_gen \<br>--hf-path /share/temp/model_repos/internlm-chat-7b/ \  <span class="hljs-comment"># HuggingFace 模型路径</span><br>--tokenizer-path /share/temp/model_repos/internlm-chat-7b/ \  <span class="hljs-comment"># HuggingFace tokenizer 路径（如果与模型路径相同，可以省略）</span><br>--tokenizer-kwargs padding_side=<span class="hljs-string">&#x27;left&#x27;</span> truncation=<span class="hljs-string">&#x27;left&#x27;</span> trust_remote_code=True \  <span class="hljs-comment"># 构建 tokenizer 的参数</span><br>--model-kwargs device_map=<span class="hljs-string">&#x27;auto&#x27;</span> trust_remote_code=True \  <span class="hljs-comment"># 构建模型的参数</span><br>--max-seq-len 2048 \  <span class="hljs-comment"># 模型可以接受的最大序列长度</span><br>--max-out-len 16 \  <span class="hljs-comment"># 生成的最大 token 数</span><br>--batch-size 2  \  <span class="hljs-comment"># 批量大小</span><br>--num-gpus 1  <span class="hljs-comment"># 运行模型所需的 GPU 数量</span><br>--debug<br></code></pre></td></tr></table></figure></p>
+<p>如果一切正常，您应该看到屏幕上显示 “Starting inference process”：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">[2024-01-12 18:23:55,076] [opencompass.openicl.icl_inferencer.icl_gen_inferencer] [INFO] Starting inference process...<br></code></pre></td></tr></table></figure>
+<p>评测完成后，将会看到：<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs maxima"><br>dataset                                         version    metric         mode      opencompass.models.huggingface.HuggingFace_model_repos_internlm-chat-7b<br>----------------------------------------------  ---------  -------------  ------  -------------------------------------------------------------------------<br>ceval-computer_network                          db9ce2     accuracy       gen                                                                         <span class="hljs-number">31.58</span><br>ceval-operating_system                          1c2571     accuracy       gen                                                                         <span class="hljs-number">36.84</span><br>ceval-computer_architecture                     a74dad     accuracy       gen                                                                         <span class="hljs-number">28.57</span><br>ceval-college_programming                       4ca32a     accuracy       gen                                                                         <span class="hljs-number">32.43</span><br>ceval-college_physics                           963fa8     accuracy       gen                                                                         <span class="hljs-number">26.32</span><br>ceval-college_chemistry                         e78857     accuracy       gen                                                                         <span class="hljs-number">16.67</span><br>ceval-advanced_mathematics                      ce03e2     accuracy       gen                                                                         <span class="hljs-number">21.05</span><br>ceval-probability_and_statistics                <span class="hljs-number">65e812</span>     accuracy       gen                                                                         <span class="hljs-number">38.89</span><br>ceval-discrete_mathematics                      e894ae     accuracy       gen                                                                         <span class="hljs-number">18.75</span><br>ceval-electrical_engineer                       ae42b9     accuracy       gen                                                                         <span class="hljs-number">35.14</span><br>ceval-metrology_engineer                        ee34ea     accuracy       gen                                                                         <span class="hljs-number">50</span><br>ceval-high_school_mathematics                   1dc5bf     accuracy       gen                                                                         <span class="hljs-number">22.22</span><br>ceval-high_school_physics                       adf25f     accuracy       gen                                                                         <span class="hljs-number">31.58</span><br>ceval-high_school_chemistry                     2ed27f     accuracy       gen                                                                         <span class="hljs-number">15.79</span><br>ceval-high_school_biology                       8e2b9a     accuracy       gen                                                                         <span class="hljs-number">36.84</span><br>ceval-middle_school_mathematics                 bee8d5     accuracy       gen                                                                         <span class="hljs-number">26.32</span><br>ceval-middle_school_biology                     86817c     accuracy       gen                                                                         <span class="hljs-number">61.9</span><br>ceval-middle_school_physics                     8accf6     accuracy       gen                                                                         <span class="hljs-number">63.16</span><br>ceval-middle_school_chemistry                   167a15     accuracy       gen                                                                         <span class="hljs-number">60</span><br>ceval-veterinary_medicine                       b4e08d     accuracy       gen                                                                         <span class="hljs-number">47.83</span><br>ceval-college_economics                         f3f4e6     accuracy       gen                                                                         <span class="hljs-number">41.82</span><br>ceval-business_administration                   c1614e     accuracy       gen                                                                         <span class="hljs-number">33.33</span><br>ceval-marxism                                   cf874c     accuracy       gen                                                                         <span class="hljs-number">68.42</span><br>ceval-mao_zedong_thought                        51c7a4     accuracy       gen                                                                         <span class="hljs-number">70.83</span><br>ceval-education_science                         591fee     accuracy       gen                                                                         <span class="hljs-number">58.62</span><br>ceval-teacher_qualification                     4e4ced     accuracy       gen                                                                         <span class="hljs-number">70.45</span><br>ceval-high_school_politics                      5c0de2     accuracy       gen                                                                         <span class="hljs-number">26.32</span><br>ceval-high_school_geography                     <span class="hljs-number">865461</span>     accuracy       gen                                                                         <span class="hljs-number">47.37</span><br>ceval-middle_school_politics                    5be3e7     accuracy       gen                                                                         <span class="hljs-number">52.38</span><br>ceval-middle_school_geography                   8a63be     accuracy       gen                                                                         <span class="hljs-number">58.33</span><br>ceval-modern_chinese_history                    fc01af     accuracy       gen                                                                         <span class="hljs-number">73.91</span><br>ceval-ideological_and_moral_cultivation         a2aa4a     accuracy       gen                                                                         <span class="hljs-number">63.16</span><br>ceval-logic                                     f5b022     accuracy       gen                                                                         <span class="hljs-number">31.82</span><br>ceval-law                                       a110a1     accuracy       gen                                                                         <span class="hljs-number">25</span><br>ceval-chinese_language_and_literature           <span class="hljs-number">0f8b68</span>     accuracy       gen                                                                         <span class="hljs-number">30.43</span><br>ceval-art_studies                               2a1300     accuracy       gen                                                                         <span class="hljs-number">60.61</span><br>ceval-professional_tour_guide                   4e673e     accuracy       gen                                                                         <span class="hljs-number">62.07</span><br>ceval-legal_professional                        ce8787     accuracy       gen                                                                         <span class="hljs-number">39.13</span><br>ceval-high_school_chinese                       <span class="hljs-number">315705</span>     accuracy       gen                                                                         <span class="hljs-number">63.16</span><br>ceval-high_school_history                       7eb30a     accuracy       gen                                                                         <span class="hljs-number">70</span><br>ceval-middle_school_history                     48ab4a     accuracy       gen                                                                         <span class="hljs-number">59.09</span><br>ceval-civil_servant                             87d061     accuracy       gen                                                                         <span class="hljs-number">53.19</span><br>ceval-sports_science                            70f27b     accuracy       gen                                                                         <span class="hljs-number">52.63</span><br>ceval-plant_protection                          8941f9     accuracy       gen                                                                         <span class="hljs-number">59.09</span><br>ceval-basic_medicine                            c409d6     accuracy       gen                                                                         <span class="hljs-number">47.37</span><br>ceval-clinical_medicine                         49e82d     accuracy       gen                                                                         <span class="hljs-number">40.91</span><br>ceval-urban_and_rural_planner                   <span class="hljs-number">95b885</span>     accuracy       gen                                                                         <span class="hljs-number">45.65</span><br>ceval-accountant                                <span class="hljs-number">002837</span>     accuracy       gen                                                                         <span class="hljs-number">26.53</span><br>ceval-fire_engineer                             bc23f5     accuracy       gen                                                                         <span class="hljs-number">22.58</span><br>ceval-environmental_impact_assessment_engineer  c64e2d     accuracy       gen                                                                         <span class="hljs-number">64.52</span><br>ceval-tax_accountant                            3a5e3c     accuracy       gen                                                                         <span class="hljs-number">34.69</span><br>ceval-physician                                 6e277d     accuracy       gen                                                                         <span class="hljs-number">40.82</span><br>ceval-stem                                      -          naive_average  gen                                                                         <span class="hljs-number">35.09</span><br>ceval-social-science                            -          naive_average  gen                                                                         <span class="hljs-number">52.79</span><br>ceval-humanities                                -          naive_average  gen                                                                         <span class="hljs-number">52.58</span><br>ceval-other                                     -          naive_average  gen                                                                         <span class="hljs-number">44.36</span><br>ceval-hard                                      -          naive_average  gen                                                                         <span class="hljs-number">23.91</span><br>ceval                                           -          naive_average  gen                                                                         <span class="hljs-number">44.16</span><br></code></pre></td></tr></table></figure></p>
+<p>有关 <code>run.py</code> 支持的所有与 HuggingFace 相关的参数，请阅读 <a target="_blank" rel="noopener" href="https://opencompass.readthedocs.io/zh-cn/latest/user_guides/experimentation.html#id2">评测任务发起</a></p>
+<p>除了通过命令行配置实验外，OpenCompass 还允许用户在配置文件中编写实验的完整配置，并通过 <code>run.py</code> 直接运行它。配置文件是以 Python 格式组织的，并且必须包括 <code>datasets</code> 和 <code>models</code> 字段。</p>
+<p>示例测试配置在 <a target="_blank" rel="noopener" href="https://github.com/open-compass/opencompass/blob/main/configs/eval_demo.py">configs/eval_demo.py</a> 中。此配置通过 <a href="../user_guides/config.md#继承机制">继承机制</a> 引入所需的数据集和模型配置，并以所需格式组合 <code>datasets</code> 和 <code>models</code> 字段。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> mmengine.config <span class="hljs-keyword">import</span> read_base<br><br><span class="hljs-keyword">with</span> read_base():<br>    <span class="hljs-keyword">from</span> .datasets.siqa.siqa_gen <span class="hljs-keyword">import</span> siqa_datasets<br>    <span class="hljs-keyword">from</span> .datasets.winograd.winograd_ppl <span class="hljs-keyword">import</span> winograd_datasets<br>    <span class="hljs-keyword">from</span> .models.opt.hf_opt_125m <span class="hljs-keyword">import</span> opt125m<br>    <span class="hljs-keyword">from</span> .models.opt.hf_opt_350m <span class="hljs-keyword">import</span> opt350m<br><br>datasets = [*siqa_datasets, *winograd_datasets]<br>models = [opt125m, opt350m]<br></code></pre></td></tr></table></figure>
+<p>运行任务时，我们只需将配置文件的路径传递给 <code>run.py</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python run.py configs/eval_demo.py<br></code></pre></td></tr></table></figure>
+<p>OpenCompass 提供了一系列预定义的模型配置，位于 <code>configs/models</code> 下。以下是与 <a target="_blank" rel="noopener" href="https://github.com/open-compass/opencompass/blob/main/configs/models/opt/hf_opt_350m.py">opt-350m</a>（<code>configs/models/opt/hf_opt_350m.py</code>）相关的配置片段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 使用 `HuggingFaceCausalLM` 评估由 HuggingFace 的 `AutoModelForCausalLM` 支持的模型</span><br><span class="hljs-keyword">from</span> opencompass.models <span class="hljs-keyword">import</span> HuggingFaceCausalLM<br><br><span class="hljs-comment"># OPT-350M</span><br>opt350m = <span class="hljs-built_in">dict</span>(<br>       <span class="hljs-built_in">type</span>=HuggingFaceCausalLM,<br>       <span class="hljs-comment"># `HuggingFaceCausalLM` 的初始化参数</span><br>       path=<span class="hljs-string">&#x27;facebook/opt-350m&#x27;</span>,<br>       tokenizer_path=<span class="hljs-string">&#x27;facebook/opt-350m&#x27;</span>,<br>       tokenizer_kwargs=<span class="hljs-built_in">dict</span>(<br>           padding_side=<span class="hljs-string">&#x27;left&#x27;</span>,<br>           truncation_side=<span class="hljs-string">&#x27;left&#x27;</span>,<br>           proxies=<span class="hljs-literal">None</span>,<br>           trust_remote_code=<span class="hljs-literal">True</span>),<br>       model_kwargs=<span class="hljs-built_in">dict</span>(device_map=<span class="hljs-string">&#x27;auto&#x27;</span>),<br>       <span class="hljs-comment"># 下面是所有模型的共同参数，不特定于 HuggingFaceCausalLM</span><br>       abbr=<span class="hljs-string">&#x27;opt350m&#x27;</span>,               <span class="hljs-comment"># 结果显示的模型缩写</span><br>       max_seq_len=<span class="hljs-number">2048</span>,             <span class="hljs-comment"># 整个序列的最大长度</span><br>       max_out_len=<span class="hljs-number">100</span>,              <span class="hljs-comment"># 生成的最大 token 数</span><br>       batch_size=<span class="hljs-number">64</span>,                <span class="hljs-comment"># 批量大小</span><br>       run_cfg=<span class="hljs-built_in">dict</span>(num_gpus=<span class="hljs-number">1</span>),     <span class="hljs-comment"># 该模型所需的 GPU 数量</span><br>    )<br></code></pre></td></tr></table></figure>
+<p>使用配置时，我们可以通过命令行参数 <code>--models</code> 指定相关文件，或使用继承机制将模型配置导入到配置文件中的 <code>models</code> 列表中。</p>
+<p>与模型类似，数据集的配置文件也提供在 <code>configs/datasets</code> 下。用户可以在命令行中使用 <code>--datasets</code>，或通过继承在配置文件中导入相关配置</p>
+<p>下面是来自 <code>configs/eval_demo.py</code> 的与数据集相关的配置片段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> mmengine.config <span class="hljs-keyword">import</span> read_base  <span class="hljs-comment"># 使用 mmengine.read_base() 读取基本配置</span><br><br><span class="hljs-keyword">with</span> read_base():<br>    <span class="hljs-comment"># 直接从预设的数据集配置中读取所需的数据集配置</span><br>    <span class="hljs-keyword">from</span> .datasets.winograd.winograd_ppl <span class="hljs-keyword">import</span> winograd_datasets  <span class="hljs-comment"># 读取 Winograd 配置，基于 PPL（困惑度）进行评估</span><br>    <span class="hljs-keyword">from</span> .datasets.siqa.siqa_gen <span class="hljs-keyword">import</span> siqa_datasets  <span class="hljs-comment"># 读取 SIQA 配置，基于生成进行评估</span><br><br>datasets = [*siqa_datasets, *winograd_datasets]       <span class="hljs-comment"># 最终的配置需要包含所需的评估数据集列表 &#x27;datasets&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>数据集配置通常有两种类型：’ppl’ 和 ‘gen’，分别指示使用的评估方法。其中 <code>ppl</code> 表示辨别性评估，<code>gen</code> 表示生成性评估。</p>
+<p>此外，<a target="_blank" rel="noopener" href="https://github.com/open-compass/opencompass/blob/main/configs/datasets/collections">configs/datasets/collections</a> 收录了各种数据集集合，方便进行综合评估。OpenCompass 通常使用 <a target="_blank" rel="noopener" href="https://github.com/open-compass/opencompass/blob/main/configs/datasets/collections/base_medium.py"><code>base_medium.py</code></a> 进行全面的模型测试。要复制结果，只需导入该文件，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python run.py --models hf_llama_7b --datasets base_medium<br></code></pre></td></tr></table></figure>
+<p>OpenCompass 通常假定运行环境网络是可用的。如果您遇到网络问题或希望在离线环境中运行 OpenCompass，请参阅 <a target="_blank" rel="noopener" href="https://opencompass.readthedocs.io/zh-cn/latest/get_started/faq.html">FAQ - 网络 - Q1</a> 寻求解决方案。</p>
+<h2 id="可视化评估结果"><a href="#可视化评估结果" class="headerlink" title="可视化评估结果"></a>可视化评估结果</h2><p>评估完成后，评估结果表格将打印如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">dataset    version    metric    mode      opt350m    opt125m<br>---------  ---------  --------  ------  ---------  ---------<br>siqa       e78df3     accuracy  gen         21.55      12.44<br>winograd   b6c7ed     accuracy  ppl         51.23      49.82<br></code></pre></td></tr></table></figure>
+<p>所有运行输出将定向到 <code>outputs/demo/</code> 目录，结构如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">outputs/default/<br>├── 20200220_120000<br>├── 20230220_183030     # 每个实验一个文件夹<br>│   ├── configs         # 用于记录的已转储的配置文件。如果在同一个实验文件夹中重新运行了不同的实验，可能会保留多个配置<br>│   ├── logs            # 推理和评估阶段的日志文件<br>│   │   ├── eval<br>│   │   └── infer<br>│   ├── predictions   # 每个任务的推理结果<br>│   ├── results       # 每个任务的评估结果<br>│   └── summary       # 单个实验的汇总评估结果<br>├── ...<br></code></pre></td></tr></table></figure>
+<p>打印评测结果的过程可被进一步定制化，用于输出一些数据集的平均分 (例如 MMLU, C-Eval 等)。</p>
+<p>关于评测结果输出的更多介绍可阅读 <a href="../user_guides/summarizer.md">结果展示</a>。</p>
+<h2 id="更多教程"><a href="#更多教程" class="headerlink" title="更多教程"></a>更多教程</h2><p>想要更多了解 OpenCompass, 可以点击下列链接学习。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://opencompass.readthedocs.io/zh-cn/latest/">https://opencompass.readthedocs.io/zh-cn/latest/</a></li>
+</ul>
+<h2 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h2><h3 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建环境</span><br>conda create --name opencompass --<span class="hljs-built_in">clone</span>=/root/share/conda_envs/internlm-base<br>conda activate opencompass<br><span class="hljs-comment"># 使用镜像 clone</span><br>git <span class="hljs-built_in">clone</span> https://mirror.ghproxy.com/https://github.com/open-compass/opencompass<br><span class="hljs-built_in">cd</span> opencompass<br>pip install -e .<br></code></pre></td></tr></table></figure>
+<h3 id="准备数据"><a href="#准备数据" class="headerlink" title="准备数据"></a>准备数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> /share/temp/datasets/OpenCompassData-core-20231110.zip /root/opencompass/<br><span class="hljs-built_in">cd</span> /root/opencompass/<br>unzip OpenCompassData-core-20231110.zip<br></code></pre></td></tr></table></figure>
+<p><img    class="lazyload" data-original="unzip.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">解压数据</span></p>
+<h3 id="查看支持的数据集和模型-1"><a href="#查看支持的数据集和模型-1" class="headerlink" title="查看支持的数据集和模型"></a>查看支持的数据集和模型</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python tools/list_configs.py internlm ceval<br></code></pre></td></tr></table></figure>
+<p><img    class="lazyload" data-original="list.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">列出所有跟 internlm 及 ceval 相关的配置</span></p>
+<h3 id="启动评测-1"><a href="#启动评测-1" class="headerlink" title="启动评测"></a>启动评测</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">python run.py \<br>--datasets ceval_gen \<br>--hf-path /share/model_repos/internlm2-chat-7b/ \  <span class="hljs-comment"># HuggingFace 模型路径</span><br>--tokenizer-path /share/model_repos/internlm2-chat-7b/ \  <span class="hljs-comment"># 注意这里是 internlm2</span><br>--tokenizer-kwargs padding_side=<span class="hljs-string">&#x27;left&#x27;</span> truncation=<span class="hljs-string">&#x27;left&#x27;</span> trust_remote_code=True \  <span class="hljs-comment"># 构建 tokenizer 的参数</span><br>--model-kwargs device_map=<span class="hljs-string">&#x27;auto&#x27;</span> trust_remote_code=True \  <span class="hljs-comment"># 构建模型的参数</span><br>--max-seq-len 2048 \  <span class="hljs-comment"># 模型可以接受的最大序列长度</span><br>--max-out-len 16 \  <span class="hljs-comment"># 生成的最大 token 数</span><br>--batch-size 2  \  <span class="hljs-comment"># 批量大小</span><br>--num-gpus 1 \ <span class="hljs-comment"># 运行模型所需的 GPU 数量</span><br>--debug<br></code></pre></td></tr></table></figure>
+<p>便于复制版：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">python run.py \<br>--datasets ceval_gen \<br>--hf-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-kwargs padding_side=<span class="hljs-string">&#x27;left&#x27;</span> truncation=<span class="hljs-string">&#x27;left&#x27;</span> trust_remote_code=True \<br>--model-kwargs device_map=<span class="hljs-string">&#x27;auto&#x27;</span> trust_remote_code=True \<br>--max-seq-len 2048 \<br>--max-out-len 16 \<br>--batch-size 2  \<br>--num-gpus 1 \<br>--debug<br></code></pre></td></tr></table></figure>
+<p>发现显存不够用，尝试改小 batch size 为 1。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">python run.py \<br>--datasets ceval_gen \<br>--hf-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-path /share/model_repos/internlm2-chat-7b/ \<br>--tokenizer-kwargs padding_side=<span class="hljs-string">&#x27;left&#x27;</span> truncation=<span class="hljs-string">&#x27;left&#x27;</span> trust_remote_code=True \<br>--model-kwargs device_map=<span class="hljs-string">&#x27;auto&#x27;</span> trust_remote_code=True \<br>--max-seq-len 2048 \<br>--max-out-len 16 \<br>--batch-size 1  \<br>--num-gpus 1 \<br>--debug<br></code></pre></td></tr></table></figure>
+<p><img    class="lazyload" data-original="run.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">运行截图</span></p>
+<p><strong>进阶作业</strong></p>
+<ul>
+<li>使用 OpenCompass 评测 InternLM2-Chat-7B 模型使用 LMDeploy 0.2.0 部署后在 C-Eval 数据集上的性能</li>
+</ul>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/internlm/internlm-06/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;internlm&#x2F;internlm-06&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;internlm&#x2F;internlm-06&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+        
+  <nav class="nav">
+    <a href="/linux/linux/"><i class="iconfont iconleft"></i>Linux 的一些使用心得</a>
+    <a href="/internlm/internlm-05/">Internlm-05-LMDeploy 的量化和部署<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-OpenCompass-%E5%AF%B9%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%BF%9B%E8%A1%8C%E8%AF%84%E6%B5%8B"><span class="toc-text">使用 OpenCompass 对大模型进行评测</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AF%84%E6%B5%8B%E6%A6%82%E8%A6%81"><span class="toc-text">大模型评测概要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E7%9A%84%E5%8F%91%E5%B1%95%E5%92%8C%E4%B8%BB%E8%A6%81%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98"><span class="toc-text">人工智能技术的发展和主要模型的演变</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9B%BD%E9%99%85%E7%AB%9E%E4%BA%89%E5%92%8C%E5%BA%94%E7%94%A8"><span class="toc-text">大模型的国际竞争和应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AF%84%E6%B5%8B%E7%9A%84%E5%9B%BD%E9%99%85%E5%92%8C%E5%9B%BD%E5%86%85%E8%BF%9B%E5%B1%95"><span class="toc-text">大模型评测的国际和国内进展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E4%B8%B4%E7%9A%84%E6%8C%91%E6%88%98%E5%92%8COpenCompass%E7%9A%84%E6%8F%90%E8%AE%AE"><span class="toc-text">面临的挑战和OpenCompass的提议</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenCompass%E4%BB%8B%E7%BB%8D"><span class="toc-text">OpenCompass介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E5%AF%B9%E8%B1%A1"><span class="toc-text">评测对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%9E%B6%E6%9E%84"><span class="toc-text">工具架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AF%84%E6%B5%8B%E7%9A%84%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="toc-text">大模型评测的层级结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E6%B5%8B%E6%96%B9%E6%B3%95"><span class="toc-text">评测方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E8%A7%82%E8%AF%84%E6%B5%8B"><span class="toc-text">客观评测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A7%82%E8%AF%84%E6%B5%8B"><span class="toc-text">主观评测</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="toc-text">快速开始</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A7%88"><span class="toc-text">概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E5%90%91GPU%E7%9A%84%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85"><span class="toc-text">面向GPU的环境安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"><span class="toc-text">数据准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%94%AF%E6%8C%81%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B"><span class="toc-text">查看支持的数据集和模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E8%AF%84%E6%B5%8B"><span class="toc-text">启动评测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AF%84%E4%BC%B0%E7%BB%93%E6%9E%9C"><span class="toc-text">可视化评估结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E6%95%99%E7%A8%8B"><span class="toc-text">更多教程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%9A"><span class="toc-text">作业</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E7%8E%AF%E5%A2%83"><span class="toc-text">准备环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE"><span class="toc-text">准备数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%94%AF%E6%8C%81%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B-1"><span class="toc-text">查看支持的数据集和模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E8%AF%84%E6%B5%8B-1"><span class="toc-text">启动评测</span></a></li></ol></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
