@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>幸福论</title>
+    <url>/uncategorized/happiness/</url>
+    <content><![CDATA[<h1 id="Async-的一些想法"><a href="#Async-的一些想法" class="headerlink" title="Async 的一些想法"></a>Async 的一些想法</h1><p>文明其精神，野蛮其体魄。</p>
+<p>在这篇文章里记录关于幸福的观点和思考。</p>
+<p>幸福不是一件容易的事：她很难求之于自身，但要想在别处得到则不可能。——尚福尔</p>
+<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在这里介绍的内容主要从平常、实用的角度出发，所以保留了与此角度相关的谬误。</p>
+<p>一些补充书籍：卡丹奴斯本的《论逆境》。</p>
+<p>一般来说，各个时代的智者们，都说过同样的话语，而愚人们——也就是各个时代数不胜数的大多数人——也做着恰恰相反的同一样事情。</p>
+<h1 id="一些基本的划分"><a href="#一些基本的划分" class="headerlink" title="一些基本的划分"></a>一些基本的划分</h1><p>亚里士多德把人生能够得到的好处分为三类——外在之物、人的灵魂和人的身体。</p>
+<p>在这里，叔本华认为决定凡人命运的根本差别在于三项内容：</p>
+<ul>
+<li>人的<strong>自身</strong>，最广泛意义上属于人的个性的东西。健康、力量、外貌、气质、道德品格、精神智力、潜在发展。</li>
+<li>人所拥有的<strong>身外之物</strong>，财产和其他占有物。</li>
+<li>人向其他人所<strong>显示的样子</strong>，人在其他人眼中的样子，亦即人们对他的看法。他人的看法包括：<ul>
+<li>名誉</li>
+<li>地位</li>
+<li>名声</li>
+</ul>
+</li>
+</ul>
+<p>其中，最重要的是第一项，也就是<strong>人的自身</strong>，是因为第一项的差别是由大自然决定的，而后两项只是出自人为的划分。</p>
+<p>对于一个人的幸福，甚至对于他的整个存在方式，最重要的就是他自身的内在素质，内在素质直接决定了这个人能否得到内心的幸福，因为内心的快乐和痛苦首先是人的感情、意欲和思想的产物。</p>
+<p>第二项和第三项属于自身以外的所有事物，他们想要起作用的方式是间接的，通过影响我们的自身感情来实现的。因此，同一样外在的事物和同一样的境遇，对于我们每个人的影响都不尽相同；即使是生活在同一个环境中的每一个人，都生活在不同的世界中。因为与一个人直接相关的是一个人对事物的看法、他的情感和意欲活动。</p>
+]]></content>
+      <tags>
+        <tag>book</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
     <url>/internlm/internlm-01/</url>
     <content><![CDATA[<h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
@@ -189,6 +218,12 @@
       <categories>
         <category>linux</category>
       </categories>
+  </entry>
+  <entry>
+    <title>一些有意思的图</title>
+    <url>/uncategorized/meme/</url>
+    <content><![CDATA[<h1 id="关于是否写脚本自动化"><a href="#关于是否写脚本自动化" class="headerlink" title="关于是否写脚本自动化"></a>关于是否写脚本自动化</h1><p><img  src="./meme/v2-7012fc4ee97f0b520094f731152eaac5_b.jpg"  ><span class="image-caption">img</span></p>
+]]></content>
   </entry>
   <entry>
     <title>人性的弱点笔记</title>
