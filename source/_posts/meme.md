@@ -6,5 +6,5 @@ tags:
 
 # 关于是否写脚本自动化
 
-![img](./meme/v2-7012fc4ee97f0b520094f731152eaac5_b.jpg)
+![img](v2-7012fc4ee97f0b520094f731152eaac5_b.jpg)
 
