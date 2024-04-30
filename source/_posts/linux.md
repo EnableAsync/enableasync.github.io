@@ -3,6 +3,14 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+# conda init fish 之后 fish 崩溃
+原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。
+```bash
+sudo apt-add-repository ppa:fish-shell/release-3
+sudo apt update
+sudo apt install fish
+```
+
 # 关闭 kde 文件索引程序
 ```bash
 balooctl suspend
