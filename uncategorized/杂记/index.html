@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>一些杂记 - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="说明本杂记包括了一些思考和记录，具体涉及到的内容包括：...">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">一些杂记</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">一些杂记</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>July 04, 2024</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3067</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本杂记包括了一些思考和记录，具体涉及到的内容包括：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://space.bilibili.com/391930545/channel/collectiondetail?sid=598034">Maki的完美算术教室的个人空间-Maki的完美算术教室个人主页-哔哩哔哩视频 (bilibili.com)</a></li>
+</ul>
+<h1 id="如何高效地读数学书"><a href="#如何高效地读数学书" class="headerlink" title="如何高效地读数学书"></a>如何高效地读数学书</h1><p>“the best way to learn is to teach“. 学习的方法按效率从低到高可以排为</p>
+<ul>
+<li>传统的上课听讲模式, 完全被老师牵着鼻子走</li>
+<li>自己啃书, 补全细节, 勤用互联网, 老师, 同学等资源</li>
+<li>以教会别人为目的的学习</li>
+</ul>
+<p><strong>数学的核心</strong>（对于小学数学、中学数学、大学数学乃至数学家学习数学都是需要掌握这些，数学的核心对于不同人可以不一样）</p>
+<ul>
+<li><strong>概念</strong>（不是每一个概念都是重要的概念，但是作为老师教的每一个概念都是重要的）</li>
+<li><strong>定理</strong>（连接不同的概念，有些是联系（贯穿）两个领域，用A领域的方法解决B领域的问题）</li>
+<li><strong>方法</strong>（最难教的就是方法。概括，归纳，总结之后才会有方法。每一门数学（代数，分析，几何）都有对应的方法。方法和经验成正比。方法有基础和进阶的，学会性质和做练习掌握基本的方法，通过掌握引理和定理加做练习掌握高级的方法）</li>
+</ul>
+<p><strong>数学书的内容</strong></p>
+<ul>
+<li><strong>定义</strong>：花很多时间在问自己为什么这么定义（看数学书很多时候，搞明白了为什么这么定义才能读懂。定义是必须要记住的，定理性质引理都是围绕定义概念展开）</li>
+<li>例子（证明）</li>
+<li>性质（证明）（定义的简单性质）</li>
+<li>引理（证明）</li>
+<li>定理（（包含推论）（证明）（历史上很多时候是先有定理）怎么记住定理：问自己为什么会有这个定理）要能举出例子，不能停留在会证明。定理是非常重要的命题。群同构第一定理为什么重要，因为很多地方用到</li>
+<li>练习（证明）</li>
+</ul>
+<h1 id="如何燃起自己的热情"><a href="#如何燃起自己的热情" class="headerlink" title="如何燃起自己的热情"></a>如何燃起自己的热情</h1><h2 id="有限VS无限"><a href="#有限VS无限" class="headerlink" title="有限VS无限"></a>有限VS无限</h2><p>当你的目标有限时，你就有了一个上确界，不会超过它。比如拿菲尔茨奖不是一个好目标，一是比较虚荣，二是拿到了之后论文数量少了25%，而且写出来论文引用频率下降了（菲尔茨奖的魔咒）。</p>
+<p><strong>理想情况</strong>是目标趋于+∞，目标是变动的，趋于+∞越快越好。</p>
+<h2 id="热情从何而来"><a href="#热情从何而来" class="headerlink" title="热情从何而来"></a>热情从何而来</h2><p>最小的想法是一个小火苗，可遇可不求。弱者思维会觉得很好笑，并评价自己肯定做不到，自我菲薄，强者思维也会笑，笑完之后觉得是可行的，并专注地执行下去，一直坚持。</p>
+<p>坚持坚持再坚持，直到一个里程碑（反馈，新的热情）。</p>
+<p>真正阻碍你的<strong>只有你自己</strong>。</p>
+<p>没有借口、阻力、绝对要求，每天至少8小时。切勿三分钟热度， 每天都学，可以少量的微习惯。由积分中值定理可知，<strong>平均值</strong>很重要。</p>
+<h2 id="纯粹"><a href="#纯粹" class="headerlink" title="纯粹"></a>纯粹</h2><p>不想太多，不去纠结，想想自己的目标，今天要写多少页讲义。</p>
+<p>重在每天的努力，120分钟的电影，在人生中是努力119分钟，成功1分钟。</p>
+<h2 id="一定完成的紧迫感"><a href="#一定完成的紧迫感" class="headerlink" title="一定完成的紧迫感"></a>一定完成的紧迫感</h2><p>每天早晨醒来，第一个想法是冥想。不必放假，每天时刻有一定要完成的紧迫感，一定要把“家里的漏水”处理好。重要的事，内因，非做不可，不做不行，日拱一卒。</p>
+<h2 id="承诺"><a href="#承诺" class="headerlink" title="承诺"></a>承诺</h2><p>你敢不敢承诺？弱者思维不敢承诺，承诺了就一定要去做到，可以晚点。积分总值会是100，但是平均相对会动态变化。</p>
+<p>先胜后战：先确定自己能大概率打赢，再去打，心里有数。不可以心里没数没有目标再去做事！</p>
+<p>战什么？人性。不动脑子，是懒惰；想得太多。是贪婪。是在承诺的先决条件下，最好的状况是中庸和谐。</p>
+<h2 id="不要让热情一次性烧完"><a href="#不要让热情一次性烧完" class="headerlink" title="不要让热情一次性烧完"></a>不要让热情一次性烧完</h2><p>手机到1%充电也可以，不要烧完。但是0%关机了再充电，就是要几分钟才能启动，内心要承受巨大的压力。</p>
+<h1 id="克服自己的无知和无能"><a href="#克服自己的无知和无能" class="headerlink" title="克服自己的无知和无能"></a>克服自己的无知和无能</h1><p>无知不意味着自己的愚蠢、不思上进、头脑空空，而是意味着自己承认自己的认知（知识、思维等）存在盲区，需要提升。即承认无知不是否定自己，而是承认自己存在进步空间。</p>
+<p>无能同理，是承认自己没有做到本可以做到的事情，而非自我贬低成废物。 如何克服？很难，要吃苦。</p>
+<p>欲戴王冠，必承其重。 </p>
+<p>我们很容易将平易的生活看做理所当然，将他人的成功看做天才的必然，殊不知生活中有许多等着我们处理的事，他人为了成功做出改变、克服困难、花费努力。 </p>
+<p>这是一种认知上的“桎梏”，需要跳出过去的失败、现在的迷惘、“娱乐至死”的陷阱以及情绪化的泥淖。</p>
+<h2 id="克服“情绪无能”"><a href="#克服“情绪无能”" class="headerlink" title="克服“情绪无能”"></a>克服“情绪无能”</h2><p>（即沉湎于无尽或突然的情绪之中并无法自拔，对学业、事业产生长期或短期的恶性影响）</p>
+<p>下法“替代批判”，用（某种角度或层面的）事实来替代：如生气→他人的问题，自卑、沮丧→自己的问题。</p>
+<p>在面对自己的问题时，不可一味否定自己，尊重事实，并且给予自己鼓励。</p>
+<p>中法“不批判”，跳出情绪的坑，不过多浪费时间。 上法“化批判为动力”，不受影响，从批判中汲取动力向前。</p>
+<p>我们可以将“评价”、“情绪”、“结果”进行一个剥离。通常的逻辑是不理想的结果→较低的自我评价→负面情绪→下次行动时逃避或“惯性失败”循环。</p>
+<p>客观认识不理想的结果，分析出其中的主客观上的问题，提升自己的认知与能力；客观认识情绪，知道情绪是长期进化所形成的，接纳情绪而非为情绪所困；正视自己，不夸大自己的能力，也不轻易贬低自己。</p>
+<h2 id="克服“事业无能"><a href="#克服“事业无能" class="headerlink" title="克服“事业无能"></a>克服“事业无能</h2><p>（即不能做/做好事情，指事项、事务、事业）</p>
+<p>（1）依旧是克服情绪化，即情绪干扰做事；（2）投入与产出，即用相对客观的视角评价目前的方法、进度；（3）人与贡献，更加注意区分数量与质量。</p>
+<p>做事不能只凭着一腔热血或者跟着感觉走，就好比走路，一个人不可能在不知道自己的方向、位置、速度、时间的情况下走到终点，因此做事时必然要不时进行评估。同时在许多情况下，数量堆叠不能换来质量飞升，但是许多人早已习惯把数量当质量，就如同盲目刷题那样，不知所以。</p>
+<p>（4）把握关键目标（某种意义、价值），并且将其拆解成可执行、可评价的阶段目标。</p>
+<p>（5）识别做事的关键方法，并且无局限地优化。 所做的事情拥有某种崇高价值时人才会有较强的动力，但虚无缥缈的目标不利于指导人的行为，因此要进行拆解。至于优化方法，则是一种不断优化、追求进步的突破，这种突破的追求往往因为得过且过的心理而不能发生，因此要保持这种追求。</p>
+<p>（6）小本本记想法 看起来简单甚至有些笨的想法，但是功用巨大。记录想法、做法、结果，我想我可以尝试（总是苦恼某些碎片化的想法转瞬即逝）。 </p>
+<p>（7）突破认知、超越前人。“圣人无常师”，学习是为了提升自己，而当有超越一位老师（亦或是友人、亲长、前辈等）的心思时，才有了站在ta的肩上拾级而上、继续发展的基础。 </p>
+<p>（8）批判性视角。从局中抽离，准确认知人事物。</p>
+<p>“无能之无能” 认识到能力问题，不回避能力问题，解决能力问题。 </p>
+<p>问题是提升能力问题很痛苦。 解决自己的无能、解决情绪化、解决愚笨（慢反应）与小聪明（自以为是）。 </p>
+<p>将自己与社会、世界联系起来，不能遗世而独立。 继承昨日的优秀，改善昨日的问题，让问题在今日消失，让渺远的未来不在迷惘。</p>
+<h1 id="学习专注力"><a href="#学习专注力" class="headerlink" title="学习专注力"></a>学习专注力</h1><p>1、SMART Goal原理 围绕一个目标专注（目标感）</p>
+<p>Specific 具体的<br>Measurable 可量化<br>Attainable 可实现<br>Reward 奖励，适当奖励<br>Time 时间投入</p>
+<p>常见误区：高估一天能做到的事情，低估一年能做到的事情。急于求成，没有长期规划，没有持续投入。</p>
+<p>2、在于质量，不在于数量，追求效果</p>
+<p>3、环境很重要，避免干扰</p>
+<p>4、专注力锻炼，干扰下强制专注</p>
+<p> 5、避免社会诱惑的干扰</p>
+<p>6、善于利用辅助工具，减少工作量，提升正向反馈出现的概率。</p>
+<h1 id="预备队思想"><a href="#预备队思想" class="headerlink" title="预备队思想"></a>预备队思想</h1><p>以正合以奇胜。</p>
+<p>奇兵：预备队</p>
+<p>未雨绸缪</p>
+<p>凡事预则立，不预则废</p>
+<h1 id="关于嘲笑"><a href="#关于嘲笑" class="headerlink" title="关于嘲笑"></a>关于嘲笑</h1><p>本质：传递负面能量的方式，人性之恶。</p>
+<p>一种刻意塑造的对立和优越感，是为浮躁。</p>
+<p>「千万不要像……样子」、「你什么档次，跟我……」</p>
+<p>刻意对立 <code>-&gt;</code> 抬高优越感 <code>-&gt;</code> 嘲笑不断 <code>-&gt;</code> 形成本能</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/uncategorized/%E6%9D%82%E8%AE%B0/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;%E6%9D%82%E8%AE%B0&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;%E6%9D%82%E8%AE%B0&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+        
+  <nav class="nav">
+    <a href="/uncategorized/%E9%9D%9E%E6%9A%B4%E5%8A%9B%E6%B2%9F%E9%80%9A/"><i class="iconfont iconleft"></i>非暴力沟通</a>
+    <a href="/uncategorized/tensorflow/">tensorflow 中的一些坑<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-text">说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%9C%B0%E8%AF%BB%E6%95%B0%E5%AD%A6%E4%B9%A6"><span class="toc-text">如何高效地读数学书</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%87%83%E8%B5%B7%E8%87%AA%E5%B7%B1%E7%9A%84%E7%83%AD%E6%83%85"><span class="toc-text">如何燃起自己的热情</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E9%99%90VS%E6%97%A0%E9%99%90"><span class="toc-text">有限VS无限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%AD%E6%83%85%E4%BB%8E%E4%BD%95%E8%80%8C%E6%9D%A5"><span class="toc-text">热情从何而来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%AF%E7%B2%B9"><span class="toc-text">纯粹</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E5%AE%9A%E5%AE%8C%E6%88%90%E7%9A%84%E7%B4%A7%E8%BF%AB%E6%84%9F"><span class="toc-text">一定完成的紧迫感</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%BF%E8%AF%BA"><span class="toc-text">承诺</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E8%A6%81%E8%AE%A9%E7%83%AD%E6%83%85%E4%B8%80%E6%AC%A1%E6%80%A7%E7%83%A7%E5%AE%8C"><span class="toc-text">不要让热情一次性烧完</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%8B%E6%9C%8D%E8%87%AA%E5%B7%B1%E7%9A%84%E6%97%A0%E7%9F%A5%E5%92%8C%E6%97%A0%E8%83%BD"><span class="toc-text">克服自己的无知和无能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%8B%E6%9C%8D%E2%80%9C%E6%83%85%E7%BB%AA%E6%97%A0%E8%83%BD%E2%80%9D"><span class="toc-text">克服“情绪无能”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%8B%E6%9C%8D%E2%80%9C%E4%BA%8B%E4%B8%9A%E6%97%A0%E8%83%BD"><span class="toc-text">克服“事业无能</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%93%E6%B3%A8%E5%8A%9B"><span class="toc-text">学习专注力</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%84%E5%A4%87%E9%98%9F%E6%80%9D%E6%83%B3"><span class="toc-text">预备队思想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%98%B2%E7%AC%91"><span class="toc-text">关于嘲笑</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
