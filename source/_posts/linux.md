@@ -3,6 +3,17 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+# SSH 端口转发
+## 本地访问远程端口
+```bash
+ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER
+```
+
+## 远程访问本地的端口
+```bash
+ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER
+```
+
 # conda init fish 之后 fish 崩溃
 原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。
 ```bash
