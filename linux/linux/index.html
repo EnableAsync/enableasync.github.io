@@ -177,9 +177,9 @@
   <div class="head-mask">
     <h1 class="head-title">Linux 的一些使用心得</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>July 10, 2024</span>
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>August 14, 2024</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3770</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3975</span>
     </div>
   </div>
 </section>
@@ -187,6 +187,9 @@
       <section class="content">
         <h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
 <h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
+<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
 <h1 id="conda-init-fish-之后-fish-崩溃"><a href="#conda-init-fish-之后-fish-崩溃" class="headerlink" title="conda init fish 之后 fish 崩溃"></a>conda init fish 之后 fish 崩溃</h1><p>原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-add-repository ppa:fish-shell/release-3<br>sudo apt update<br>sudo apt install fish<br></code></pre></td></tr></table></figure></p>
 <h1 id="关闭-kde-文件索引程序"><a href="#关闭-kde-文件索引程序" class="headerlink" title="关闭 kde 文件索引程序"></a>关闭 kde 文件索引程序</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">balooctl <span class="hljs-built_in">suspend</span><br>balooctl <span class="hljs-built_in">disable</span><br></code></pre></td></tr></table></figure>
 <h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
@@ -270,7 +273,7 @@
         
   <nav class="nav">
     <a></a>
-    <a href="/uncategorized/%E9%98%BF%E5%BE%B7%E5%8B%92%E5%BF%83%E7%90%86%E5%AD%A6%E8%AE%B2%E4%B9%89/">阿德勒心理学讲义<i class="iconfont iconright"></i></a>
+    <a href="/linux/docker-proxy/">Docker 镜像都失效之后的处理<i class="iconfont iconright"></i></a>
   </nav>
 
       </section>

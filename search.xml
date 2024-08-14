@@ -30,6 +30,27 @@
       </tags>
   </entry>
   <entry>
+    <title>Docker 镜像都失效之后的处理</title>
+    <url>/linux/docker-proxy/</url>
+    <content><![CDATA[<h1 id="Docker-镜像都失效之后的处理"><a href="#Docker-镜像都失效之后的处理" class="headerlink" title="Docker 镜像都失效之后的处理"></a>Docker 镜像都失效之后的处理</h1><p>在 2024 年，所有的 docker 镜像已经失效了，想要继续进行 <code>docker pull</code> 就需要自建镜像，或者使用代理进行 pull，这里记录一下具体的处理方式。</p>
+<h2 id="Docker-system-代理"><a href="#Docker-system-代理" class="headerlink" title="Docker system 代理"></a>Docker system 代理</h2><p><strong>在执行docker pull时，是由守护进程dockerd来执行。因此，代理需要配在dockerd的环境中。而这个环境，则是受systemd所管控，因此实际是systemd的配置。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">mkdir</span> -p /etc/systemd/system/docker.service.d<br>sudo <span class="hljs-built_in">touch</span> /etc/systemd/system/docker.service.d/proxy.conf<br></code></pre></td></tr></table></figure>
+<p>在这个proxy.conf文件（可以是任意*.conf的形式）中，添加以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">[Service]<br>Environment=<span class="hljs-string">&quot;HTTP_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;HTTPS_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span><br></code></pre></td></tr></table></figure>
+<p>注意，当使用 k8s 的时候，容器的 <code>http://127.0.0.1:10800</code> 是不可访问的，需要设置为 <code>docker0</code> 的 ip 地址。</p>
+<h2 id="Docker-容器内部代理"><a href="#Docker-容器内部代理" class="headerlink" title="Docker 容器内部代理"></a>Docker 容器内部代理</h2><p><strong>在容器运行阶段，如果需要代理上网，则需要配置 ~/.docker/config.json。以下配置，只在Docker 17.07及以上版本生效。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">&#123;<br> <span class="hljs-string">&quot;proxies&quot;</span>:<br> &#123;<br>   <span class="hljs-string">&quot;default&quot;</span>:<br>   &#123;<br>     <span class="hljs-string">&quot;httpProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;httpsProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;noProxy&quot;</span>: <span class="hljs-string">&quot;localhost,127.0.0.1,.example.com&quot;</span><br>   &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
+<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
     <url>/internlm/internlm-01/</url>
     <content><![CDATA[<h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
@@ -151,6 +172,9 @@
     <url>/linux/linux/</url>
     <content><![CDATA[<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
 <h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
+<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
 <h1 id="conda-init-fish-之后-fish-崩溃"><a href="#conda-init-fish-之后-fish-崩溃" class="headerlink" title="conda init fish 之后 fish 崩溃"></a>conda init fish 之后 fish 崩溃</h1><p>原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo apt-add-repository ppa:fish-shell/release-3<br>sudo apt update<br>sudo apt install fish<br></code></pre></td></tr></table></figure></p>
 <h1 id="关闭-kde-文件索引程序"><a href="#关闭-kde-文件索引程序" class="headerlink" title="关闭 kde 文件索引程序"></a>关闭 kde 文件索引程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">balooctl <span class="hljs-built_in">suspend</span><br>balooctl <span class="hljs-built_in">disable</span><br></code></pre></td></tr></table></figure>
 <h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
@@ -275,6 +299,17 @@
 ]]></content>
       <tags>
         <tag>book</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tensorflow 中的一些坑</title>
+    <url>/uncategorized/tensorflow/</url>
+    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
+<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
+<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ai</tag>
       </tags>
   </entry>
   <entry>
@@ -432,17 +467,6 @@
       </tags>
   </entry>
   <entry>
-    <title>tensorflow 中的一些坑</title>
-    <url>/uncategorized/tensorflow/</url>
-    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
-<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
-<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>ai</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>一些杂记</title>
     <url>/uncategorized/%E6%9D%82%E8%AE%B0/</url>
     <content><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本杂记包括了一些思考和记录，具体涉及到的内容包括：</p>
@@ -558,7 +582,10 @@
 <p>通过本书，你将能正确地认识自己，拥抱人人都有的自卑感，并将其化为养分，萌生勇气，面对一切挑战与逆境。</p>
 <p>人，因不完美而奋发向上，而人生会因不完美而更趋完美。</p>
 <p>阿德勒说：人，做得到任何事！他不在乎过去，不认同宿命论与天注定，主张事在人为，并如此相信：唯有你自己，能决定你人生的样貌；也唯有你自己，才能改写人生的剧本。阿德勒用一生观察并剖析“何而为人”，终得此结论。</p>
-<h1 id="生活的科学-The-Science-of-Living"><a href="#生活的科学-The-Science-of-Living" class="headerlink" title="生活的科学-The Science of Living"></a>生活的科学-The Science of Living</h1>]]></content>
+<h1 id="生活的科学-The-Science-of-Living"><a href="#生活的科学-The-Science-of-Living" class="headerlink" title="生活的科学-The Science of Living"></a>生活的科学-The Science of Living</h1><p>以阿德勒来说，他对心理学的兴趣源于行医。行医让我明了目的论（又称目标论）的观点。如果想了解心理事实，目的论是不可或缺的</p>
+<p>在医学界，所有的器官都有明确的目标，并朝着该目标努力发展，等发展到一定的形态，就代表这些器官已发育成熟。此外，当器官出现缺陷时，自然会采取特别的方式来克服缺憾，或者改由其他器官承担缺损器官的功能。<strong>生命总会设法延续下去，而且在面对外来阻碍时，生命的力量绝不会还没挣扎就先高举白旗。</strong></p>
+<p>人类心理层面的活动也和生命的功能面向类似。<strong>每一个人心里都有一个类似目标或理想的概念，一心想要超越现状，并通过制订出具体的未来方向，来克服目前的缺憾和困难。通过这个具体目标，人们得以想象未来成功的样貌，进而感受并认定自己必能超越当下的困境。要是感受不到目标，个人的所作所为只是行礼如仪，毫无意义可言。</strong></p>
+]]></content>
   </entry>
   <entry>
     <title>非暴力沟通</title>
