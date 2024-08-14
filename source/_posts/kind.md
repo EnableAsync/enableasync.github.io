@@ -39,8 +39,26 @@ sudo kind create cluster --config kind.yaml
 
 这里需要注意的点有：
 
-1. 不要设置集群 name，在我本地，如果设置了 name 会导致 kubeconfig 无法导出。
-2. 要使用 sudo，在我本地，如果不使用 sudo 会导致无法创建集群，原因未知。
+1. 不要设置集群 name，在我本地，如果设置了 name 会导致 kubeconfig 无法导出。（现在已修复，可以设置）
+2. 要使用 sudo，在我本地，如果不使用 sudo 会导致无法创建集群，原因未知。（因为 docker 需要 sudo，配置 docker 不用 sudo 之后就可以了）
+3. 这里 build image 的时候，会把当前的 proxy 配置也记住，所以如果要修改 proxy 配置，要重新 build image。
+4. 在 create 的时候可能会因为代理导致 create 失败，需要在 `~/.docker/config.json` 设置 no_proxy，如下所示：
+
+```bash
+{
+ "proxies":
+ {
+   "default":
+   {
+     "httpProxy": "http://172.17.0.1:10800",
+     "httpsProxy": "http://172.17.0.1:10800",
+     "noProxy": "localhost,127.0.0.1,10.96.0.0/12,172.18.0.0/28,172.18.0.3,::1,higress-control-plane"
+   }
+ }
+}
+```
+
+
 
 ```bash
 Creating cluster "kind" ...
@@ -106,6 +124,12 @@ Forwarding from [::1]:8443 -> 8443
 kubectl expose deploy dashboard-kubernetes-dashboard --name dashboard-nodeport --port 8443 --target-port=8443 --type=NodePort
 ```
 
+### 2.2 新版的 dashboard 的转发
+
+```bash
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+```
+
 ### 3. 生成 token
 
 不出意外 dashboard 需要 token 来登录，使用以下步骤来生成 token：
@@ -135,3 +159,36 @@ kubectl describe secret dashboard-token-vzzjn
 ```
 
 之后就可以将具体的 token 粘贴在 dashboard 中登录。
+
+### 3.1 新版的生成
+
+https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+
+## 其他内容
+
+### 配置 docker 不用 sudo
+
+创建名为docker的组，如果之前已经有该组就会报错，可以忽略这个错误。
+
+```bash
+sudo groupadd docker
+```
+
+将当前用户加入组docker
+
+```bash
+sudo gpasswd -a ${USER} docker
+```
+
+重启docker服务（生产环境请慎用）
+
+```bash
+sudo systemctl restart docker
+```
+
+添加访问和执行权限
+
+```bash
+sudo chmod a+rw /var/run/docker.sock
+```
+
