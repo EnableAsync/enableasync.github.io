@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker 镜像都失效之后的处理</title>
+    <url>/linux/docker-proxy/</url>
+    <content><![CDATA[<h1 id="Docker-镜像都失效之后的处理"><a href="#Docker-镜像都失效之后的处理" class="headerlink" title="Docker 镜像都失效之后的处理"></a>Docker 镜像都失效之后的处理</h1><p>在 2024 年，所有的 docker 镜像已经失效了，想要继续进行 <code>docker pull</code> 就需要自建镜像，或者使用代理进行 pull，这里记录一下具体的处理方式。</p>
+<h2 id="Docker-system-代理"><a href="#Docker-system-代理" class="headerlink" title="Docker system 代理"></a>Docker system 代理</h2><p><strong>在执行docker pull时，是由守护进程dockerd来执行。因此，代理需要配在dockerd的环境中。而这个环境，则是受systemd所管控，因此实际是systemd的配置。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">mkdir</span> -p /etc/systemd/system/docker.service.d<br>sudo <span class="hljs-built_in">touch</span> /etc/systemd/system/docker.service.d/proxy.conf<br></code></pre></td></tr></table></figure>
+<p>在这个proxy.conf文件（可以是任意*.conf的形式）中，添加以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">[Service]<br>Environment=<span class="hljs-string">&quot;HTTP_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;HTTPS_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span><br></code></pre></td></tr></table></figure>
+<p>注意，当使用 k8s 的时候，容器的 <code>http://127.0.0.1:10800</code> 是不可访问的，需要设置为 <code>docker0</code> 的 ip 地址。</p>
+<h2 id="Docker-容器内部代理"><a href="#Docker-容器内部代理" class="headerlink" title="Docker 容器内部代理"></a>Docker 容器内部代理</h2><p><strong>在容器运行阶段，如果需要代理上网，则需要配置 ~/.docker/config.json。以下配置，只在Docker 17.07及以上版本生效。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">&#123;<br> <span class="hljs-string">&quot;proxies&quot;</span>:<br> &#123;<br>   <span class="hljs-string">&quot;default&quot;</span>:<br>   &#123;<br>     <span class="hljs-string">&quot;httpProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;httpsProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;noProxy&quot;</span>: <span class="hljs-string">&quot;localhost,127.0.0.1,.example.com&quot;</span><br>   &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
+<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>幸福论</title>
     <url>/uncategorized/happiness/</url>
     <content><![CDATA[<h1 id="Async-的一些想法"><a href="#Async-的一些想法" class="headerlink" title="Async 的一些想法"></a>Async 的一些想法</h1><p>文明其精神，野蛮其体魄。</p>
@@ -28,27 +49,6 @@
       <tags>
         <tag>book</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Docker 镜像都失效之后的处理</title>
-    <url>/linux/docker-proxy/</url>
-    <content><![CDATA[<h1 id="Docker-镜像都失效之后的处理"><a href="#Docker-镜像都失效之后的处理" class="headerlink" title="Docker 镜像都失效之后的处理"></a>Docker 镜像都失效之后的处理</h1><p>在 2024 年，所有的 docker 镜像已经失效了，想要继续进行 <code>docker pull</code> 就需要自建镜像，或者使用代理进行 pull，这里记录一下具体的处理方式。</p>
-<h2 id="Docker-system-代理"><a href="#Docker-system-代理" class="headerlink" title="Docker system 代理"></a>Docker system 代理</h2><p><strong>在执行docker pull时，是由守护进程dockerd来执行。因此，代理需要配在dockerd的环境中。而这个环境，则是受systemd所管控，因此实际是systemd的配置。</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">mkdir</span> -p /etc/systemd/system/docker.service.d<br>sudo <span class="hljs-built_in">touch</span> /etc/systemd/system/docker.service.d/proxy.conf<br></code></pre></td></tr></table></figure>
-<p>在这个proxy.conf文件（可以是任意*.conf的形式）中，添加以下内容：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">[Service]<br>Environment=<span class="hljs-string">&quot;HTTP_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;HTTPS_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span><br></code></pre></td></tr></table></figure>
-<p>注意，当使用 k8s 的时候，容器的 <code>http://127.0.0.1:10800</code> 是不可访问的，需要设置为 <code>docker0</code> 的 ip 地址。</p>
-<h2 id="Docker-容器内部代理"><a href="#Docker-容器内部代理" class="headerlink" title="Docker 容器内部代理"></a>Docker 容器内部代理</h2><p><strong>在容器运行阶段，如果需要代理上网，则需要配置 ~/.docker/config.json。以下配置，只在Docker 17.07及以上版本生效。</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">&#123;<br> <span class="hljs-string">&quot;proxies&quot;</span>:<br> &#123;<br>   <span class="hljs-string">&quot;default&quot;</span>:<br>   &#123;<br>     <span class="hljs-string">&quot;httpProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;httpsProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;noProxy&quot;</span>: <span class="hljs-string">&quot;localhost,127.0.0.1,.example.com&quot;</span><br>   &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
-<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
   </entry>
   <entry>
     <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
@@ -141,9 +141,12 @@
 <h3 id="2-创建集群"><a href="#2-创建集群" class="headerlink" title="2. 创建集群"></a>2. 创建集群</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo kind create cluster --config kind.yaml<br></code></pre></td></tr></table></figure>
 <p>这里需要注意的点有：</p>
 <ol>
-<li>不要设置集群 name，在我本地，如果设置了 name 会导致 kubeconfig 无法导出。</li>
-<li>要使用 sudo，在我本地，如果不使用 sudo 会导致无法创建集群，原因未知。</li>
+<li>不要设置集群 name，在我本地，如果设置了 name 会导致 kubeconfig 无法导出。（现在已修复，可以设置）</li>
+<li>要使用 sudo，在我本地，如果不使用 sudo 会导致无法创建集群，原因未知。（因为 docker 需要 sudo，配置 docker 不用 sudo 之后就可以了）</li>
+<li>这里 build image 的时候，会把当前的 proxy 配置也记住，所以如果要修改 proxy 配置，要重新 build image。</li>
+<li>在 create 的时候可能会因为代理导致 create 失败，需要在 <code>~/.docker/config.json</code> 设置 no_proxy，如下所示：</li>
 </ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">&#123;<br> <span class="hljs-string">&quot;proxies&quot;</span>:<br> &#123;<br>   <span class="hljs-string">&quot;default&quot;</span>:<br>   &#123;<br>     <span class="hljs-string">&quot;httpProxy&quot;</span>: <span class="hljs-string">&quot;http://172.17.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;httpsProxy&quot;</span>: <span class="hljs-string">&quot;http://172.17.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;noProxy&quot;</span>: <span class="hljs-string">&quot;localhost,127.0.0.1,10.96.0.0/12,172.18.0.0/28,172.18.0.3,::1,higress-control-plane&quot;</span><br>   &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">Creating cluster <span class="hljs-string">&quot;kind&quot;</span> ...<br> ✓ Ensuring node image (kindest/node:v1.21.1) 🖼<br> ✓ Preparing nodes 📦 📦 📦  <br> ✓ Writing configuration 📜 <br> ✓ Starting control-plane 🕹️ <br> ✓ Installing CNI 🔌 <br> ✓ Installing StorageClass 💾 <br> ✓ Joining worker nodes 🚜 <br>Set kubectl context to <span class="hljs-string">&quot;kind-kind&quot;</span><br>You can now use your cluster with:<br><br>kubectl cluster-info --context kind-kind<br></code></pre></td></tr></table></figure>
 <p>如果出现以上信息表示创建成功，可以进行下一步。</p>
 <h3 id="3-导出-kubeconfig"><a href="#3-导出-kubeconfig" class="headerlink" title="3. 导出 kubeconfig"></a>3. 导出 kubeconfig</h3><figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">kind export kubeconfig<br></code></pre></td></tr></table></figure>
@@ -156,12 +159,22 @@
 <p>说明转发成功，此时访问 <a href="https://127.0.0.1:8443/">https://127.0.0.1:8443/</a> ，注意是 https</p>
 <h3 id="2-1-或者可以不转发使用-service-暴露服务"><a href="#2-1-或者可以不转发使用-service-暴露服务" class="headerlink" title="2.1 或者可以不转发使用 service 暴露服务"></a>2.1 或者可以不转发使用 service 暴露服务</h3><p>这里为了测试使用了 NodePort 方式暴露</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">kubectl expose deploy dashboard-kubernetes-dashboard --name dashboard-nodeport --port 8443 --target-port=8443 --<span class="hljs-built_in">type</span>=NodePort<br></code></pre></td></tr></table></figure>
+<h3 id="2-2-新版的-dashboard-的转发"><a href="#2-2-新版的-dashboard-的转发" class="headerlink" title="2.2 新版的 dashboard 的转发"></a>2.2 新版的 dashboard 的转发</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443<br></code></pre></td></tr></table></figure>
 <h3 id="3-生成-token"><a href="#3-生成-token" class="headerlink" title="3. 生成 token"></a>3. 生成 token</h3><p>不出意外 dashboard 需要 token 来登录，使用以下步骤来生成 token：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">kubectl create serviceaccount dashboard -n default<br>kubectl create rolebinding def-ns-admin --clusterrole=admin --serviceaccount=default:def-ns-admin<br>kubectl create clusterrolebinding dashboard-cluster-admin --clusterrole=cluster-admin --serviceaccount=default:dashboard<br></code></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">kubectl describe sa dashboard<br>Name:                dashboard<br>Namespace:           default<br>Labels:              &lt;none&gt;<br>Annotations:         &lt;none&gt;<br>Image pull secrets:  &lt;none&gt;<br>Mountable secrets:   dashboard-token-vzzjn<br>Tokens:              dashboard-token-vzzjn<br>Events:              &lt;none&gt;<br></code></pre></td></tr></table></figure>
 <p>这里可以看到 <code>dashboard-token-vzzjn</code> 就是我们需要的 token，使用以下命令显示具体内容：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">kubectl describe secret dashboard-token-vzzjn<br></code></pre></td></tr></table></figure>
 <p>之后就可以将具体的 token 粘贴在 dashboard 中登录。</p>
+<h3 id="3-1-新版的生成"><a href="#3-1-新版的生成" class="headerlink" title="3.1 新版的生成"></a>3.1 新版的生成</h3><p><a href="https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md">https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md</a></p>
+<h2 id="其他内容"><a href="#其他内容" class="headerlink" title="其他内容"></a>其他内容</h2><h3 id="配置-docker-不用-sudo"><a href="#配置-docker-不用-sudo" class="headerlink" title="配置 docker 不用 sudo"></a>配置 docker 不用 sudo</h3><p>创建名为docker的组，如果之前已经有该组就会报错，可以忽略这个错误。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo groupadd docker<br></code></pre></td></tr></table></figure>
+<p>将当前用户加入组docker</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo gpasswd -a <span class="hljs-variable">$&#123;USER&#125;</span> docker<br></code></pre></td></tr></table></figure>
+<p>重启docker服务（生产环境请慎用）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo systemctl restart docker<br></code></pre></td></tr></table></figure>
+<p>添加访问和执行权限</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">chmod</span> a+rw /var/run/docker.sock<br></code></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>k8s, kind</tag>
@@ -299,17 +312,6 @@
 ]]></content>
       <tags>
         <tag>book</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tensorflow 中的一些坑</title>
-    <url>/uncategorized/tensorflow/</url>
-    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
-<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
-<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>ai</tag>
       </tags>
   </entry>
   <entry>
@@ -464,6 +466,17 @@
       </categories>
       <tags>
         <tag>rust</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tensorflow 中的一些坑</title>
+    <url>/uncategorized/tensorflow/</url>
+    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
+<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
+<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ai</tag>
       </tags>
   </entry>
   <entry>
