@@ -22,6 +22,12 @@ ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port
 
 注意，默认是无法在远程服务器上监听 `0.0.0.0` 的，如果想要监听，需要修改 `/etc/ssh/sshd_config` 中的 `GatewayPorts yes` 才行。
 
+如果网络不稳定，容易断开连接，用以下命令将该连接只用作隧道（-N），同时增加心跳
+```bash
+ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -R 0.0.0.0:10800:127.0.0.1:10800 kdzlys@117.139.126.36 -p 2224
+```
+
+
 # conda init fish 之后 fish 崩溃
 
 原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。
