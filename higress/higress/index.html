@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Higress AI Wasm 插件开发记录 - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="Higress 背景Higress 是基于阿里内部两年...">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Higress AI Wasm 插件开发记录</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Higress AI Wasm 插件开发记录</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>August 26, 2024</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>17292</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="Higress-背景"><a href="#Higress-背景" class="headerlink" title="Higress 背景"></a>Higress 背景</h1><p>Higress 是基于阿里内部两年多的 Envoy Gateway 实践沉淀，以开源 Istio 与 Envoy 为核心构建的云原生 API 网关。</p>
+<p><img    class="lazyload" data-original="./higress/overview.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 33%;" /><span class="image-caption">image</span></p>
+<p>Higress 实现了安全防护网关、流量网关、微服务网关三层网关合一，可以显著降低网关的部署和运维成本。</p>
+<p><img    class="lazyload" data-original="./higress/云原生网关.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">image</span></p>
+<h1 id="Higress-与大模型"><a href="#Higress-与大模型" class="headerlink" title="Higress 与大模型"></a>Higress 与大模型</h1><p>以 ChatGPT 为代表的 AIGC（人工智能生成内容）技术正在引领企业生产的巨大变革，并在企业应用开发领域中占据了重要地位。AI 大模型凭借其卓越的学习和理解能力，可以辅助完成各种复杂的任务，极大地提升了工作效率和创新能力。</p>
+<p>在软件开发领域，AI 大模型能够显著提高开发人员的工作效率。它们可以协助编写和调试代码，自动生成测试用例，并提供最佳实践建议，从而加速开发周期，降低错误率。科研领域的研究人员则利用这些模型快速获取和理解最新的科研进展，自动化文献综述和数据分析，节省大量时间和精力。</p>
+<p>然而，随着 AI 大模型在企业中的应用不断深入，许多企业开始探索如何降低这些技术的使用成本。一个常见的解决方案是通过网关进行 AI 大模型的 API 管理。这样的管理方式不仅能够集中控制和优化模型的调用频率和资源使用，还可以保障数据安全和隐私合规。通过网关，企业能够灵活地调整使用策略，以更低的成本享受 AI 技术带来的高效益。</p>
+<p>Higress 前瞻性地通过 Wasm 实现了LLM Proxy 插件和 AI Assistant 插件帮助开发者快速构建 RAG 应用。</p>
+<h1 id="为-Higress-开发-ai-cache-插件的意义"><a href="#为-Higress-开发-ai-cache-插件的意义" class="headerlink" title="为 Higress 开发 ai-cache 插件的意义"></a>为 Higress 开发 ai-cache 插件的意义</h1><p><img    class="lazyload" data-original="./higress/arch" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 33%;" /><span class="image-caption">image-20240826154248690</span></p>
+<p>AI 缓存插件的目标是在构建 AI 应用时，通过智能缓存机制，<strong>减少对LLM提供商API的请求数量，从而降低使用成本，同时确保返回结果的质量</strong>。</p>
+<p>在具体实现过程中，Higress AI-Cache 利用向量相似度技术，通过分析和比较用户查询的特征向量，与缓存中已有的查询结果进行匹配。当用户发起新的查询时，Higress 首先计算该查询的向量表示，并在缓存中寻找相似度较高的结果。如果找到足够相似的缓存结果，插件将直接返回该结果，而无需再向LLM提供商API发出新的请求。</p>
+<p>该插件适用于多个LLM提供商API，例如通义千问、moonshot、OpenAI等。通过集成这些API，插件可以在不同的AI应用场景中灵活应用，包括但不限于智能客服、内容生成、代码编写和调试等领域。</p>
+<p>Higress AI 缓存插件核心优势在于，通过减少不必要的API调用，显著降低了使用大型语言模型的成本。同时，向量相似度技术确保了缓存结果的准确性和相关性，使得用户体验不受影响。插件还具备动态更新和管理缓存的功能，能够根据查询频率和变化情况，自动调整缓存策略，以保持最佳性能。</p>
+<h1 id="AI-Cache-插件运行流程"><a href="#AI-Cache-插件运行流程" class="headerlink" title="AI-Cache 插件运行流程"></a>AI-Cache 插件运行流程</h1><p><img    class="lazyload" data-original="./higress/seq" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">image-20240826155252868</span></p>
+<ol>
+<li>当用户请求 LLM API 时，首先在 AI-Cache 插件中对用户的请求内容进行 Embedding 操作，将用户的请求转换为向量数据。</li>
+<li>之后在向量数据库中进行相似度搜索。当相似度高于预先设定的阈值时直接返回 Cache 中的内容，不请求 LLM API。否则执行下一个步骤。</li>
+<li>当相似度低于预先设定的阈值时，使用 AI-Proxy 插件进行请求转发，向 LLM API 发送请求。并将请求结果缓存在本地的向量数据库中，并把结果返回给用户。</li>
+</ol>
+<h1 id="Docker-compose-部署-Higress-进行插件开发"><a href="#Docker-compose-部署-Higress-进行插件开发" class="headerlink" title="Docker compose 部署 Higress 进行插件开发"></a>Docker compose 部署 Higress 进行插件开发</h1><p>使用 K8s 进行 Higress 开发时复杂度较高，这里介绍使用 Docker compose 开发的方法。</p>
+<h2 id="docker-compose-文件编写"><a href="#docker-compose-文件编写" class="headerlink" title="docker-compose 文件编写"></a>docker-compose 文件编写</h2><p>首先是 <code>docker-compose.yml</code> 文件的编写，这里给出我使用的文件内容，其中的要点主要有：</p>
+<ol>
+<li>对 higress 的环境变量设置：<code>--component-log-level wasm:debug</code> 和 <code>/etc/envoy/envoy.yaml</code> 分别指定日志级别和配置文件。</li>
+<li>wasm 文件和 envoy.yaml 文件的映射。</li>
+<li>higress 的上游服务需要和 higress 在同一个 network 中。</li>
+<li>higress 的上游服务需要在 higress 之前启动完成。</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3.7&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">envoy:</span><br>    <span class="hljs-comment"># image: higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/gateway:v1.4.0-rc.1</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/gateway:1.4.2</span><br>    <span class="hljs-attr">entrypoint:</span> <span class="hljs-string">/usr/local/bin/envoy</span><br>    <span class="hljs-comment"># 注意这里对wasm开启了debug级别日志，正式部署时则默认info级别</span><br>    <span class="hljs-attr">command:</span> <span class="hljs-string">-c</span> <span class="hljs-string">/etc/envoy/envoy.yaml</span> <span class="hljs-string">--component-log-level</span> <span class="hljs-string">wasm:debug</span><br>    <span class="hljs-attr">depends_on:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">httpbin</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">redis</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">chroma</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">es</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">wasmtest</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;10000:10000&quot;</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;9901:9901&quot;</span><br>    <span class="hljs-attr">volumes:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">./envoy.yaml:/etc/envoy/envoy.yaml</span><br>    <span class="hljs-comment"># 注意默认没有这两个 wasm 的时候，docker 会创建文件夹，这样会出错，需要有 wasm 文件之后 down 然后重新 up</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">./ai-cache.wasm:/etc/envoy/ai-cache.wasm</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">./ai-proxy.wasm:/etc/envoy/ai-proxy.wasm</span><br><br>  <span class="hljs-attr">chroma:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">chromadb/chroma</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;8001:8000&quot;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">chroma-data:/chroma/chroma</span><br><br>  <span class="hljs-attr">redis:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">redis:latest</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">wasmtest</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;6379:6379&quot;</span><br><br>  <span class="hljs-attr">httpbin:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">kennethreitz/httpbin:latest</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">wasmtest</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;12345:80&quot;</span><br><br>  <span class="hljs-attr">es:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">elasticsearch:8.15.0</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;TZ=Asia/Shanghai&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;discovery.type=single-node&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;xpack.security.http.ssl.enabled=false&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;xpack.license.self_generated.type=trial&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTIC_PASSWORD=123456&quot;</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;9200:9200&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;9300:9300&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">wasmtest</span><br><br><span class="hljs-attr">volumes:</span><br>  <span class="hljs-attr">weaviate_data:</span> &#123;&#125;<br>  <span class="hljs-attr">chroma-data:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">local</span><br><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">wasmtest:</span> &#123;&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="envoy-yaml-文件编写"><a href="#envoy-yaml-文件编写" class="headerlink" title="envoy.yaml 文件编写"></a>envoy.yaml 文件编写</h2><p>在这里踩过许多坑，一一记录下来：</p>
+<ol>
+<li>在 wasm 插件中如果需要请求外部服务，需要在 <code>envoy.yaml</code> 中的 <code>clusters</code> 中一一指定并使用 <code>cluster_name</code> 访问，比如需要访问远程的 Dashscope Embedding 接口，则需要创建 <code>cluster_name</code> 名为 <code>outbound|443||dashvector.dns</code> 的 cluster，之后在代码中通过以下方式访问：</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">client := wrapper.NewClusterClient(wrapper.DnsCluster&#123;<br>			ServiceName: c.serviceName,<br>			Port:        c.servicePort,<br>			Domain:      c.serviceHost,<br>		&#125;)<br></code></pre></td></tr></table></figure>
+<p>   这里的 client 支持以下方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> HttpClient <span class="hljs-keyword">interface</span> &#123;<br>	Get(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Head(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Options(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Post(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, body []<span class="hljs-type">byte</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Put(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, body []<span class="hljs-type">byte</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Patch(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, body []<span class="hljs-type">byte</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Delete(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, body []<span class="hljs-type">byte</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Connect(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, body []<span class="hljs-type">byte</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Trace(path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, body []<span class="hljs-type">byte</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>	Call(method, path <span class="hljs-type">string</span>, headers [][<span class="hljs-number">2</span>]<span class="hljs-type">string</span>, body []<span class="hljs-type">byte</span>, cb ResponseCallback, timeoutMillisecond ...<span class="hljs-type">uint32</span>) <span class="hljs-type">error</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>   <strong>注意，这里的 HttpClient 是异步的，所以如果需要对结果进行处理之后再继续进行，则需要把逻辑写在 <code>ResponseCallback</code> 中。</strong></p>
+<ol>
+<li>如果请求的服务是 HTTPS，则需要在 <code>cluster</code> 中指定是 <code>tls</code> 以及服务对应的 <code>sni</code>。</li>
+<li>envoy.yaml 里配置 Redis cluster 时，socketAddr 要尽量用 IP，不要用主机名。详细原因在 Wasm 插件编写中解释。</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">admin:</span><br>  <span class="hljs-attr">address:</span><br>    <span class="hljs-attr">socket_address:</span><br>      <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>      <span class="hljs-attr">address:</span> <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>      <span class="hljs-attr">port_value:</span> <span class="hljs-number">9901</span><br><span class="hljs-attr">static_resources:</span><br>  <span class="hljs-attr">listeners:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">listener_0</span><br>    <span class="hljs-attr">address:</span><br>      <span class="hljs-attr">socket_address:</span><br>        <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>        <span class="hljs-attr">address:</span> <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>        <span class="hljs-attr">port_value:</span> <span class="hljs-number">10000</span><br>    <span class="hljs-attr">filter_chains:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">filters:</span><br>      <span class="hljs-comment"># httpbin</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">envoy.filters.network.http_connection_manager</span><br>        <span class="hljs-attr">typed_config:</span><br>          <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager</span><br>          <span class="hljs-attr">scheme_header_transformation:</span><br>            <span class="hljs-attr">scheme_to_overwrite:</span> <span class="hljs-string">https</span><br>          <span class="hljs-attr">stat_prefix:</span> <span class="hljs-string">ingress_http</span><br>          <span class="hljs-attr">route_config:</span><br>            <span class="hljs-attr">name:</span> <span class="hljs-string">local_route</span><br>            <span class="hljs-attr">virtual_hosts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">local_service</span><br>              <span class="hljs-attr">domains:</span> [<span class="hljs-string">&quot;*&quot;</span>]<br>              <span class="hljs-attr">routes:</span><br>              <span class="hljs-bullet">-</span> <span class="hljs-attr">match:</span><br>                  <span class="hljs-attr">prefix:</span> <span class="hljs-string">&quot;/&quot;</span><br>                <span class="hljs-attr">route:</span><br>                  <span class="hljs-attr">cluster:</span> <span class="hljs-string">llm</span><br>                  <span class="hljs-attr">timeout:</span> <span class="hljs-string">300s</span><br><br>          <span class="hljs-attr">http_filters:</span><br>          <span class="hljs-comment"># ai-cache</span><br>          <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ai-cache</span><br>            <span class="hljs-attr">typed_config:</span><br>              <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">type.googleapis.com/udpa.type.v1.TypedStruct</span><br>              <span class="hljs-attr">type_url:</span> <span class="hljs-string">type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm</span><br>              <span class="hljs-attr">value:</span><br>                <span class="hljs-attr">config:</span><br>                  <span class="hljs-attr">name:</span> <span class="hljs-string">ai-cache</span><br>                  <span class="hljs-attr">vm_config:</span><br>                    <span class="hljs-attr">runtime:</span> <span class="hljs-string">envoy.wasm.runtime.v8</span><br>                    <span class="hljs-attr">code:</span><br>                      <span class="hljs-attr">local:</span><br>                        <span class="hljs-attr">filename:</span> <span class="hljs-string">/etc/envoy/ai-cache.wasm</span><br>                  <span class="hljs-attr">configuration:</span><br>                    <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">&quot;type.googleapis.com/google.protobuf.StringValue&quot;</span><br>                    <span class="hljs-attr">value:</span> <span class="hljs-string">|</span><br><span class="hljs-string">                      &#123;</span><br><span class="hljs-string">                        &quot;embeddingProvider&quot;: &#123;</span><br><span class="hljs-string">                          &quot;type&quot;: &quot;dashscope&quot;,</span><br><span class="hljs-string">                          &quot;serviceName&quot;: &quot;dashscope&quot;,</span><br><span class="hljs-string">                          &quot;apiKey&quot;: &quot;sk-key&quot;,</span><br><span class="hljs-string">                          &quot;DashScopeServiceName&quot;: &quot;dashscope&quot;</span><br><span class="hljs-string">                        &#125;,</span><br><span class="hljs-string">                        &quot;vectorProvider&quot;: &#123;</span><br><span class="hljs-string">                          &quot;VectorStoreProviderType&quot;: &quot;elasticsearch&quot;,</span><br><span class="hljs-string">                          &quot;ThresholdRelation&quot;: &quot;gte&quot;,</span><br><span class="hljs-string">                          &quot;ESThreshold&quot;: 0.7,</span><br><span class="hljs-string">                          &quot;ESServiceName&quot;: &quot;es&quot;,</span><br><span class="hljs-string">                          &quot;ESIndex&quot;: &quot;higress&quot;,</span><br><span class="hljs-string">                          &quot;ESUsername&quot;: &quot;elastic&quot;,</span><br><span class="hljs-string">                          &quot;ESPassword&quot;: &quot;123456&quot;</span><br><span class="hljs-string">                        &#125;,</span><br><span class="hljs-string">                        &quot;cacheKeyFrom&quot;: &#123;</span><br><span class="hljs-string">                          &quot;requestBody&quot;: &quot;&quot;</span><br><span class="hljs-string">                        &#125;,</span><br><span class="hljs-string">                        &quot;cacheValueFrom&quot;: &#123;</span><br><span class="hljs-string">                          &quot;responseBody&quot;: &quot;&quot;</span><br><span class="hljs-string">                        &#125;,</span><br><span class="hljs-string">                        &quot;cacheStreamValueFrom&quot;: &#123;</span><br><span class="hljs-string">                          &quot;responseBody&quot;: &quot;&quot;</span><br><span class="hljs-string">                        &#125;,</span><br><span class="hljs-string">                        &quot;returnResponseTemplate&quot;: &quot;&quot;,</span><br><span class="hljs-string">                        &quot;returnTestResponseTemplate&quot;: &quot;&quot;,</span><br><span class="hljs-string">                        &quot;ReturnStreamResponseTemplate&quot;: &quot;&quot;,</span><br><span class="hljs-string">                        &quot;redis&quot;: &#123;</span><br><span class="hljs-string">                          &quot;serviceName&quot;: &quot;redis_cluster&quot;,</span><br><span class="hljs-string">                          &quot;timeout&quot;: 2000</span><br><span class="hljs-string">                        &#125;</span><br><span class="hljs-string">                      &#125;</span><br><span class="hljs-string"></span><br>          <span class="hljs-comment"># 上面的配置中 redis 的配置名字是 redis，而不是 golang tag 中的 redisConfig</span><br>                        <span class="hljs-comment"># &quot;vectorProvider&quot;: &#123;</span><br>                        <span class="hljs-comment">#   &quot;VectorStoreProviderType&quot;: &quot;chroma&quot;,</span><br>                        <span class="hljs-comment">#   &quot;ChromaServiceName&quot;: &quot;chroma&quot;,</span><br>                        <span class="hljs-comment">#   &quot;ChromaCollectionID&quot;: &quot;0294deb1-8ef5-4582-b21c-75f23093db2c&quot;</span><br>                        <span class="hljs-comment"># &#125;,</span><br><br>                        <span class="hljs-comment"># &quot;vectorProvider&quot;: &#123;</span><br>                        <span class="hljs-comment">#   &quot;VectorStoreProviderType&quot;: &quot;elasticsearch&quot;,</span><br>                        <span class="hljs-comment">#   &quot;ThresholdRelation&quot;: &quot;gte&quot;,</span><br>                        <span class="hljs-comment">#   &quot;ESThreshold&quot;: 0.7,</span><br>                        <span class="hljs-comment">#   &quot;ESServiceName&quot;: &quot;es&quot;,</span><br>                        <span class="hljs-comment">#   &quot;ESIndex&quot;: &quot;higress&quot;,</span><br>                        <span class="hljs-comment">#   &quot;ESUsername&quot;: &quot;elastic&quot;,</span><br>                        <span class="hljs-comment">#   &quot;ESPassword&quot;: &quot;123456&quot;</span><br>                        <span class="hljs-comment"># &#125;,</span><br>          <span class="hljs-comment"># llm-proxy</span><br>          <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">llm-proxy</span><br>            <span class="hljs-attr">typed_config:</span><br>              <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">type.googleapis.com/udpa.type.v1.TypedStruct</span><br>              <span class="hljs-attr">type_url:</span> <span class="hljs-string">type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm</span><br>              <span class="hljs-attr">value:</span><br>                <span class="hljs-attr">config:</span><br>                  <span class="hljs-attr">name:</span> <span class="hljs-string">llm</span><br>                  <span class="hljs-attr">vm_config:</span><br>                    <span class="hljs-attr">runtime:</span> <span class="hljs-string">envoy.wasm.runtime.v8</span><br>                    <span class="hljs-attr">code:</span><br>                      <span class="hljs-attr">local:</span><br>                        <span class="hljs-attr">filename:</span> <span class="hljs-string">/etc/envoy/ai-proxy.wasm</span><br>                  <span class="hljs-attr">configuration:</span><br>                    <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">&quot;type.googleapis.com/google.protobuf.StringValue&quot;</span><br>                    <span class="hljs-attr">value:</span> <span class="hljs-string">|</span> <span class="hljs-comment"># 插件配置</span><br>                      &#123;<br>                        <span class="hljs-attr">&quot;provider&quot;:</span> &#123;<br>                          <span class="hljs-attr">&quot;type&quot;:</span> <span class="hljs-string">&quot;openai&quot;</span>,                                <br>                          <span class="hljs-attr">&quot;apiTokens&quot;:</span> [<br>                            <span class="hljs-string">&quot;YOUR_API_TOKEN&quot;</span><br>                          ],<br>                          <span class="hljs-attr">&quot;openaiCustomUrl&quot;:</span> <span class="hljs-string">&quot;172.17.0.1:8000/v1/chat/completions&quot;</span><br>                        &#125;<br>                      &#125;<br><br><br>          <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">envoy.filters.http.router</span><br>      <br>  <span class="hljs-attr">clusters:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">httpbin</span><br>    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">30s</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">LOGICAL_DNS</span><br>    <span class="hljs-comment"># Comment out the following line to test on v6 networks</span><br>    <span class="hljs-attr">dns_lookup_family:</span> <span class="hljs-string">V4_ONLY</span><br>    <span class="hljs-attr">lb_policy:</span> <span class="hljs-string">ROUND_ROBIN</span><br>    <span class="hljs-attr">load_assignment:</span><br>      <span class="hljs-attr">cluster_name:</span> <span class="hljs-string">httpbin</span><br>      <span class="hljs-attr">endpoints:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">lb_endpoints:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">endpoint:</span><br>            <span class="hljs-attr">address:</span><br>              <span class="hljs-attr">socket_address:</span><br>                <span class="hljs-attr">address:</span> <span class="hljs-string">httpbin</span><br>                <span class="hljs-attr">port_value:</span> <span class="hljs-number">80</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">outbound|6379||redis_cluster</span><br>    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">1s</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">strict_dns</span><br>    <span class="hljs-attr">lb_policy:</span> <span class="hljs-string">ROUND_ROBIN</span><br>    <span class="hljs-attr">load_assignment:</span><br>      <span class="hljs-attr">cluster_name:</span> <span class="hljs-string">outbound|6379||redis_cluster</span><br>      <span class="hljs-attr">endpoints:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">lb_endpoints:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">endpoint:</span><br>                <span class="hljs-attr">address:</span><br>                  <span class="hljs-attr">socket_address:</span><br>                    <span class="hljs-attr">address:</span> <span class="hljs-number">172.17</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>                    <span class="hljs-attr">port_value:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">typed_extension_protocol_options:</span><br>      <span class="hljs-attr">envoy.filters.network.redis_proxy:</span><br>        <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">type.googleapis.com/envoy.extensions.filters.network.redis_proxy.v3.RedisProtocolOptions</span><br>  <span class="hljs-comment"># chroma</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">outbound|8001||chroma.dns</span><br>    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">30s</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">LOGICAL_DNS</span><br>    <span class="hljs-attr">dns_lookup_family:</span> <span class="hljs-string">V4_ONLY</span><br>    <span class="hljs-attr">lb_policy:</span> <span class="hljs-string">ROUND_ROBIN</span><br>    <span class="hljs-attr">load_assignment:</span><br>      <span class="hljs-attr">cluster_name:</span> <span class="hljs-string">outbound|8001||chroma.dns</span><br>      <span class="hljs-attr">endpoints:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">lb_endpoints:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">endpoint:</span><br>                <span class="hljs-attr">address:</span><br>                  <span class="hljs-attr">socket_address:</span><br>                    <span class="hljs-attr">address:</span> <span class="hljs-number">172.17</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> <span class="hljs-comment"># 本地 API 服务地址，这里是 docker0</span><br>                    <span class="hljs-attr">port_value:</span> <span class="hljs-number">8001</span><br><br>  <span class="hljs-comment"># es</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">outbound|9200||es.dns</span><br>    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">30s</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">LOGICAL_DNS</span><br>    <span class="hljs-attr">dns_lookup_family:</span> <span class="hljs-string">V4_ONLY</span><br>    <span class="hljs-attr">lb_policy:</span> <span class="hljs-string">ROUND_ROBIN</span><br>    <span class="hljs-attr">load_assignment:</span><br>      <span class="hljs-attr">cluster_name:</span> <span class="hljs-string">outbound|9200||es.dns</span><br>      <span class="hljs-attr">endpoints:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">lb_endpoints:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">endpoint:</span><br>                <span class="hljs-attr">address:</span><br>                  <span class="hljs-attr">socket_address:</span><br>                    <span class="hljs-attr">address:</span> <span class="hljs-number">172.17</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> <span class="hljs-comment"># 本地 API 服务地址，这里是 docker0</span><br>                    <span class="hljs-attr">port_value:</span> <span class="hljs-number">9200</span><br><br>  <span class="hljs-comment"># llm</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">llm</span><br>    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">30s</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">LOGICAL_DNS</span><br>    <span class="hljs-attr">dns_lookup_family:</span> <span class="hljs-string">V4_ONLY</span><br>    <span class="hljs-attr">lb_policy:</span> <span class="hljs-string">ROUND_ROBIN</span><br>    <span class="hljs-attr">load_assignment:</span><br>      <span class="hljs-attr">cluster_name:</span> <span class="hljs-string">llm</span><br>      <span class="hljs-attr">endpoints:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">lb_endpoints:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">endpoint:</span><br>                <span class="hljs-attr">address:</span><br>                  <span class="hljs-attr">socket_address:</span><br>                    <span class="hljs-attr">address:</span> <span class="hljs-number">172.17</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> <span class="hljs-comment"># 本地 API 服务地址，这里是 docker0</span><br>                    <span class="hljs-attr">port_value:</span> <span class="hljs-number">8000</span><br>  <span class="hljs-comment"># dashvector</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">outbound|443||dashvector.dns</span><br>    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">30s</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">LOGICAL_DNS</span><br>    <span class="hljs-attr">dns_lookup_family:</span> <span class="hljs-string">V4_ONLY</span><br>    <span class="hljs-attr">lb_policy:</span> <span class="hljs-string">ROUND_ROBIN</span><br>    <span class="hljs-attr">load_assignment:</span><br>      <span class="hljs-attr">cluster_name:</span> <span class="hljs-string">outbound|443||dashvector.dns</span><br>      <span class="hljs-attr">endpoints:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">lb_endpoints:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">endpoint:</span><br>                <span class="hljs-attr">address:</span><br>                  <span class="hljs-attr">socket_address:</span><br>                    <span class="hljs-attr">address:</span> <span class="hljs-string">vrs-cn-0dw3vnaqs0002z.dashvector.cn-hangzhou.aliyuncs.com</span><br>                    <span class="hljs-attr">port_value:</span> <span class="hljs-number">443</span><br>    <span class="hljs-attr">transport_socket:</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">envoy.transport_sockets.tls</span><br>      <span class="hljs-attr">typed_config:</span><br>        <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext</span><br>        <span class="hljs-attr">&quot;sni&quot;:</span> <span class="hljs-string">&quot;vrs-cn-0dw3vnaqs0002z.dashvector.cn-hangzhou.aliyuncs.com&quot;</span><br>  <span class="hljs-comment"># dashscope</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">outbound|443||dashscope.dns</span><br>    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">30s</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">LOGICAL_DNS</span><br>    <span class="hljs-attr">dns_lookup_family:</span> <span class="hljs-string">V4_ONLY</span><br>    <span class="hljs-attr">lb_policy:</span> <span class="hljs-string">ROUND_ROBIN</span><br>    <span class="hljs-attr">load_assignment:</span><br>      <span class="hljs-attr">cluster_name:</span> <span class="hljs-string">outbound|443||dashscope.dns</span><br>      <span class="hljs-attr">endpoints:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">lb_endpoints:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">endpoint:</span><br>                <span class="hljs-attr">address:</span><br>                  <span class="hljs-attr">socket_address:</span><br>                    <span class="hljs-attr">address:</span> <span class="hljs-string">dashscope.aliyuncs.com</span><br>                    <span class="hljs-attr">port_value:</span> <span class="hljs-number">443</span><br>    <span class="hljs-attr">transport_socket:</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">envoy.transport_sockets.tls</span><br>      <span class="hljs-attr">typed_config:</span><br>        <span class="hljs-string">&quot;@type&quot;</span><span class="hljs-string">:</span> <span class="hljs-string">type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext</span><br>        <span class="hljs-attr">&quot;sni&quot;:</span> <span class="hljs-string">&quot;dashscope.aliyuncs.com&quot;</span><br></code></pre></td></tr></table></figure>
+<h2 id="Wasm-插件编写"><a href="#Wasm-插件编写" class="headerlink" title="Wasm 插件编写"></a>Wasm 插件编写</h2><h3 id="Wasm-插件中无法使用-golang-的-net-http-库发送请求，必须使用-higress-封装的-HTTP-client"><a href="#Wasm-插件中无法使用-golang-的-net-http-库发送请求，必须使用-higress-封装的-HTTP-client" class="headerlink" title="Wasm 插件中无法使用 golang 的 net/http 库发送请求，必须使用 higress 封装的 HTTP client"></a>Wasm 插件中无法使用 golang 的 <code>net/http</code> 库发送请求，必须使用 higress 封装的 HTTP client</h3><h3 id="Wasm-插件请求-Redis-时，提示-“bad-argument”-错误"><a href="#Wasm-插件请求-Redis-时，提示-“bad-argument”-错误" class="headerlink" title="Wasm 插件请求 Redis 时，提示 “bad argument” 错误"></a>Wasm 插件请求 Redis 时，提示 “bad argument” 错误</h3><p>   解决办法：envoy.yaml 里配置 Redis cluster 时，socketAddr 要用 IP，不要用主机名。</p>
+<p>   在开发 Wasm 插件过程中，我们镜像会使用 Docker Compose + Envoy + Volume Mount 的方式测试本地构建出来的插件。如果插件需要连接 Redis，那么我们就需要在 envoy.yaml 中配置一个 Redis 的 cluster。如果配置中的 Redis 节点地址使用机器名，那么在启动插件的时候可能会出现初始化 Redis 客户端报“bad argument”的错误。</p>
+<p>   原因：这种错误一般只发生在插件在 <code>parseConfig</code> 阶段调用 <code>RedisClusterClient.Init()</code> 函数的时候。、</p>
+<p>   在 Envoy 初始化的过程中，集群信息的初始化与 Wasm 插件的初始化可以认为是并行进行的。如果使用主机名进行配置，要获取实例的实际 IP 就需要经过 DNS 解析。而 DNS 解析一般是需要一些时间的，Redis 客户端的初始化又需要与 Redis 集群建立连接和通信。这一延迟就可能会导致 Wasm 插件进行初始化时 Redis 的集群信息还没有就绪，进而引发上述报错。</p>
+<p>   而在 Higress 的实际运行过程中，集群信息是通过 xDS 进行下发的，这个延迟的问题不会非常显著。</p>
+<h3 id="proxywasm-ResumeHttpRequest-的使用"><a href="#proxywasm-ResumeHttpRequest-的使用" class="headerlink" title="proxywasm.ResumeHttpRequest() 的使用"></a><code>proxywasm.ResumeHttpRequest()</code> 的使用</h3><p>下面是一个 wasm 插件访问外部请求并返回给下游的例子：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">onHttpRequestHeaders</span><span class="hljs-params">(ctx wrapper.HttpContext, config MyConfig, log wrapper.Log)</span></span> types.Action &#123;<br>  <span class="hljs-comment">// 使用client的Get方法发起HTTP Get调用，此处省略了timeout参数，默认超时时间500毫秒</span><br>  config.client.Get(config.requestPath, <span class="hljs-literal">nil</span>,<br>    <span class="hljs-comment">// 回调函数，将在响应异步返回时被执行</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(statusCode <span class="hljs-type">int</span>, responseHeaders http.Header, responseBody []<span class="hljs-type">byte</span>)</span></span> &#123;<br>      <span class="hljs-comment">// 请求没有返回200状态码，进行处理</span><br>      <span class="hljs-keyword">if</span> statusCode != http.StatusOK &#123;<br>        log.Errorf(<span class="hljs-string">&quot;http call failed, status: %d&quot;</span>, statusCode)<br>        proxywasm.SendHttpResponse(http.StatusInternalServerError, <span class="hljs-literal">nil</span>,<br>          []<span class="hljs-type">byte</span>(<span class="hljs-string">&quot;http call failed&quot;</span>), <span class="hljs-number">-1</span>)<br>        <span class="hljs-keyword">return</span><br>      &#125;<br>      <span class="hljs-comment">// 打印响应的HTTP状态码和应答body</span><br>      log.Infof(<span class="hljs-string">&quot;get status: %d, response body: %s&quot;</span>, statusCode, responseBody)<br>      <span class="hljs-comment">// 从应答头中解析token字段设置到原始请求头中</span><br>      token := responseHeaders.Get(config.tokenHeader)<br>      <span class="hljs-keyword">if</span> token != <span class="hljs-string">&quot;&quot;</span> &#123;<br>        proxywasm.AddHttpRequestHeader(config.tokenHeader, token)<br>      &#125;<br>      <span class="hljs-comment">// 恢复原始请求流程，继续往下处理，才能正常转发给后端服务</span><br>      proxywasm.ResumeHttpRequest()<br>    &#125;)<br>  <span class="hljs-comment">// 需要等待异步回调完成，返回Pause状态，可以被ResumeHttpRequest恢复</span><br>  <span class="hljs-keyword">return</span> types.ActionPause<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在这里需要注意的是 <code>onHttpRequestHeaders</code> 方法返回了 <code>types.ActionPause</code> 等待了 <code>Get</code> 方法，我们前面说过 <code>client.Get</code> 是一个异步请求，如果不显式地进行等待，那么下游无法得到 higress 的请求结果。因此这里返回 <code>types.ActionPause</code> 等待请求完成之后，在 <code>client.Get</code> 的 response callback 函数中调用 <code>proxywasm.ResumeHttpRequest()</code> 恢复原始请求流程，继续往下处理，才能正常转发给后端服务。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/higress/higress/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;higress&#x2F;higress&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;higress&#x2F;higress&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+        
+  <nav class="nav">
+    <a href="/linux/docker-proxy/"><i class="iconfont iconleft"></i>Docker 镜像都失效之后的处理</a>
+    <a href="/uncategorized/%E9%98%BF%E5%BE%B7%E5%8B%92%E5%BF%83%E7%90%86%E5%AD%A6%E8%AE%B2%E4%B9%89/">阿德勒心理学讲义<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Higress-%E8%83%8C%E6%99%AF"><span class="toc-text">Higress 背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Higress-%E4%B8%8E%E5%A4%A7%E6%A8%A1%E5%9E%8B"><span class="toc-text">Higress 与大模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA-Higress-%E5%BC%80%E5%8F%91-ai-cache-%E6%8F%92%E4%BB%B6%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-text">为 Higress 开发 ai-cache 插件的意义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AI-Cache-%E6%8F%92%E4%BB%B6%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">AI-Cache 插件运行流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-compose-%E9%83%A8%E7%BD%B2-Higress-%E8%BF%9B%E8%A1%8C%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91"><span class="toc-text">Docker compose 部署 Higress 进行插件开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#docker-compose-%E6%96%87%E4%BB%B6%E7%BC%96%E5%86%99"><span class="toc-text">docker-compose 文件编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#envoy-yaml-%E6%96%87%E4%BB%B6%E7%BC%96%E5%86%99"><span class="toc-text">envoy.yaml 文件编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Wasm-%E6%8F%92%E4%BB%B6%E7%BC%96%E5%86%99"><span class="toc-text">Wasm 插件编写</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Wasm-%E6%8F%92%E4%BB%B6%E4%B8%AD%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8-golang-%E7%9A%84-net-http-%E5%BA%93%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82%EF%BC%8C%E5%BF%85%E9%A1%BB%E4%BD%BF%E7%94%A8-higress-%E5%B0%81%E8%A3%85%E7%9A%84-HTTP-client"><span class="toc-text">Wasm 插件中无法使用 golang 的 net&#x2F;http 库发送请求，必须使用 higress 封装的 HTTP client</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Wasm-%E6%8F%92%E4%BB%B6%E8%AF%B7%E6%B1%82-Redis-%E6%97%B6%EF%BC%8C%E6%8F%90%E7%A4%BA-%E2%80%9Cbad-argument%E2%80%9D-%E9%94%99%E8%AF%AF"><span class="toc-text">Wasm 插件请求 Redis 时，提示 “bad argument” 错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxywasm-ResumeHttpRequest-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">proxywasm.ResumeHttpRequest() 的使用</span></a></li></ol></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
