@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Docker 镜像都失效之后的处理</title>
-    <url>/linux/docker-proxy/</url>
-    <content><![CDATA[<h1 id="Docker-镜像都失效之后的处理"><a href="#Docker-镜像都失效之后的处理" class="headerlink" title="Docker 镜像都失效之后的处理"></a>Docker 镜像都失效之后的处理</h1><p>在 2024 年，所有的 docker 镜像已经失效了，想要继续进行 <code>docker pull</code> 就需要自建镜像，或者使用代理进行 pull，这里记录一下具体的处理方式。</p>
-<h2 id="Docker-system-代理"><a href="#Docker-system-代理" class="headerlink" title="Docker system 代理"></a>Docker system 代理</h2><p><strong>在执行docker pull时，是由守护进程dockerd来执行。因此，代理需要配在dockerd的环境中。而这个环境，则是受systemd所管控，因此实际是systemd的配置。</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">mkdir</span> -p /etc/systemd/system/docker.service.d<br>sudo <span class="hljs-built_in">touch</span> /etc/systemd/system/docker.service.d/proxy.conf<br></code></pre></td></tr></table></figure>
-<p>在这个proxy.conf文件（可以是任意*.conf的形式）中，添加以下内容：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">[Service]<br>Environment=<span class="hljs-string">&quot;HTTP_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;HTTPS_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span><br></code></pre></td></tr></table></figure>
-<p>注意，当使用 k8s 的时候，容器的 <code>http://127.0.0.1:10800</code> 是不可访问的，需要设置为 <code>docker0</code> 的 ip 地址。</p>
-<h2 id="Docker-容器内部代理"><a href="#Docker-容器内部代理" class="headerlink" title="Docker 容器内部代理"></a>Docker 容器内部代理</h2><p><strong>在容器运行阶段，如果需要代理上网，则需要配置 ~/.docker/config.json。以下配置，只在Docker 17.07及以上版本生效。</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">&#123;<br> <span class="hljs-string">&quot;proxies&quot;</span>:<br> &#123;<br>   <span class="hljs-string">&quot;default&quot;</span>:<br>   &#123;<br>     <span class="hljs-string">&quot;httpProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;httpsProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;noProxy&quot;</span>: <span class="hljs-string">&quot;localhost,127.0.0.1,.example.com&quot;</span><br>   &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
-<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-  </entry>
-  <entry>
     <title>幸福论</title>
     <url>/uncategorized/happiness/</url>
     <content><![CDATA[<h1 id="Async-的一些想法"><a href="#Async-的一些想法" class="headerlink" title="Async 的一些想法"></a>Async 的一些想法</h1><p>文明其精神，野蛮其体魄。</p>
@@ -49,6 +28,27 @@
       <tags>
         <tag>book</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Docker 镜像都失效之后的处理</title>
+    <url>/linux/docker-proxy/</url>
+    <content><![CDATA[<h1 id="Docker-镜像都失效之后的处理"><a href="#Docker-镜像都失效之后的处理" class="headerlink" title="Docker 镜像都失效之后的处理"></a>Docker 镜像都失效之后的处理</h1><p>在 2024 年，所有的 docker 镜像已经失效了，想要继续进行 <code>docker pull</code> 就需要自建镜像，或者使用代理进行 pull，这里记录一下具体的处理方式。</p>
+<h2 id="Docker-system-代理"><a href="#Docker-system-代理" class="headerlink" title="Docker system 代理"></a>Docker system 代理</h2><p><strong>在执行docker pull时，是由守护进程dockerd来执行。因此，代理需要配在dockerd的环境中。而这个环境，则是受systemd所管控，因此实际是systemd的配置。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">mkdir</span> -p /etc/systemd/system/docker.service.d<br>sudo <span class="hljs-built_in">touch</span> /etc/systemd/system/docker.service.d/proxy.conf<br></code></pre></td></tr></table></figure>
+<p>在这个proxy.conf文件（可以是任意*.conf的形式）中，添加以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">[Service]<br>Environment=<span class="hljs-string">&quot;HTTP_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;HTTPS_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span><br></code></pre></td></tr></table></figure>
+<p>注意，当使用 k8s 的时候，容器的 <code>http://127.0.0.1:10800</code> 是不可访问的，需要设置为 <code>docker0</code> 的 ip 地址。</p>
+<h2 id="Docker-容器内部代理"><a href="#Docker-容器内部代理" class="headerlink" title="Docker 容器内部代理"></a>Docker 容器内部代理</h2><p><strong>在容器运行阶段，如果需要代理上网，则需要配置 ~/.docker/config.json。以下配置，只在Docker 17.07及以上版本生效。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">&#123;<br> <span class="hljs-string">&quot;proxies&quot;</span>:<br> &#123;<br>   <span class="hljs-string">&quot;default&quot;</span>:<br>   &#123;<br>     <span class="hljs-string">&quot;httpProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;httpsProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;noProxy&quot;</span>: <span class="hljs-string">&quot;localhost,127.0.0.1,.example.com&quot;</span><br>   &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
+<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
   </entry>
   <entry>
     <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
@@ -324,6 +324,17 @@
       </tags>
   </entry>
   <entry>
+    <title>tensorflow 中的一些坑</title>
+    <url>/uncategorized/tensorflow/</url>
+    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
+<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
+<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ai</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Rust的一些学习心得</title>
     <url>/rust/rust/</url>
     <content><![CDATA[<h1 id="Rust-标准库-trait"><a href="#Rust-标准库-trait" class="headerlink" title="Rust 标准库 trait"></a>Rust 标准库 trait</h1><p>假设有以下变量：</p>
@@ -475,17 +486,6 @@
       </categories>
       <tags>
         <tag>rust</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tensorflow 中的一些坑</title>
-    <url>/uncategorized/tensorflow/</url>
-    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
-<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
-<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>ai</tag>
       </tags>
   </entry>
   <entry>
@@ -665,19 +665,19 @@
     <title>Higress AI Wasm 插件开发记录</title>
     <url>/higress/higress/</url>
     <content><![CDATA[<h1 id="Higress-背景"><a href="#Higress-背景" class="headerlink" title="Higress 背景"></a>Higress 背景</h1><p>Higress 是基于阿里内部两年多的 Envoy Gateway 实践沉淀，以开源 Istio 与 Envoy 为核心构建的云原生 API 网关。</p>
-<p><img  src="./higress/overview.png"   style="zoom: 33%;" /><span class="image-caption">image</span></p>
+<p><img  src="overview.png"   style="zoom: 33%;" /><span class="image-caption">image</span></p>
 <p>Higress 实现了安全防护网关、流量网关、微服务网关三层网关合一，可以显著降低网关的部署和运维成本。</p>
-<p><img  src="./higress/云原生网关.png"   style="zoom:50%;" /><span class="image-caption">image</span></p>
+<p><img  src="云原生网关.png"   style="zoom:50%;" /><span class="image-caption">image</span></p>
 <h1 id="Higress-与大模型"><a href="#Higress-与大模型" class="headerlink" title="Higress 与大模型"></a>Higress 与大模型</h1><p>以 ChatGPT 为代表的 AIGC（人工智能生成内容）技术正在引领企业生产的巨大变革，并在企业应用开发领域中占据了重要地位。AI 大模型凭借其卓越的学习和理解能力，可以辅助完成各种复杂的任务，极大地提升了工作效率和创新能力。</p>
 <p>在软件开发领域，AI 大模型能够显著提高开发人员的工作效率。它们可以协助编写和调试代码，自动生成测试用例，并提供最佳实践建议，从而加速开发周期，降低错误率。科研领域的研究人员则利用这些模型快速获取和理解最新的科研进展，自动化文献综述和数据分析，节省大量时间和精力。</p>
 <p>然而，随着 AI 大模型在企业中的应用不断深入，许多企业开始探索如何降低这些技术的使用成本。一个常见的解决方案是通过网关进行 AI 大模型的 API 管理。这样的管理方式不仅能够集中控制和优化模型的调用频率和资源使用，还可以保障数据安全和隐私合规。通过网关，企业能够灵活地调整使用策略，以更低的成本享受 AI 技术带来的高效益。</p>
 <p>Higress 前瞻性地通过 Wasm 实现了LLM Proxy 插件和 AI Assistant 插件帮助开发者快速构建 RAG 应用。</p>
-<h1 id="为-Higress-开发-ai-cache-插件的意义"><a href="#为-Higress-开发-ai-cache-插件的意义" class="headerlink" title="为 Higress 开发 ai-cache 插件的意义"></a>为 Higress 开发 ai-cache 插件的意义</h1><p><img  src="./higress/arch"   style="zoom: 33%;" /><span class="image-caption">image-20240826154248690</span></p>
+<h1 id="为-Higress-开发-ai-cache-插件的意义"><a href="#为-Higress-开发-ai-cache-插件的意义" class="headerlink" title="为 Higress 开发 ai-cache 插件的意义"></a>为 Higress 开发 ai-cache 插件的意义</h1><p><img  src="arch.png"   style="zoom: 33%;" /><span class="image-caption">image-20240826154248690</span></p>
 <p>AI 缓存插件的目标是在构建 AI 应用时，通过智能缓存机制，<strong>减少对LLM提供商API的请求数量，从而降低使用成本，同时确保返回结果的质量</strong>。</p>
 <p>在具体实现过程中，Higress AI-Cache 利用向量相似度技术，通过分析和比较用户查询的特征向量，与缓存中已有的查询结果进行匹配。当用户发起新的查询时，Higress 首先计算该查询的向量表示，并在缓存中寻找相似度较高的结果。如果找到足够相似的缓存结果，插件将直接返回该结果，而无需再向LLM提供商API发出新的请求。</p>
 <p>该插件适用于多个LLM提供商API，例如通义千问、moonshot、OpenAI等。通过集成这些API，插件可以在不同的AI应用场景中灵活应用，包括但不限于智能客服、内容生成、代码编写和调试等领域。</p>
 <p>Higress AI 缓存插件核心优势在于，通过减少不必要的API调用，显著降低了使用大型语言模型的成本。同时，向量相似度技术确保了缓存结果的准确性和相关性，使得用户体验不受影响。插件还具备动态更新和管理缓存的功能，能够根据查询频率和变化情况，自动调整缓存策略，以保持最佳性能。</p>
-<h1 id="AI-Cache-插件运行流程"><a href="#AI-Cache-插件运行流程" class="headerlink" title="AI-Cache 插件运行流程"></a>AI-Cache 插件运行流程</h1><p><img  src="./higress/seq"   style="zoom:50%;" /><span class="image-caption">image-20240826155252868</span></p>
+<h1 id="AI-Cache-插件运行流程"><a href="#AI-Cache-插件运行流程" class="headerlink" title="AI-Cache 插件运行流程"></a>AI-Cache 插件运行流程</h1><p><img  src="seq.png"   style="zoom:50%;" /><span class="image-caption">image-20240826155252868</span></p>
 <ol>
 <li>当用户请求 LLM API 时，首先在 AI-Cache 插件中对用户的请求内容进行 Embedding 操作，将用户的请求转换为向量数据。</li>
 <li>之后在向量数据库中进行相似度搜索。当相似度高于预先设定的阈值时直接返回 Cache 中的内容，不请求 LLM API。否则执行下一个步骤。</li>
