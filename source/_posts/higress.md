@@ -1,17 +1,18 @@
 ---
 title: Higress AI Wasm 插件开发记录
 categories: higress
+typora-root-url: ./higress
 ---
 
 # Higress 背景
 
 Higress 是基于阿里内部两年多的 Envoy Gateway 实践沉淀，以开源 Istio 与 Envoy 为核心构建的云原生 API 网关。
 
-<img src="./higress/overview.png" alt="image" style="zoom: 33%;" />
+<img src="overview.png" alt="image" style="zoom: 33%;" />
 
 Higress 实现了安全防护网关、流量网关、微服务网关三层网关合一，可以显著降低网关的部署和运维成本。
 
-<img src="./higress/云原生网关.png" alt="image" style="zoom:50%;" />
+<img src="云原生网关.png" alt="image" style="zoom:50%;" />
 
 # Higress 与大模型
 
@@ -25,7 +26,7 @@ Higress 前瞻性地通过 Wasm 实现了LLM Proxy 插件和 AI Assistant 插件
 
 # 为 Higress 开发 ai-cache 插件的意义
 
-<img src="./higress/arch" alt="image-20240826154248690" style="zoom: 33%;" />
+<img src="arch.png" alt="image-20240826154248690" style="zoom: 33%;" />
 
 AI 缓存插件的目标是在构建 AI 应用时，通过智能缓存机制，**减少对LLM提供商API的请求数量，从而降低使用成本，同时确保返回结果的质量**。
 
@@ -37,7 +38,7 @@ Higress AI 缓存插件核心优势在于，通过减少不必要的API调用，
 
 # AI-Cache 插件运行流程
 
-<img src="./higress/seq" alt="image-20240826155252868" style="zoom:50%;" />
+<img src="seq.png" alt="image-20240826155252868" style="zoom:50%;" />
 
 1. 当用户请求 LLM API 时，首先在 AI-Cache 插件中对用户的请求内容进行 Embedding 操作，将用户的请求转换为向量数据。
 2. 之后在向量数据库中进行相似度搜索。当相似度高于预先设定的阈值时直接返回 Cache 中的内容，不请求 LLM API。否则执行下一个步骤。
