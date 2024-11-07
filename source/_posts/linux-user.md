@@ -169,11 +169,11 @@ $ setfacl -m u:user:rwx file.txt
 #### 6.5 修改文件所有者
 
 ```bash
-#遇到权限不足的情况自行添加sudo，没sudo权限就联系管理员吧
-chown user1 aFile #修改aFile的所属用户为user1；
-chown user1: aFile #修改aFile的所属用户为user1，所属用户组为user1所在的主组；
-chown :Group1 aFile #修改aFile的所属用户组为Group1，所属用户不变；
-chown user1:Group2 aFile #修改aFile的所属用户为user1，所属用户组为Group2；
+# 遇到权限不足的情况自行添加sudo，没sudo权限就联系管理员吧
+chown user1 aFile # 修改aFile的所属用户为user1；
+chown user1: aFile # 修改aFile的所属用户为user1，所属用户组为user1所在的主组；
+chown :Group1 aFile # 修改aFile的所属用户组为Group1，所属用户不变；
+chown user1:Group2 aFile # 修改aFile的所属用户为user1，所属用户组为Group2；
 ```
 
 
