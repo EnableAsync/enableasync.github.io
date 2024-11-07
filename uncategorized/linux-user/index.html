@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>November 07, 2024</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>4793</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>4798</span>
     </div>
   </div>
 </section>
@@ -230,7 +230,7 @@
 <p>示例：</p>
 <figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams"><span class="hljs-symbol">$</span> setfacl -m u:user:rwx <span class="hljs-keyword">file</span>.txt<br></code></pre></td></tr></table></figure>
 <p>该命令将文件<code>file.txt</code>的ACL添加了一个新的用户<code>user</code>，并赋予该用户读、写和执行的权限。</p>
-<h4 id="6-5-修改文件所有者"><a href="#6-5-修改文件所有者" class="headerlink" title="6.5 修改文件所有者"></a>6.5 修改文件所有者</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#遇到权限不足的情况自行添加sudo，没sudo权限就联系管理员吧</span><br><span class="hljs-built_in">chown</span> user1 aFile <span class="hljs-comment">#修改aFile的所属用户为user1；</span><br><span class="hljs-built_in">chown</span> user1: aFile <span class="hljs-comment">#修改aFile的所属用户为user1，所属用户组为user1所在的主组；</span><br><span class="hljs-built_in">chown</span> :Group1 aFile <span class="hljs-comment">#修改aFile的所属用户组为Group1，所属用户不变；</span><br><span class="hljs-built_in">chown</span> user1:Group2 aFile <span class="hljs-comment">#修改aFile的所属用户为user1，所属用户组为Group2；</span><br></code></pre></td></tr></table></figure>
+<h4 id="6-5-修改文件所有者"><a href="#6-5-修改文件所有者" class="headerlink" title="6.5 修改文件所有者"></a>6.5 修改文件所有者</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 遇到权限不足的情况自行添加sudo，没sudo权限就联系管理员吧</span><br><span class="hljs-built_in">chown</span> user1 aFile <span class="hljs-comment"># 修改aFile的所属用户为user1；</span><br><span class="hljs-built_in">chown</span> user1: aFile <span class="hljs-comment"># 修改aFile的所属用户为user1，所属用户组为user1所在的主组；</span><br><span class="hljs-built_in">chown</span> :Group1 aFile <span class="hljs-comment"># 修改aFile的所属用户组为Group1，所属用户不变；</span><br><span class="hljs-built_in">chown</span> user1:Group2 aFile <span class="hljs-comment"># 修改aFile的所属用户为user1，所属用户组为Group2；</span><br></code></pre></td></tr></table></figure>
 <h3 id="7-用户切换和身份验证"><a href="#7-用户切换和身份验证" class="headerlink" title="7. 用户切换和身份验证"></a>7. 用户切换和身份验证</h3><h4 id="7-1-su命令"><a href="#7-1-su命令" class="headerlink" title="7.1 su命令"></a>7.1 su命令</h4><p><code>su</code>命令（切换用户）允许当前用户切换到其他用户账户。通过<code>su</code>命令，可以以其他用户的身份执行命令，需要输入目标用户的密码。</p>
 <p>示例：</p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">$ su <span class="hljs-keyword">user</span><br><span class="hljs-title">Password</span>: <br>$ whoami<br>user<br></code></pre></td></tr></table></figure>
