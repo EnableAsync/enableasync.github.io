@@ -34,13 +34,67 @@ nodes:
 ### 2. 创建集群
 
 ```bash
+# 旧版
 sudo kind create cluster --config kind.yaml
+# 新版
+kind create cluster --name higress --config=cluster.conf
+```
+
+```yaml
+# cluster.conf
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+# networking:
+  # WARNING: It is _strongly_ recommended that you keep this the default
+  # (127.0.0.1) for security reasons. However it is possible to change this.
+  # apiServerAddress: "0.0.0.0"
+  # By default the API server listens on a random open port.
+  # You may choose a specific port but probably don't need to in most cases.
+  # Using a random port makes it easier to spin up multiple clusters.
+  # apiServerPort: 6443
+networking:
+  serviceSubnet: "10.96.0.0/12"
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+- role: worker
+- role: worker
 ```
 
 这里需要注意的点有：
 
-1. 不要设置集群 name，在我本地，如果设置了 name 会导致 kubeconfig 无法导出。
-2. 要使用 sudo，在我本地，如果不使用 sudo 会导致无法创建集群，原因未知。
+1. 不要设置集群 name，在我本地，如果设置了 name 会导致 kubeconfig 无法导出。（现在已修复，可以设置）
+2. 要使用 sudo，在我本地，如果不使用 sudo 会导致无法创建集群，原因未知。（因为 docker 需要 sudo，配置 docker 不用 sudo 之后就可以了）
+3. 这里 build image 的时候，会把当前的 proxy 配置也记住，所以如果要修改 proxy 配置，要重新 build image。
+4. 在 create 的时候可能会因为代理导致 create 失败，需要在 `~/.docker/config.json` 设置 no_proxy，如下所示：
+
+```bash
+{
+ "proxies":
+ {
+   "default":
+   {
+     "httpProxy": "http://172.17.0.1:10800",
+     "httpsProxy": "http://172.17.0.1:10800",
+     "noProxy": "localhost,127.0.0.1,10.96.0.0/12,172.18.0.0/28,172.18.0.3,::1,higress-control-plane"
+   }
+ }
+}
+```
+
+其中最重要的是 `higress-control-plan`，不过为了防止无法访问 ClusterIP，我也配置了 `10.96.0.0/12` 和 Docker 网段 `172.18.0.0/28`。
 
 ```bash
 Creating cluster "kind" ...
@@ -106,6 +160,52 @@ Forwarding from [::1]:8443 -> 8443
 kubectl expose deploy dashboard-kubernetes-dashboard --name dashboard-nodeport --port 8443 --target-port=8443 --type=NodePort
 ```
 
+### 2.2 新版的 dashboard 的转发
+
+```bash
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+```
+
+当用户在安装了 kind 的电脑上访问 pods 中的服务时，是这样的
+
+```
+user -> docker proxy(docker 监听的端口) -> services(nodeport 等) -> pod
+```
+
+当用 kubectl 开启了转发时，访问的网络是
+
+```
+user -> kubectl port-forward -> pod
+```
+
+在 kind 中，worker 的 ClusterIP 可以用 `docker inspect` 查看。
+
+```
+➜  git:(master) ✗ k -n kubesphere-system get svc ks-console
+NAME         TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+ks-console   NodePort   10.99.226.191   <none>        80:30880/TCP   21h
+
+➜  git:(master) ✗ docker ps | grep kind
+c46d6ca06e9f        kindest/node:v1.19.1              "/usr/local/bin/entr…"   28 hours ago        Up 28 hours         127.0.0.1:53079->6443/tcp   kind-control-plane
+
+➜  git:(master) ✗ docker inspect c46d6ca06e9f | grep -i ipadd
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.20.0.2",
+
+➜  git:(master) ✗ curl -I 172.20.0.2:30880
+HTTP/1.1 302 Found
+Vary: Accept-Encoding
+Location: /login
+Content-Type: text/html; charset=utf-8
+Content-Length: 43
+Date: Fri, 19 Mar 2021 07:56:34 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+```
+
+
+
 ### 3. 生成 token
 
 不出意外 dashboard 需要 token 来登录，使用以下步骤来生成 token：
@@ -135,3 +235,36 @@ kubectl describe secret dashboard-token-vzzjn
 ```
 
 之后就可以将具体的 token 粘贴在 dashboard 中登录。
+
+### 3.1 新版的生成
+
+https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+
+## 其他内容
+
+### 配置 docker 不用 sudo
+
+创建名为docker的组，如果之前已经有该组就会报错，可以忽略这个错误。
+
+```bash
+sudo groupadd docker
+```
+
+将当前用户加入组docker
+
+```bash
+sudo gpasswd -a ${USER} docker
+```
+
+重启docker服务（生产环境请慎用）
+
+```bash
+sudo systemctl restart docker
+```
+
+添加访问和执行权限
+
+```bash
+sudo chmod a+rw /var/run/docker.sock
+```
+

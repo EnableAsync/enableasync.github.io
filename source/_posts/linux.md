@@ -3,6 +3,40 @@ title: Linux 的一些使用心得
 categories: linux
 ---
 
+# SSH 端口转发
+## 本地访问远程端口
+```bash
+ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER
+```
+
+## 远程访问本地的端口
+```bash
+ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER
+```
+
+比如要把本机的代理 `http://127.0.0.1:10800` 端口共享到远程的所有 IP 上的 10801 端口，则是
+
+```bash
+ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port
+```
+
+注意，默认是无法在远程服务器上监听 `0.0.0.0` 的，如果想要监听，需要修改 `/etc/ssh/sshd_config` 中的 `GatewayPorts yes` 才行。
+
+如果网络不稳定，容易断开连接，用以下命令将该连接只用作隧道（-N），同时增加心跳
+```bash
+ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -R 0.0.0.0:10800:127.0.0.1:10800 kdzlys@117.139.126.36 -p 2224
+```
+
+
+# conda init fish 之后 fish 崩溃
+
+原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。
+```bash
+sudo apt-add-repository ppa:fish-shell/release-3
+sudo apt update
+sudo apt install fish
+```
+
 # 关闭 kde 文件索引程序
 ```bash
 balooctl suspend
@@ -130,7 +164,7 @@ sudo ifconfig wlo1 up
 - 使用 `fcitx5-diagnose` 命令根据提示设置环境变量
 
 - 删除 `/etc/profile.d/pop-im-ibus.sh` （pop os）
-   
+  
    `/etc/profile.d/pop-im-ibus.sh` （源文件： /etc/gdm3/Xsession ）设置了环境变量 `XMODIFIERS` ，在 `/etc/X11/Xsession.d/70im-config_launch` 中有如下代码：
    
    ```bash
