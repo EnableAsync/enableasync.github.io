@@ -602,6 +602,30 @@
       </tags>
   </entry>
   <entry>
+    <title>远程服务器的 Git 使用本地的密钥——ssh-agent</title>
+    <url>/linux/ssh-agent/</url>
+    <content><![CDATA[<h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>有的时候我们在远程服务器上开发，但是远程服务器有多个人使用，我们并不想把自己的私钥放到服务器上，但是又想通过私钥连接到 Github 等远程仓库，那么该怎么做呢？</p>
+<h1 id="SSH-Agent"><a href="#SSH-Agent" class="headerlink" title="SSH Agent"></a>SSH Agent</h1><p>SSH Agent 是一个程序，用于管理多个 SSH 密钥并为 SSH 协议提供身份验证服务。它主要用于以下几点：</p>
+<ul>
+<li>密钥管理：SSH Agent 可以存储用户的私钥，并在需要时提供给 SSH 客户端，从而避免每次连接时都需要输入密码。</li>
+<li>身份验证：当用户尝试连接到远程服务器时，SSH Agent 会自动处理身份验证过程，提高安全性。</li>
+<li>多会话支持：用户可以在多个终端会话或应用程序中使用同一个 SSH Agent，而不需要重复加载密钥。</li>
+<li>在使用 SSH 进行远程操作时，启动 SSH Agent 并将私钥添加到其中，可以简化连接过程并提高效率。</li>
+</ul>
+<p>例如，在 Linux 系统中，可以通过以下命令启动 SSH Agent 并添加私钥：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">eval</span> `ssh-agent -s`<br>ssh-add ~/.ssh/id_rsa<br></code></pre></td></tr></table></figure><br>这样，后续的 SSH 连接将自动使用这些密钥进行身份验证。</p>
+<h1 id="在-Windows-上开启-SSH-Agent"><a href="#在-Windows-上开启-SSH-Agent" class="headerlink" title="在 Windows 上开启 SSH Agent"></a>在 Windows 上开启 SSH Agent</h1><p>根据微软帮助，我们能够通过以下方式开启 ssh-agent 并加入我们的私钥：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># By default the ssh-agent service is disabled. Configure it to start automatically.</span><br><span class="hljs-comment"># Make sure you&#x27;re running as an Administrator.</span><br>Get-Service ssh-agent | Set-Service -StartupType Automatic<br><br><span class="hljs-comment"># Start the service</span><br>Start-Service ssh-agent<br><br><span class="hljs-comment"># This should return a status of Running</span><br>Get-Service ssh-agent<br><br><span class="hljs-comment"># Now load your key files into ssh-agent</span><br>ssh-add <span class="hljs-variable">$env</span>:USERPROFILE\.ssh\id_ecdsa<br><br><span class="hljs-comment"># Check that it worked</span><br>ssh-add -l<br></code></pre></td></tr></table></figure></p>
+<h1 id="vscode-中启用-SSH-Agent"><a href="#vscode-中启用-SSH-Agent" class="headerlink" title="vscode 中启用 SSH Agent"></a>vscode 中启用 SSH Agent</h1><p>首先要在 ssh 中开启 <code>ForwardAgent</code>，具体方法是编辑 ssh config：<br><figure class="highlight coffeescript"><table><tr><td class="code"><pre><code class="hljs coffeescript">Host <span class="hljs-keyword">async</span><span class="hljs-number">-004</span><br>    HostName IP<br>    ForwardAgent <span class="hljs-literal">yes</span><br></code></pre></td></tr></table></figure><br>之后在本地的 vsocde 设置中搜索 <code>Enable Agent Forwarding</code> 并开启。</p>
+<p>之后 F1 搜索 Kill，关闭远程 vscode server，之后重新连接远程服务器，这个时候远程服务器上输入 <code>ssh-add -l</code> 应该能看到我们之前在 Windows 上添加的私钥，就实现了密钥的安全转发。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_keymanagement">https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_keymanagement</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/394555196">https://zhuanlan.zhihu.com/p/394555196</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>tensorflow 中的一些坑</title>
     <url>/uncategorized/tensorflow/</url>
     <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>

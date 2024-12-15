@@ -6,12 +6,12 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Docker 镜像都失效之后的处理 - EnableAsync&#39;s Blog</title>
+  <title>远程服务器的 Git 使用本地的密钥——ssh-agent - EnableAsync&#39;s Blog</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   <meta name="keywords" content="golang,java">
-  <meta name="description" content="Docker 镜像都失效之后的处理在 2024 年，所...">
+  <meta name="description" content="动机有的时候我们在远程服务器上开发，但是远程服务器有多...">
   <meta name="author" content="EnableAsync">
   <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
@@ -139,7 +139,7 @@
         <i class="iconfont iconsearch j-navbar-search"></i>
       
     </div>
-    <div class="center">Docker 镜像都失效之后的处理</div>
+    <div class="center">远程服务器的 Git 使用本地的密钥——ssh-agent</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -175,29 +175,32 @@
     <section class="head">
   <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">Docker 镜像都失效之后的处理</h1>
+    <h1 class="head-title">远程服务器的 Git 使用本地的密钥——ssh-agent</h1>
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 15, 2024</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1394</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1383</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h1 id="Docker-镜像都失效之后的处理"><a href="#Docker-镜像都失效之后的处理" class="headerlink" title="Docker 镜像都失效之后的处理"></a>Docker 镜像都失效之后的处理</h1><p>在 2024 年，所有的 docker 镜像已经失效了，想要继续进行 <code>docker pull</code> 就需要自建镜像，或者使用代理进行 pull，这里记录一下具体的处理方式。</p>
-<h2 id="Docker-system-代理"><a href="#Docker-system-代理" class="headerlink" title="Docker system 代理"></a>Docker system 代理</h2><p><strong>在执行docker pull时，是由守护进程dockerd来执行。因此，代理需要配在dockerd的环境中。而这个环境，则是受systemd所管控，因此实际是systemd的配置。</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">mkdir</span> -p /etc/systemd/system/docker.service.d<br>sudo <span class="hljs-built_in">touch</span> /etc/systemd/system/docker.service.d/proxy.conf<br></code></pre></td></tr></table></figure>
-<p>在这个proxy.conf文件（可以是任意*.conf的形式）中，添加以下内容：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">[Service]<br>Environment=<span class="hljs-string">&quot;HTTP_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;HTTPS_PROXY=http://127.0.0.1:10800&quot;</span><br>Environment=<span class="hljs-string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span><br></code></pre></td></tr></table></figure>
-<p>注意，当使用 k8s 的时候，容器的 <code>http://127.0.0.1:10800</code> 是不可访问的，需要设置为 <code>docker0</code> 的 ip 地址。</p>
-<h2 id="Docker-容器内部代理"><a href="#Docker-容器内部代理" class="headerlink" title="Docker 容器内部代理"></a>Docker 容器内部代理</h2><p><strong>在容器运行阶段，如果需要代理上网，则需要配置 ~/.docker/config.json。以下配置，只在Docker 17.07及以上版本生效。</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">&#123;<br> <span class="hljs-string">&quot;proxies&quot;</span>:<br> &#123;<br>   <span class="hljs-string">&quot;default&quot;</span>:<br>   &#123;<br>     <span class="hljs-string">&quot;httpProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;httpsProxy&quot;</span>: <span class="hljs-string">&quot;http://127.0.0.1:10800&quot;</span>,<br>     <span class="hljs-string">&quot;noProxy&quot;</span>: <span class="hljs-string">&quot;localhost,127.0.0.1,.example.com&quot;</span><br>   &#125;<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
-<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
+        <h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>有的时候我们在远程服务器上开发，但是远程服务器有多个人使用，我们并不想把自己的私钥放到服务器上，但是又想通过私钥连接到 Github 等远程仓库，那么该怎么做呢？</p>
+<h1 id="SSH-Agent"><a href="#SSH-Agent" class="headerlink" title="SSH Agent"></a>SSH Agent</h1><p>SSH Agent 是一个程序，用于管理多个 SSH 密钥并为 SSH 协议提供身份验证服务。它主要用于以下几点：</p>
+<ul>
+<li>密钥管理：SSH Agent 可以存储用户的私钥，并在需要时提供给 SSH 客户端，从而避免每次连接时都需要输入密码。</li>
+<li>身份验证：当用户尝试连接到远程服务器时，SSH Agent 会自动处理身份验证过程，提高安全性。</li>
+<li>多会话支持：用户可以在多个终端会话或应用程序中使用同一个 SSH Agent，而不需要重复加载密钥。</li>
+<li>在使用 SSH 进行远程操作时，启动 SSH Agent 并将私钥添加到其中，可以简化连接过程并提高效率。</li>
+</ul>
+<p>例如，在 Linux 系统中，可以通过以下命令启动 SSH Agent 并添加私钥：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">eval</span> `ssh-agent -s`<br>ssh-add ~/.ssh/id_rsa<br></code></pre></td></tr></table></figure><br>这样，后续的 SSH 连接将自动使用这些密钥进行身份验证。</p>
+<h1 id="在-Windows-上开启-SSH-Agent"><a href="#在-Windows-上开启-SSH-Agent" class="headerlink" title="在 Windows 上开启 SSH Agent"></a>在 Windows 上开启 SSH Agent</h1><p>根据微软帮助，我们能够通过以下方式开启 ssh-agent 并加入我们的私钥：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># By default the ssh-agent service is disabled. Configure it to start automatically.</span><br><span class="hljs-comment"># Make sure you&#x27;re running as an Administrator.</span><br>Get-Service ssh-agent | Set-Service -StartupType Automatic<br><br><span class="hljs-comment"># Start the service</span><br>Start-Service ssh-agent<br><br><span class="hljs-comment"># This should return a status of Running</span><br>Get-Service ssh-agent<br><br><span class="hljs-comment"># Now load your key files into ssh-agent</span><br>ssh-add <span class="hljs-variable">$env</span>:USERPROFILE\.ssh\id_ecdsa<br><br><span class="hljs-comment"># Check that it worked</span><br>ssh-add -l<br></code></pre></td></tr></table></figure></p>
+<h1 id="vscode-中启用-SSH-Agent"><a href="#vscode-中启用-SSH-Agent" class="headerlink" title="vscode 中启用 SSH Agent"></a>vscode 中启用 SSH Agent</h1><p>首先要在 ssh 中开启 <code>ForwardAgent</code>，具体方法是编辑 ssh config：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">Host <span class="hljs-keyword">async</span><span class="hljs-number">-004</span><br>    HostName IP<br>    ForwardAgent <span class="hljs-literal">yes</span><br></code></pre></td></tr></table></figure><br>之后在本地的 vsocde 设置中搜索 <code>Enable Agent Forwarding</code> 并开启。</p>
+<p>之后 F1 搜索 Kill，关闭远程 vscode server，之后重新连接远程服务器，这个时候远程服务器上输入 <code>ssh-add -l</code> 应该能看到我们之前在 Windows 上添加的私钥，就实现了密钥的安全转发。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_keymanagement">https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_keymanagement</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/394555196">https://zhuanlan.zhihu.com/p/394555196</a></li>
+</ol>
 
       </section>
       <section class="extra">
@@ -205,7 +208,7 @@
           <ul class="copyright">
   
     <li><strong>本文作者：</strong>EnableAsync</li>
-    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/linux/docker-proxy/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;docker-proxy&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;docker-proxy&#x2F;index.html</a></li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/linux/ssh-agent/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;ssh-agent&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;ssh-agent&#x2F;index.html</a></li>
     <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
   
 </ul>
@@ -214,8 +217,8 @@
         
         
   <nav class="nav">
-    <a href="/linux/ssh-agent/"><i class="iconfont iconleft"></i>远程服务器的 Git 使用本地的密钥——ssh-agent</a>
-    <a href="/higress/higress/">Higress AI Wasm 插件开发记录<i class="iconfont iconright"></i></a>
+    <a href="/linux/linux/"><i class="iconfont iconleft"></i>Linux 的一些使用心得</a>
+    <a href="/linux/docker-proxy/">Docker 镜像都失效之后的处理<i class="iconfont iconright"></i></a>
   </nav>
 
       </section>
@@ -228,7 +231,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E9%95%9C%E5%83%8F%E9%83%BD%E5%A4%B1%E6%95%88%E4%B9%8B%E5%90%8E%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-text">Docker 镜像都失效之后的处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-system-%E4%BB%A3%E7%90%86"><span class="toc-text">Docker system 代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-%E5%AE%B9%E5%99%A8%E5%86%85%E9%83%A8%E4%BB%A3%E7%90%86"><span class="toc-text">Docker 容器内部代理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SSH-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="toc-text">SSH 端口转发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E8%AE%BF%E9%97%AE%E8%BF%9C%E7%A8%8B%E7%AB%AF%E5%8F%A3"><span class="toc-text">本地访问远程端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E6%9C%AC%E5%9C%B0%E7%9A%84%E7%AB%AF%E5%8F%A3"><span class="toc-text">远程访问本地的端口</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-text">动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SSH-Agent"><span class="toc-text">SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8-Windows-%E4%B8%8A%E5%BC%80%E5%90%AF-SSH-Agent"><span class="toc-text">在 Windows 上开启 SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#vscode-%E4%B8%AD%E5%90%AF%E7%94%A8-SSH-Agent"><span class="toc-text">vscode 中启用 SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
   </aside>
 
         
