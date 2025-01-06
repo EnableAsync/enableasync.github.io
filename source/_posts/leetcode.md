@@ -4,6 +4,7 @@ date: 2022-01-04 19:21:50
 tags: data structure, algorithm
 image: https://dingxuewen.com/leetcode-js-leviding/leetcode.png
 mathjax: true
+typora-root-url: ./leetcode
 ---
 
 # 注意事项
@@ -16,17 +17,618 @@ mathjax: true
 ## 双指针
 第 27、977 题就是经典的双指针题目。
 
+- 有序数组平方。
+
 ## 滑动窗口
-注意，使用滑动窗口的时候，for 循环代表滑动窗口的结尾，否则又会陷入两个 for 的困境。
+注意，使用滑动窗口的时候，只用一个 for 循环代表滑动窗口的结尾，否则又会陷入两个 for 的困境。
+
+- 长度最小的子数组
+
+## 前缀和
+
+```Java
+for(int i = 1; i <= n; i++) {
+    s[i] = s [i-1] + a[i];
+}
+```
+
+## Java 多组输入示例
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main (String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int n = scanner.nextInt();
+        int[] nums = new int[n + 1];
+        int[] s = new int[n + 1];
+        
+        for (int i = 1; i <= n; i++) {
+            nums[i] = scanner.nextInt();
+            s[i] = s[i - 1] + nums[i];
+        }
+        
+        while (scanner.hasNextInt()) {
+            int a = scanner.nextInt();
+            int b = scanner.nextInt();
+            System.out.println(s[b+1] - s[a]);
+        }
+        scanner.close();
+    }
+}
+```
+
+## 模拟矩阵
+
+1. 走完一行或者一列对 x 和 y 进行处理，使得继续走下一行而不下标越界
+2. 走完一行或者一列对 x 和 y 进行处理，使得走到没有写数字的地方
+3. 走完一行或者一列对边界进行处理
+
+```java
+class Solution {
+    public int[][] generateMatrix(int n) {
+        int [][]result = new int[n][n];
+        int count = 1;
+        int x = 0, y = 0;
+        int xMax = n, yMax = n, xMin = 0, yMin = 0;
+        while (count <= n * n) {
+            // 向右
+            while (y < yMax) {
+                result[x][y] = count++;
+                y++;
+            }
+            y--; // 能够向下走
+            x++; // 走到没写过数字的地方
+            xMin += 1; // 向右一行补充完向上少走一行
+
+            // 向下
+            while (x < xMax) {
+                result[x][y] = count++;
+                x++;
+            }
+            x--; // 能够向左走
+            y--; // 走到没写过数字的地方
+            yMax -= 1; // 向右少走一行
+
+            // 向左
+            while (y >= yMin) {
+                result[x][y] = count++;
+                y--;
+            }
+            y++; // 能够向右走
+            x--; // 走到没写过数字的地方
+            xMax -= 1; // 向下少走一行
+
+            // 向上
+            while (x >= xMin) {
+                result[x][y] = count++;
+                x--;
+            }
+            x++; // 能够向右走
+            y++; // 走到没写过数字的地方
+            yMin += 1; // 向左少走一行
+
+        }
+        return result;
+    }
+    
+}
+```
+
+# 双指针
+
+## 移动零
+
+10^4 O(n)
+
+给定一个数组 `nums`，编写一个函数将所有 `0` 移动到数组的末尾，同时保持非零元素的相对顺序。
+
+**请注意** ，必须在不复制数组的情况下原地对数组进行操作。
+
+**key：**保证 right 在 left 左边。
+
+## 盛最多水的容器
+
+10^5 O(n)
+
+给定一个长度为 `n` 的整数数组 `height` 。有 `n` 条垂线，第 `i` 条线的两个端点是 `(i, 0)` 和 `(i, height[i])` 。
+
+找出其中的两条线，使得它们与 `x` 轴共同构成的容器可以容纳最多的水。
+
+返回容器可以储存的最大水量。
+
+**说明：**你不能倾斜容器。
+
+**思考：**有两个变量决定盛水量：1. 左右的距离。 2. 较低的柱子高度。
+
+1. 左右的距离最左到最右最大，然后慢慢缩小。
+2. 如果移动较高的柱子，那么盛水量不会变大，但是如果移动较低的柱子，那么盛水量有可能会变大。
+
+## 接雨水
+
+2 * 10^4
+
+![img](rainwatertrap.png)
+
+```
+输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+输出：6
+解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 
+```
+
+**key：**某一处的雨水 = 左右最高柱子的最小值 - 当前处的高度
+
+剩下的点就在求左右最高柱子处进行优化。
+
+### 动态规划
+
+将左右最高柱子的高度分别记为 leftMax，rightMax，并 O(n) 计算出这个数组的。
+
+需要注意的点是 **初始值** 和 **边界**。
+
+```java
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int[] leftMax = new int[n];
+        int[] rightMax = new int[n];
+        leftMax[0] = height[0];
+        for (int i = 1; i < n; i++) {
+            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+        }
+        rightMax[n - 1] = height[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            rightMax[i] = Math.max(rightMax[i + 1], height[i]);
+        }
+        int total = 0;
+        for (int i = 1; i < n; i++) {
+            total += Math.min(leftMax[i], rightMax[i]) - height[i];
+        }
+        return total;
+    }
+}
+```
+
+时间复杂度：O(n)，其中 n 是数组 height 的长度。计算数组 leftMax 和 rightMax 的元素值各需要遍历数组 height 一次，计算能接的雨水总量还需要遍历一次。
+
+空间复杂度：O(n)，其中 n 是数组 height 的长度。需要创建两个长度为 n 的数组 leftMax 和 rightMax。
+
+### 单调栈
+
+
+
+### 双指针
+
+动态规划计算 leftMax 和 rightMax 的时候需要遍历一次数组，能不能直接得到 leftMax 和 rightMax 而不遍历呢？这样就可以将得到 max 的复杂度降低为 O(1) 了。
+
+**与盛最多水的容器相同的思路，可以从两边的雨水向中间进行计算**，这样可以 O(1) 得到
+
+```java
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int ans = 0;
+        int left = 0, right = n - 1;
+        int maxLeft = 0, maxRight = 0;
+        while (left < right) {
+            maxLeft = Math.max(maxLeft, height[left]);
+            maxRight = Math.max(maxRight, height[right]);
+            if (height[left] > height[right]) {
+                ans += maxRight - height[right];
+                right--;
+            } else {
+                ans += maxLeft - height[left];
+                left++;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+# 滑动窗口
+
+### 滑动窗口模板
+
+```java
+// 外层循环扩展右边界，内层循环扩展左边界
+for (int l = 0, r = 0 ; r < n ; r++) {
+	// 当前考虑的元素
+	while (l <= r && check()) { // 区间[left,right]不符合题意
+        // 扩展左边界
+    }
+    // 区间[left,right]符合题意，统计相关信息
+}
+```
+
+## 无重复字符的最长子串
+
+5 * 10^4 级别
+
+给定一个字符串 `s` ，请你找出其中不含有重复字符的最长子串的长度。
+
+1. 判断重复字符：Set
+2. 最长字串：滑动窗口
+
+这道题官方解答为枚举所有起始位置，之后向右延申至不含重复字符的最长子串长度，如果包含重复字符，那么左指针持续移动到不含重复字符为止。
+
+关键在于有重复字符的时候，是左指针持续地向右移动，而不是重新开始枚举，因为这个操作，使得时间复杂度为 O(n)，那么为什么这样不会漏掉答案呢？也就是说为什么这样一定会取到最优答案呢？
+
+因为当右边要出现重复字母的的候，这个时候左指针到右指针的子串一定是对应了右指针不移动情况下的最优子串。
+
+所以可以枚举右指针，并让左指针不断向右。
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<>();
+        int n = s.length(), l = 0, ans = 0;
+        for (int r = 0; r < n; r++) {
+            while (set.contains(s.charAt(r))) {
+                set.remove(s.charAt(l));
+                l++;
+            }
+            set.add(s.charAt(r));
+            ans = Math.max(ans, r - l + 1);
+        }
+        return ans;
+    }
+}
+```
+
+## 找到字符串中所有字母异位词
+
+给定两个字符串 `s` 和 `p`，找到 `s` 中所有 `p` 的 异位词的子串，返回这些子串的起始索引。不考虑答案输出的顺序。
+
+3 * 10^4 级别
+
+与上一题相同，需要做以下操作：
+
+1. 判断异位词。
+2. 异位词子串。
+
+确定异位词需要 O(n)，n 是字符串长度。
+
+**key：**在这道题中，异位词和原词肯定是长度相同的，所以直接用固定长度的滑动窗口滑过去，这样时间复杂度为 O(n * m)。但是有更好的做法，就是当向右滑动的时候，删掉的是左面的字母，如果右边能够补齐，那么就说明是异位词，这样就可以 O(1) 判断异位词，再加上滑动的耗时，总计 O(m)。
+
+Arrays.equals 可以判断两个数组相等。
 
 # 链表
-链表对于有插入、交换或者删除的操作的时候，一般加一个虚拟头节点更好处理。
+链表对于有插入、交换或者删除的操作的时候，一般加一个**虚拟头节点**更好处理。
+
+203.移除链表元素
+
+707.设计链表
+
+206.翻转链表
+
+206.翻转链表
+
+19.删除链表的倒数第 N 个结点
+
+# 子串
+
+## 和为 K 的子数组
+
+2 * 10^4 O(n^2) 或者 O(n)
+
+### 前缀和
+
+```
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int left = 0, n = nums.length, right = n - 1, ans = 0;;
+        int[] sum = new int[n];
+        sum[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            sum[i] = sum[i - 1] + nums[i];
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (sum[j] - sum[i] == k) { // 这种写法无法计算前 n 个的和
+                    ans++;
+                }
+            }
+            
+        }
+        for (int i = 0; i < n; i++) { // 补上
+            if (sum[i] == k) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+## 优化前缀和中的 O(n^2)
+
+用 "两数之和" 的思路来优化掉枚举所有前缀和的过程，用 HashMap 直接找到想要的前缀和。
+
+```java
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int left = 0, n = nums.length, right = n - 1, ans = 0;;
+        int[] sum = new int[n];
+        sum[0] = nums[0];
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 1; i < n; i++) {
+            sum[i] = sum[i - 1] + nums[i];
+        }
+        // 方法一：暴力前缀和 
+
+        // for (int i = 0; i < n; i++) {
+        //     for (int j = i + 1; j < n; j++) {
+        //         if (sum[j] - sum[i] == k) { // 这种写法无法计算前 n 个的和
+        //             ans++;
+        //         }
+        //     }
+        // }
+
+        // 方法一的实质是求两数之差为固定值的数有多少
+        // sum[j] - sum[i] = k
+        // 用 "两数之和" 的方法用哈希表进行优化 a + b = target -> a = target - b
+        for (int i = 0; i < n; i++) {
+            int num = k + sum[i];
+            if (map.containsKey(sum[i])) { // 如果需要的正好有
+                ans += map.get(sum[i]);
+            }
+            map.put(num, map.getOrDefault(num, 0) + 1); // 需要 k + sum[i]
+        }
+
+        for (int i = 0; i < n; i++) { // 补上
+            if (sum[i] == k) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+## 滑动窗口最大值
+
+10^5 O(n) 可以做
+
+给你一个整数数组 `nums`，有一个大小为 `k` 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 `k` 个数字。滑动窗口每次只向右移动一位。
+
+返回 *滑动窗口中的最大值* 。
+
+像前缀和一样，维护区间的最大值呢？
+
+### ST 表
+
+复杂度为 O(nlogn)：
+
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length, l = 0, logN = (int)(Math.log(n) / Math.log(2)) + 1;
+        int[] result = new int[n - k + 1];
+        int f[][] = new int[n + 1][logN];
+        int[] logn = new int[n + 5];
+
+        for (int i = 1; i <= n; i++) {
+            f[i][0] = nums[i - 1];
+        }
+
+        // pre
+        logn[1] = 0;
+        logn[2] = 1;
+        for (int i = 3; i < n; i++) {
+            logn[i] = logn[i / 2] + 1;
+        }
+
+        for (int j = 1; j <= logN; j++)
+            for (int i = 1; i + (1 << j) - 1 <= n; i++)
+                f[i][j] = Math.max(f[i][j - 1], f[i + (1 << (j - 1))][j - 1]);  // ST表具体实现
+        for (int i = 1; i <= n - k + 1; i++) {
+            int x = i, y = Math.min(n, i + k - 1);
+            int s = logn[y - x + 1];
+            result[i-1] = Math.max(f[x][s], f[y - (1 << s) + 1][s]);
+        }
+        return result;
+    }
+}
+```
+
+### 优先队列
+
+O(nlogn)
+
+这里的思路是用一个堆来维护最大值，同时在堆中记录下最大值的下标，当左指针移动时，要删掉那些失效的最大值。
+
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        PriorityQueue<Map.Entry<Integer, Integer>> pq = new PriorityQueue<>((a, b) -> b.getKey() - a.getKey());
+        int n = nums.length, l = 0;
+        int ret[] = new int[n - k + 1];
+        for (int r = 0; r < n; r++) {
+            pq.offer(new java.util.AbstractMap.SimpleEntry<>(nums[r], r));
+            if (r - l + 1 == k) {
+                while (pq.peek().getValue() < l) pq.poll();
+                ret[r - k + 1] = pq.peek().getKey();
+                l++;
+            }
+        }
+        return ret;
+    }
+}
+```
+
+### 单调队列
+
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length, l = 0;
+        int[] ans = new int[n - k + 1];
+        Deque<Integer> deque = new LinkedList<Integer>(); // 递增存储下标
+        for (int r = 0; r < n; r++) {
+            while (!deque.isEmpty() && nums[r] > nums[deque.peekLast()]) { // 放进去的是保持下标递增的情况下值最大的
+                deque.pollLast();
+            }
+            deque.offerLast(r);
+            if (r - l + 1 == k) {
+                ans[l] = nums[deque.peekFirst()];
+                while (!deque.isEmpty() && deque.peekFirst() <= l) { // 淘汰掉滑动窗口以外的
+                    deque.pollFirst();
+                }
+                l++;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+
 
 ## 双指针
-经典的一个 pre 指针，一个 cur 指针：可以解决反转链表、交换节点等问题。
-还有一个 fast 指针，一个 slow 指针：可以解决删除第 n 个元素的问题。
+**前后指针：**经典的一个 pre 指针，一个 cur 指针：可以解决反转链表、交换节点等问题。
+**快慢指针：**还有一个 fast 指针，一个 slow 指针：可以解决删除第 n 个元素的问题。
+
+19.删除链表的倒数第 N 个结点
+
+142.环形链表
+
+# 哈希表
+
+## 两数之和
+
+10^4 O(n)
+
+一个哈希表
+
+## 三数之和
+
+3000
+
+O(n^2)
+
+排序+双指针
+
+## 四数之和
+
+排序+双指针
+
+注意溢出
+
+## 四数相加
+
+与上一题不同在于有 4 个数组，4 个数组等长度，上一题每个区间长度不同
+
+哈希表 + 哈希表
+
+## 字母异位词分组
+
+10^4 O(n) 或 O(nlogn)
+
+主要考虑异位词表示为相同的 map key，这样就可以将异位词聚集在一起。
+
+## 最长连续序列
+
+10^5 O(n)
+
+未排序的数组，O(n) 找到数字连续的最长序列，不要求在原数组中连续。
+
+排序做法为 O(nlogn)
+
+key：考虑某一个数是不是连续序列的第一个数字，如果是则继续往下。
+
+```java
+        for (int num : set) {
+            int i = 1;
+            while (set.contains(num + i)) {
+                i++;
+                longest = Math.max(longest, i);
+            }
+        }
+```
+
+这种写法最坏会变成 O(n^2)，需要思考如何跳过重复情况。如果再开一个 TreeSet 来定位下一个数字是 O(logn)，应该可以。
+
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if (nums.length == 0) return 0;
+        Set<Integer> set = new HashSet<>();
+        TreeSet<Integer> treeSet = new TreeSet<>();
+        Integer next = 0x3f3f3f3f;
+        for (int i = 0; i < nums.length; i++) {
+            set.add(nums[i]);
+            treeSet.add(nums[i]);
+            next = Math.min(next, nums[i]);
+        }
+        int longest = 1;
+        while (next != null) {
+            int i = 1;
+            while (set.contains(next)) {
+                next = next + 1;
+                longest = Math.max(longest, i);
+                i++;
+            }
+            next = treeSet.higher(next); // 定位下一个数字
+        }
+
+        return longest;
+    }
+}
+```
+
+还有一种 O(1) 定位下一个数字的方法：
+
+如果这个数字为 x，那么不存在 x-1 的话，这个数字一定是连续序列的第一个数字。
+
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if (nums.length == 0) return 0;
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            set.add(nums[i]);
+        }
+        int longest = 1;
+        for (int num : set) {
+            if (set.contains(num - 1)) continue;
+            int i = 1;
+            while (set.contains(num + i)) {
+                i++;
+                longest = Math.max(longest, i);
+            }
+        }
+
+        return longest;
+    }
+}
+```
+
+
 
 # 字符串
+
+## KMP 算法
+
+next 数组：**是一个前缀表，前缀表是用来回退的，它记录了模式串与主串(文本串)不匹配的时候，模式串应该从哪里开始重新匹配。**
+
+那么什么是前缀表：**记录下标i之前（包括i）的字符串中，有多大长度的相同前缀后缀。**
+
+**下标5之前这部分的字符串（也就是字符串aabaa）的最长相等的前缀 和 后缀字符串是 子字符串aa ，因为找到了最长相等的前缀和后缀，匹配失败的位置是后缀子串的后面，那么我们找到与其相同的前缀的后面重新匹配就可以了。**
+
+
+
+## 反转字符串中的单词
+
+方法一：split 之后拼接。
+
+```java
+"a good   example".split() // [a, good, , , example]，分割后存在 ""
+```
+
+方法二：反转整个字符串之后，再反转单个字符串。
 
 ## 最长公共子串
 
