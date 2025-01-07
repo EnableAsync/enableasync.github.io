@@ -485,6 +485,52 @@ class Solution {
 }
 ```
 
+### 分块 + 前后缀数组
+
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        if (n == 1) return nums;
+        int[] prefixMax = new int[n]; // 以 i 结尾的前缀最大值，也就是查询的左边
+        int[] suffixMax = new int[n]; // 以 i 开头的后缀最大值，也就是查询的右边
+        // [ a, b, c ] [ d, e, f ]
+        // 按 k 分块，如果是边界，那么需要第一个的后缀最大值和第二个的前缀最大值拼起来
+        // 如果不是边界，那么直接取后缀最大值就好
+        for (int i = 0; i < n; i++) {
+            if (i % k == 0) { // 边界
+                prefixMax[i] = nums[i];
+
+            } else { // 在块中间
+                prefixMax[i] = Math.max(prefixMax[i - 1], nums[i]);
+            }
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            if ((i + 1) % k == 0 || i == n - 1) {
+                suffixMax[i] = nums[i];
+            } else {
+                suffixMax[i] = Math.max(suffixMax[i + 1], nums[i]);
+            }
+        }
+
+        int[] ans = new int[n - k + 1];
+        // [ a, b, c ] [ d, e, f ]
+        for (int i = 0 ; i < n - k + 1; i++) { // 滑动窗口开始位置
+            if (i % k == 0) { // 边界
+                ans[i] = prefixMax[i + k - 1];
+            } else { // [ a, b, c ] [ d, e, f ]
+                     // b 为滑动窗口开始的时候，元素为 b, c, d，最大值为 max([b, c], [d])
+                     // -> max(suffixMax[1], prefixMax[3])
+                ans[i] = Math.max(suffixMax[i], prefixMax[i + k - 1]);
+            }
+        }
+        return ans;
+
+
+    }
+}
+```
+
 
 
 ## 双指针
@@ -894,6 +940,243 @@ impl Solution {
     }
 }
 ```
+
+# 动态规划
+
+对于动态规划，可以先初始化一个 dp 数组，然后手写出 dp[0] dp[1] dp[2] dp[3] 等等
+
+## 杨辉三角
+
+主要难点在处理边界情况
+
+```java
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> ret = new ArrayList<>();
+        for (int i = 1; i <= numRows; i++) {
+            List<Integer> arr = new ArrayList<>(i);
+            for (int j = 0; j < i; j++) {
+                arr.add(0);
+            }
+            arr.set(0, 1);
+            arr.set(i - 1, 1);
+            List<Integer> lastArr;
+            if (ret.size() >= 2) {
+                lastArr = ret.get(ret.size() - 1);
+                for (int j = 1; j < i - 1; j++) { // 跳过第一个和最后一个
+                    arr.set(j, lastArr.get(j-1) + lastArr.get(j));
+                }
+            }
+            ret.add(arr);
+        }
+        return ret;
+    }
+}
+```
+
+## 打家劫舍
+
+要点在于对于某一个房子是否抢劫以及边界处理。
+
+```java
+class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if (n == 1) return nums[0];
+        if (n == 2) return Math.max(nums[0], nums[1]);
+        int[] dp = new int[n + 1];
+        dp[0] = 0;
+        dp[1] = nums[0];
+        dp[2] = Math.max(nums[0], nums[1]);
+        for (int i = 3; i <= n; i++) {
+            dp[i] = Math.max(dp[i - 2] + nums[i - 1], dp[i - 1]);
+        }
+        return dp[n];
+    }
+}
+```
+
+## 完全平方数
+
+### 动态规划
+
+要点是 dp[i] 表示结果为 i 的最少数量，然后转移的话，dp[i] 只能从 dp[i - 所有平方数] 来，于是写出状态转移方程。
+
+```java
+class Solution {
+    public int numSquares(int n) {
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        if (n == 3) return 3;
+        if (n == 4) return 1;
+        if (n == 5) return 2;
+        int sqrtN = (int)Math.sqrt(n) + 1;
+        int[] square = new int[sqrtN];
+        for (int i = 1; i < sqrtN; i++) {
+            square[i] = i * i;
+        }
+        int[] dp = new int[n + 1];
+        dp[0] = 0;
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 3;
+        dp[4] = 1;
+        dp[5] = 2;
+
+        for (int i = 1; i <= n; i++) {
+            int min = 999;
+            for (int j = 1; j < sqrtN; j++) {
+                if (i - square[j] >= 0) {
+                    min = Math.min(dp[i - square[j]] + 1, min);
+                }
+            }
+            dp[i] = min;
+        }
+
+        return dp[n];
+    }
+}
+```
+
+优化一下
+
+```java
+class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            int min = 999;
+            for (int j = 1; j * j <= i; j++) {
+                if (i - j * j >= 0) {
+                    min = Math.min(dp[i - j * j] + 1, min);
+                }
+            }
+            dp[i] = min;
+        }
+
+        return dp[n];
+    }
+}
+```
+
+### 四平方和定理
+
+![image-20250107155619501](/image-20250107155619501.png)
+
+
+
+## 零钱兑换
+
+这是一个完全背包问题，硬币可以重复使用。与爬楼梯类似。
+
+$dp[i] = dp[i - coins[j]] + 1$。
+
+```
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) return 0;
+        int n = coins.length;
+        int[] dp = new int[Math.max(n, amount) + 10]; // 可以凑成 n 所需的最少的硬币个数
+        // 与爬楼梯一样，dp[i] 可以从 dp[i - coins[j]] 过来
+        for (int i = 0; i < n; i++) {
+            if (coins[i] > amount) {
+                continue;
+            }
+            dp[coins[i]] = 1;
+        }
+        for (int i = 0; i <= amount; i++) {
+            if (dp[i] == 0) {
+                dp[i] = 0x3f3f3f3f;
+            }
+        }
+        dp[0] = 0;
+        int max = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i - coins[j] >= 0) {
+                    dp[i] = Math.min(dp[i - coins[j]] + 1, dp[i]);
+                }
+            }
+        }
+
+        return dp[amount] == 0x3f3f3f3f ? -1 : dp[amount];
+    }
+}
+```
+
+
+
+## 单词拆分
+
+- `1 <= s.length <= 300`
+- `1 <= wordDict.length <= 1000`
+- `1 <= wordDict[i].length <= 20`
+
+### 模拟 + 剪枝
+
+不断地尝试所有可能的拼接，看最后能否拼接出来，注意要剪枝，否则会超时。
+
+```java
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = wordDict.size();
+        Set<String> dp = new HashSet<>();
+        int maxLen = 0x3f3f3f3f;
+        for (int i = 0; i < n; i++) {
+            String word = wordDict.get(i);
+            if (s.startsWith(word)) // 剪枝
+                dp.add(word);
+            maxLen = Math.min(maxLen, word.length());
+        }
+
+
+        while (maxLen < s.length()) {
+            Set<String> tmp = new HashSet<>(dp); // 创建一个临时副本用于遍历
+            int minLen = 0x3f3f3f3f;
+            for (String cur : tmp) {
+                if (cur.length() < maxLen) continue;
+                for (int i = 0; i < n; i++) {
+                    String newString = cur + wordDict.get(i);
+                    if (s.startsWith(newString)) { // 剪枝
+                        minLen = Math.min(newString.length(), minLen);
+                        dp.add(newString);
+                    }
+                }
+            }
+            maxLen = Math.max(maxLen, minLen);
+        }
+        return dp.contains(s);
+    }
+}
+```
+
+优化一下
+
+### 动态规划
+
+![image-20250107182951481](/image-20250107182951481.png)
+
+```java
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = wordDict.size();
+        Set<String> set = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && set.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
+```
+
+
 
 # 数学
 
