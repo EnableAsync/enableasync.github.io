@@ -996,6 +996,27 @@ class Solution {
 }
 ```
 
+## 最大子序和
+
+要点在于当前数字结尾的最大子串的和只能来自于前一个，也就是上楼梯只能由前一个上过来，或者现在新开一个。
+
+```java
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n + 1]; // 第 i 个数结尾的子数组最大值
+        int ans = -0x3f3f3f3f;
+        for (int i = 1; i <= n; i++) {
+            dp[i] = Math.max(dp[i - 1] + nums[i - 1], nums[i - 1]);
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans;
+    }
+}
+```
+
+
+
 ## 完全平方数
 
 ### 动态规划
@@ -1172,6 +1193,57 @@ class Solution {
             }
         }
         return dp[s.length()];
+    }
+}
+```
+
+## 最长递增子序列
+
+要点在于 dp 为以第 i 个数字结尾的最长上升子序列长度，也就是 dp[i] 是 i 被选择的情况下的最长上升子序列长度。
+
+这题要求的是子序列，而不是子数组，也就是可以跳过一些数字，所以动态转移方程就是对于 dp[i] 可以从任意的 dp[i - j] 调过来。
+
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int n =  nums.length, max = 1;
+        int[] dp = new int[n + 1]; // 以第 i 个数字结尾的最长上升子序列长度
+        for (int i = 1; i <= n; i++) {
+            dp[i] = 1; // 如果选当前的 i，至少有 1 个长度
+            for (int j = 1; j < i; j++) {
+                if (nums[i - 1] > nums[j - 1]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+}
+```
+
+## 乘积最大子数组
+
+`dp_max[i]` 表示以第 `i` 个元素结尾的连续子数组的最大乘积。
+
+对于每一个 dp[i] 来说，他会从前一个最大的 dp[i - 1] 过来，或者从最小的 dp[i - 1] 过来，或者在当前位置另起炉灶。与子序列不同，dp[i] 的子数组只能从 dp[i - 1] 过来，而不能从任意的 dp[i - j] 过来。
+
+```java
+class Solution {
+    public int maxProduct(int[] nums) {
+        if (nums.length == 0) return 0;
+        int n = nums.length;
+        int[] dp_max = new int[n];
+        int[] dp_min = new int[n];
+        dp_max[0] = nums[0];
+        dp_min[0] = nums[0];
+        int ans = nums[0];
+        for (int i = 1; i < n; i++) {
+            dp_max[i] = Math.max(Math.max(dp_max[i-1] * nums[i], dp_min[i-1] * nums[i]), nums[i]);
+            dp_min[i] = Math.min(Math.min(dp_max[i-1] * nums[i], dp_min[i-1] * nums[i]), nums[i]);
+            ans = Math.max(ans, dp_max[i]);
+        }
+        return ans;
     }
 }
 ```
