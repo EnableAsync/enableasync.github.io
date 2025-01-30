@@ -2599,6 +2599,7 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <p><strong>并不能，只是出错概率减小了</strong></p>
 <ul>
 <li>写文件原子操作</li>
+<li><code>mr-[0-9]*-%d</code> 避免解析 mr-out-* 文件</li>
 </ul>
 <p>实现方法：先写到 tmp 文件，然后重命名成文件就好，重命名是原子操作。</p>
 <h3 id="第四个版本"><a href="#第四个版本" class="headerlink" title="第四个版本"></a>第四个版本</h3><p>增加了</p>
