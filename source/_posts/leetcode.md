@@ -117,6 +117,16 @@ class Solution {
 }
 ```
 
+# 矩阵
+
+## 矩阵置零
+
+给定一个 **`m x n`** 的矩阵，如果一个元素为 **0** ，则将其所在行和列的所有元素都设为 **0** 。请使用 **[原地](http://baike.baidu.com/item/原地算法)** 算法。
+
+难点在于原地算法，否则很简单，模拟就好，模拟的时候注意不要跳过本来为 0 的元素。
+
+
+
 # 双指针
 
 ## 移动零
@@ -307,6 +317,75 @@ Arrays.equals 可以判断两个数组相等。
 206.翻转链表
 
 19.删除链表的倒数第 N 个结点
+
+## K 个一组翻转链表
+
+给你链表的头节点 `head` ，每 `k` 个节点一组进行翻转，请你返回修改后的链表。
+
+`k` 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 `k` 的整数倍，那么请将最后剩余的节点保持原有顺序。
+
+你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+
+
+
+**Key：**关键在于写一个 reverse 函数逆转从 head 到 tail 的链表。其中 reverse 函数可以返回逆转后的最后一个节点。还有需要维护返回的节点。
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (k == 1) return head;
+        boolean first = true;
+        ListNode dummy = new ListNode(0, head), cur = head, pre = dummy, ret = null;
+        int count = 0;
+        while (cur != null) {
+            count++;
+            if (count == k) {
+                if (first) {
+                    ret = cur;
+                    first = false;
+                }
+                pre = reverse(pre, head, cur);
+                head = pre.next;
+                cur = pre;
+                count = 0;
+            }
+            cur = cur.next;
+        }
+        return ret;
+    }
+
+    // 逆转从 head 到 tail 的链表，pre 是 head 的前一个结点
+    // 返回逆转后的最后一个节点，其实就是 head，这一组的最后一个节点是下一组的 pre
+    private ListNode reverse(ListNode pre, ListNode head, ListNode tail) {
+        // pre -> head -> cur -> tail
+        ListNode cur = head.next, retTail = head;
+        head.next = tail.next;
+        while (cur != tail) { // tail 之前的节点全部头插法插到到 pre 之后
+            ListNode next = cur.next;
+            pre.next = cur;
+            cur.next = head;
+            head = cur;
+            cur = next;
+        }
+        // 把 tail 也插到头部
+        pre.next = tail;
+        tail.next = head;
+        return retTail;
+    }
+}
+```
+
+
 
 # 子串
 
@@ -1248,9 +1327,274 @@ class Solution {
 }
 ```
 
+## 分割等和子集
+
+`1 <= nums.length <= 200`，`1 <= nums[i] <= 100` 数据范围暗示了是和数组中最大数有关的二维 dp
+
+给你一个 **只包含正整数** 的 **非空** 数组 `nums` 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+
+如何将该问题转换为具有最优子结构的问题是难点。
+
+动态规划，时间复杂度与元素大小相关的。
+
+这个问题可以转换为：给定一个只包含正整数的非空数组 nums[0]，判断是否可以从数组中选出一些数字，使得这些数字的和等于整个数组的元素和的一半。因此这个问题可以转换成「0−1 背包问题」。这道题与传统的「0−1 背包问题」的区别在于，传统的「0−1 背包问题」要求选取的物品的重量之和不能超过背包的总容量，这道题则要求选取的数字的和恰好等于整个数组的元素和的一半。类似于传统的「0−1 背包问题」，可以使用动态规划求解。
+
+关键在于：**将这个数组分割成两个子集 = 选出的数字的和是数组一半**
+
+然后关键的转移方程为：
+
+1. 和为 j 的数字可以由 j - nums[i]（如果存在的话） 得到
+2. 和为 j 的数字可以由 j （如果存在的话）得到
+
+```java
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int n = nums.length, target = 0, max = 0;
+        for (int i = 0; i < n; i++) {
+            target += nums[i];
+            max = Math.max(max, nums[i]);
+        }
+        if ((target & 1) == 1) return false; // 奇数
+        else target /= 2;
+        if (max > target) return false;
+
+        boolean[][] dp = new boolean[n][target + 1]; // 0..i 的数字中是否存在方案使得和为 j
+        // 数字 nums[i] 所在的行都能使得和为 nums[i]
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                dp[i][nums[j]] = true;
+            }
+        }
+
+        // 0..i 中怎么选都能使得和为 0
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = true;
+        }
+
+        // 和为 j 的数字可以由 j - nums[i]（如果存在的话） 得到
+        // 和为 j 的数字可以由 j （如果存在的话）得到
+        // 可以根据上面的内容对 dp 数组进行填表
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= target; j++) {
+
+                if (j >= nums[i]) {
+
+                    dp[i][j] = dp[i - 1][j] | dp[i - 1][j - nums[i]];
+
+                    // 与上面的内容等价
+                    // if (dp[i - 1][j - nums[i]]) {
+                    //     dp[i][j] = true;
+                    // }
+                    // if (dp[i - 1][j]) {
+                    //     dp[i][j] = true;
+                    // }
+
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+
+                    // 与上面的内容等价
+                    if (dp[i - 1][j]) {
+                        dp[i][j] = true;
+                    }
+                }
+            }
+        }
+
+        
+        return dp[n - 1][target];
+    }
+}
+```
+
+然后又有这一行仅仅由上一行确定得到，于是有：
+
+```java
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int n = nums.length, target = 0, max = 0;
+        for (int i = 0; i < n; i++) {
+            target += nums[i];
+            max = Math.max(max, nums[i]);
+        }
+        if ((target & 1) == 1) return false; // 奇数
+        else target /= 2;
+        if (max > target) return false;
+
+        boolean[][] dp = new boolean[n][target + 1]; // 0..i 的数字中是否存在方案使得和为 j
+        // 数字 nums[i] 所在的行都能使得和为 nums[i]
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                dp[i][nums[j]] = true;
+            }
+        }
+
+        // 0..i 中怎么选都能使得和为 0
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = true;
+        }
+
+        // 和为 j 的数字可以由 j - nums[i]（如果存在的话） 得到
+        // 和为 j 的数字可以由 j （如果存在的话）得到
+        // 可以根据上面的内容对 dp 数组进行填表
+        // for (int i = 1; i < n; i++) {
+        //     for (int j = 1; j <= target; j++) {
+
+        //         if (j >= nums[i]) {
+
+        //             dp[i][j] = dp[i - 1][j] | dp[i - 1][j - nums[i]];
+
+        //             // 与上面的内容等价
+        //             // if (dp[i - 1][j - nums[i]]) {
+        //             //     dp[i][j] = true;
+        //             // }
+        //             // if (dp[i - 1][j]) {
+        //             //     dp[i][j] = true;
+        //             // }
+
+        //         } else {
+        //             dp[i][j] = dp[i - 1][j];
+
+        //             // 与上面的内容等价
+        //             if (dp[i - 1][j]) {
+        //                 dp[i][j] = true;
+        //             }
+        //         }
+        //     }
+        // }
+
+        for (int i = 1; i < n; i++) {
+            int num = nums[i];
+            for (int j = 1; j <= target; j++) {
+                if (j >= num) {
+                    dp[i][j] = dp[i - 1][j] | dp[i - 1][j - num];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+
+        
+        return dp[n - 1][target];
+    }
+}
+```
+
+优化空间：
+
+```java
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int n = nums.length, target = 0, max = 0;
+        for (int i = 0; i < n; i++) {
+            target += nums[i];
+            max = Math.max(max, nums[i]);
+        }
+        if ((target & 1) == 1) return false; // 奇数
+        else target /= 2;
+        if (max > target) return false;
+
+        boolean[] dp = new boolean[target + 1]; // 0..i 的数字中是否存在方案使得和为 j
+
+        dp[0] = true;
+
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            for (int j = target; j >= num; j--) {
+                dp[j] |= dp[j - num];
+            }
+        }
+
+        
+        return dp[target];
+    }
+}
+```
+
+## 最长有效括号
+
+### 动态规划
+
+`0 <= s.length <= 3 * 10^4`
+
+给你一个只包含 `'('` 和 `')'` 的字符串，找出最长有效（格式正确且连续）括号子串的长度。
+
+定义 dp[i] 表示以下标 *i* 字符结尾的最长有效括号的长度。
+
+难点在于怎么思考状态转移方程。
+
+想到如果是合法的括号，那么肯定是左右都有，那么是不是可以每次走两步
+
+*s*[*i*]=‘)’ 且 *s*[*i*−1]=‘(’，也就是字符串形如 “……()”，我们可以推出：dp[i]=dp[i−2]+2
+
+**key：** 两种有效的括号类型：（...）（...）（...），另一种为嵌套格式 （（...））
+
+第一种可以 dp[i] = dp[i - 2] + 2，第二种则比较复杂。
+
+考虑第一次遇到 ... ））时，需要找到和右括号匹配的左括号，我们这里可以根据最优子结构得到 dp[i - 1] 代表了前一个右括号之前的有效括号，那么 i - dp[i - 1] - 1 的位置就是和当前右括号匹配的位置，如果这个位置是左括号，那么最长有效长度就可以 + 2，否则就不更新。
+
+![截屏2020-04-17下午4.26.34.png](./6e07ddaac3b703cba03a9ea8438caf1407c4834b7b1e4c8ec648c34f2833a3b9-截屏2020-04-17下午4.26.34.png)
+
+同时还要考虑 ...((...)) 的情况，也就是加上 dp[i - dp[i - 1] - 2]
+
+于是有以下内容：
+
+```java
+class Solution {
+    public int longestValidParentheses(String s) {
+        int n = s.length();
+        int[] dp = new int[n]; // 以下标 i 结尾的最长子串长度
+        int max = 0;
+        for (int i = 1; i < n; i++) {
+            if (s.charAt(i - 1) == '(' && s.charAt(i) == ')') {
+                // 能够处理 ..()，但是无法处理 (())
+                dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
+            } else if (s.charAt(i - 1) == ')' && s.charAt(i) == ')') {
+                // 这里处理 ...((...)) 的情况
+                // 判断 s[i] 是否有对应的左括号
+                if (i - dp[i - 1] - 1 >= 0 && s.charAt(i - dp[i - 1] - 1) == '(') {
+                    // 第一项对应 ((...)) 中的三个点
+                    // 最后一项是和匹配的括号的情况连起来，对应 ...(()) 中的三个点
+                    // dp[i] = dp[i - 1] + 2 + (i - dp[i - 1] - 2) > 0 ? dp[i - dp[i - 1] - 2] : 0;
+                    dp[i] = dp[i - 1] + 2 + ((i - dp[i - 1] - 2) > 0 ? dp[i - dp[i - 1] - 2] : 0);
+                }
+            }
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+}
+```
+
+### 栈
+
+如果用栈，那么关键在于对于 ...(...)() 和 ...(()) 这两种情况如何判断长度和判断连续。
+
+对于连续来说，可以过一遍字符串即可，对于长度判断，要点在于，如果对于右括号没有对应的左括号时，说明需要另起炉灶，重新计算最大长度。
+
+```java
+class Solution {
+    public int longestValidParentheses(String s) {
+        int max = 0;
+        Deque<Integer> stack = new LinkedList<Integer>();
+        stack.push(-1);
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push(i);
+            } else {
+                stack.pop();
+                if (stack.isEmpty()) {
+                    stack.push(i);
+                } else {
+                    max = Math.max(max, i - stack.peek());
+                }
+            }
+        }
+        return max;
+    }
+}
+```
 
 
-# 数学
 
 ## 寻找两个正序数组的中位数[^3]
 
@@ -1323,6 +1667,8 @@ impl Solution {
     }
 }
 ```
+
+
 
 ## 三数之和
 
