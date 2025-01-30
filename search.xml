@@ -2606,6 +2606,8 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <ul>
 <li>容错逻辑（分发任务之后开始计时，如果时间到了还是 wait，那么就 resume 为 map/reduce）</li>
 <li>把 list 换成了 map</li>
+<li>修改写文件原子操作，先写到 temp 文件，注意 temp 文件一定不能重名。还要注意在同一个文件系统上，这样 rename 才是原子操作。</li>
+<li>存在一个问题，当 reduce crash 时，重新开了一个在运行，之前 crash 的那个恢复之后又调用了一次 finish，同一个 finish 了 2 次，就出错了。所以要注意 crash 掉的不要 finish。在接受到 finish 请求的时候判断是不是 Wait，如果是则再 Done，并完成数量加一。</li>
 </ul>
 <p>完成所有的测试！芜湖！</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">--- crash <span class="hljs-built_in">test</span>: PASS<br>*** PASSED ALL TESTS<br></code></pre></td></tr></table></figure>
