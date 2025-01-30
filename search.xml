@@ -2513,8 +2513,8 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <p>并发性：如何编写程序以支持独立执行的控制流的组合，无论你想称它们为进程、线程还是 Go 协程。</p>
 <p>并行性：程序如何被执行，允许多个计算同时运行，使得程序可以同时处理许多事情，而不仅仅是同时应对许多事情。因此，并发性自然适合并行执行。</p>
 <h2 id="Goroutines-for-State"><a href="#Goroutines-for-State" class="headerlink" title="Goroutines for State"></a>Goroutines for State</h2><p>Hint: Convert data state into code state when it makes programs clearer.</p>
-<h1 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h1><h2 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h2><p><img  src="./image-20250130171236090.png"  ><span class="image-caption">image-20250130171236090</span></p>
-<p><img  src="./94dee74c9845b.png"  ><span class="image-caption">94dee74c9845b</span></p>
+<h1 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h1><h2 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h2><p><img  src="./image-20250130171236090.png"  ><span class="image-caption">MapReduce框架图</span></p>
+<p><img  src="./94dee74c9845b.png"  ><span class="image-caption">MapReduce论文结构</span></p>
 <h2 id="MapReduce-结构"><a href="#MapReduce-结构" class="headerlink" title="MapReduce 结构"></a>MapReduce 结构</h2><ul>
 <li>Map and Reduce Function（由用户定义）</li>
 <li>Worker（我们实现）</li>
