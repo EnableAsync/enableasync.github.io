@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 21, 2025</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>105639</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>120043</span>
     </div>
   </div>
 </section>
@@ -192,7 +192,7 @@
 <p>并发性：如何编写程序以支持独立执行的控制流的组合，无论你想称它们为进程、线程还是 Go 协程。</p>
 <p>并行性：程序如何被执行，允许多个计算同时运行，使得程序可以同时处理许多事情，而不仅仅是同时应对许多事情。因此，并发性自然适合并行执行。</p>
 <h2 id="Goroutines-for-State"><a href="#Goroutines-for-State" class="headerlink" title="Goroutines for State"></a>Goroutines for State</h2><p>Hint: Convert data state into code state when it makes programs clearer.</p>
-<h1 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h1><h2 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h2><p><img    class="lazyload" data-original="./image-20250130171236090.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MapReduce框架图</span></p>
+<h1 id="Lab1-MapReduce"><a href="#Lab1-MapReduce" class="headerlink" title="Lab1: MapReduce"></a>Lab1: MapReduce</h1><h2 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h2><p><img    class="lazyload" data-original="./image-20250130171236090.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MapReduce框架图</span></p>
 <p><img    class="lazyload" data-original="./94dee74c9845b.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MapReduce论文结构</span></p>
 <h2 id="MapReduce-结构"><a href="#MapReduce-结构" class="headerlink" title="MapReduce 结构"></a>MapReduce 结构</h2><ul>
 <li>Map and Reduce Function（由用户定义）</li>
@@ -289,8 +289,220 @@
 <li>存在一个问题，当 reduce crash 时，重新开了一个在运行，之前 crash 的那个恢复之后又调用了一次 finish，同一个 finish 了 2 次，就出错了。所以要注意 crash 掉的不要 finish。在接受到 finish 请求的时候判断是不是 Wait，如果是则再 Done，并完成数量加一。</li>
 </ul>
 <p>完成所有的测试！芜湖！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">--- crash <span class="hljs-built_in">test</span>: PASS<br>*** PASSED ALL TESTS<br></code></pre></td></tr></table></figure>
-
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">--- crash <span class="hljs-built_in">test</span>: PASS<br>*** PASSED ALL TESTS<br>*** PASSED ALL 500 TESTING TRIALS<br></code></pre></td></tr></table></figure>
+<h1 id="GFS"><a href="#GFS" class="headerlink" title="GFS"></a>GFS</h1><p>特点：单 master、弱一致性</p>
+<p>Master 管理文件、存储文件的 Chunk ID 信息。</p>
+<h2 id="GFS-一致性"><a href="#GFS-一致性" class="headerlink" title="GFS 一致性"></a>GFS 一致性</h2><h3 id="master"><a href="#master" class="headerlink" title="master"></a>master</h3><ul>
+<li><p>第一个是文件名到Chunk ID或者Chunk Handle数组的对应。这个表单告诉你，文件对应了哪些Chunk。但是只有Chunk ID是做不了太多事情的，所以有了第二个表单。</p>
+</li>
+<li><p>第二个表单记录了Chunk ID到Chunk数据的对应关系。这里的数据又包括了：</p>
+<ul>
+<li><p>每个Chunk存储在哪些服务器上，所以这部分是Chunk服务器的列表</p>
+</li>
+<li><p>每个Chunk当前的版本号，所以Master节点必须记住每个Chunk对应的版本号。</p>
+</li>
+<li><p>所有对于Chunk的写操作都必须在主Chunk（Primary Chunk）上顺序处理，主Chunk是Chunk的多个副本之一。所以，Master节点必须记住哪个Chunk服务器持有主Chunk。</p>
+</li>
+<li><p>并且，主Chunk只能在特定的租约时间内担任主Chunk，所以，Master节点要记住主Chunk的租约过期时间。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Master会在磁盘上存储log，每次有数据变更时，Master会在磁盘的log中追加一条记录，并生成CheckPoint（类似于备份点）。</p>
+<ul>
+<li><p>Chunk Handle的数组（第一个表单）要保存在磁盘上。给它标记成NV（non-volatile, 非易失），这个标记表示对应的数据会写入到磁盘上。</p>
+</li>
+<li><p>Chunk服务器列表不用保存到磁盘上。因为Master节点重启之后可以与所有的Chunk服务器通信，并查询每个Chunk服务器存储了哪些Chunk，所以我认为它不用写入磁盘。所以这里标记成V（volatile），</p>
+</li>
+<li>版本号要不要写入磁盘取决于GFS是如何工作的，我认为它需要写入磁盘。我们之后在讨论系统是如何工作的时候再详细讨论这个问题。这里先标记成NV。</li>
+<li>主Chunk的ID，几乎可以确定不用写入磁盘，因为Master节点重启之后会忘记谁是主Chunk，它只需要等待60秒租约到期，那么它知道对于这个Chunk来说没有主Chunk，这个时候，Master节点可以安全指定一个新的主Chunk。所以这里标记成V。</li>
+<li>类似的，租约过期时间也不用写入磁盘，所以这里标记成V。</li>
+</ul>
+<p>任何时候，如果文件扩展到达了一个新的64MB，需要新增一个Chunk或者由于指定了新的主Chunk而导致版本号更新了，Master节点需要向磁盘中的Log追加一条记录说，我刚刚向这个文件添加了一个新的Chunk或者我刚刚修改了Chunk的版本号。所以每次有这样的更新，都需要写磁盘。GFS论文并没有讨论这么多细节，但是因为写磁盘的速度是有限的，写磁盘会导致Master节点的更新速度也是有限的，所以要尽可能少的写入数据到磁盘。</p>
+<p>这里在磁盘中维护log而不是数据库的原因是，数据库本质上来说是某种B树（b-tree）或者hash table，相比之下，追加log会非常的高效，因为你可以将最近的多个log记录一次性的写入磁盘。因为这些数据都是向同一个地址追加，这样只需要等待磁盘的磁碟旋转一次。而对于B树来说，每一份数据都需要在磁盘中随机找个位置写入。所以使用Log可以使得磁盘写入更快一些。</p>
+<p>当Master节点故障重启，并重建它的状态，你不会想要从log的最开始重建状态，因为log的最开始可能是几年之前，所以Master节点会在磁盘中创建一些checkpoint点，这可能要花费几秒甚至一分钟。这样Master节点重启时，会从log中的最近一个checkpoint开始恢复，再逐条执行从Checkpoint开始的log，最后恢复自己的状态。</p>
+<h3 id="client-读文件"><a href="#client-读文件" class="headerlink" title="client 读文件"></a>client 读文件</h3><h1 id="Raft"><a href="#Raft" class="headerlink" title="Raft"></a>Raft</h1><h2 id="1-脑裂（Split-Brain）"><a href="#1-脑裂（Split-Brain）" class="headerlink" title="1. 脑裂（Split Brain）"></a>1. 脑裂（Split Brain）</h2><ol>
+<li>脑裂（Split Brain）是指在分布式系统中，由于网络分区（Network Partition）或其他故障导致系统中的不同节点无法正常通信，进而使得系统被分割成两个或多个独立的部分，每个部分都认为自己是系统的主节点（Primary），并独立地进行操作和决策。这种情况下，系统会出现数据不一致性和决策冲突，导致系统行为异常。</li>
+</ol>
+<h3 id="1-脑裂的场景"><a href="#1-脑裂的场景" class="headerlink" title="1. 脑裂的场景"></a>1. <strong>脑裂的场景</strong></h3><p>   在分布式系统中，通常会有多副本（Replicas）来提高系统的容错能力。例如，VMware FT（Fault Tolerance）系统中，有一个主虚拟机（Primary VM）和一个备份虚拟机（Backup VM），它们通过一个 Test-and-Set 服务来决定谁是主节点。如果 Test-and-Set 服务本身是单点的，那么它可以通过仲裁来避免脑裂。但如果 Test-and-Set 服务本身也有多副本（例如 S1 和 S2），就可能出现脑裂。</p>
+<h3 id="2-脑裂的发生"><a href="#2-脑裂的发生" class="headerlink" title="2. 脑裂的发生"></a>2. <strong>脑裂的发生</strong></h3><p>   假设系统中有两个服务器（S1 和 S2）和两个客户端（C1 和 C2）。客户端需要通过 Test-and-Set 服务来确定主节点。正常情况下，客户端会同时与两个服务器通信，确保数据一致性。但如果网络出现故障，客户端可能只能与其中一个服务器通信：</p>
+<ul>
+<li><strong>C1 可以访问 S1，但无法访问 S2</strong>。</li>
+<li><p><strong>C2 可以访问 S2，但无法访问 S1</strong>。</p>
+<p>在这种情况下：</p>
+</li>
+<li><p>C1 会认为 S1 是主节点，并开始执行操作。</p>
+</li>
+<li><p>C2 会认为 S2 是主节点，并开始执行操作。</p>
+<p>此时，系统被分割成两个独立的部分，每个部分都认为自己是主节点，这就是脑裂。</p>
+</li>
+</ul>
+<h3 id="3-脑裂的后果"><a href="#3-脑裂的后果" class="headerlink" title="3. 脑裂的后果"></a>3. <strong>脑裂的后果</strong></h3><p>   脑裂会导致以下严重问题：</p>
+<ul>
+<li><strong>数据不一致性</strong>：S1 和 S2 的数据可能会出现冲突，因为它们各自独立地处理请求。</li>
+<li><strong>决策冲突</strong>：两个主节点可能会同时对同一资源进行操作，导致系统行为不可预测。</li>
+<li><strong>系统不可用</strong>：为了避免数据不一致，系统可能需要停止服务，直到问题解决。</li>
+</ul>
+<h3 id="4-避免脑裂的方法"><a href="#4-避免脑裂的方法" class="headerlink" title="4. 避免脑裂的方法"></a>4. <strong>避免脑裂的方法</strong></h3><p>   为了避免脑裂，分布式系统通常会采用以下方法：</p>
+<ul>
+<li><strong>单点仲裁</strong>：使用一个单点（如 Test-and-Set 服务）来决定主节点。虽然单点本身是单点故障，但它可以避免脑裂。</li>
+<li><strong>网络分区检测</strong>：通过检测网络分区，确保系统在分区发生时能够快速做出决策，避免两个部分各自为政。</li>
+<li><strong>人工干预</strong>：在某些情况下，系统会停止自动操作，转而由人工干预来解决冲突。</li>
+</ul>
+<h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. <strong>总结</strong></h3><p>   脑裂是分布式系统中的一种严重故障场景，它会导致系统分裂成多个独立的部分，每个部分都认为自己是主节点，从而引发数据不一致性和决策冲突。为了避免脑裂，系统通常需要依赖单点仲裁、网络分区检测或人工干预等方法。</p>
+<h2 id="2-过半票决（Majority-Vote）"><a href="#2-过半票决（Majority-Vote）" class="headerlink" title="2. 过半票决（Majority Vote）"></a>2. 过半票决（Majority Vote）</h2><p>尽管存在脑裂的可能，但是随着技术的发展，人们发现哪怕网络可能出现故障，可能出现分区，实际上是可以正确的实现能够<strong>自动完成故障切换</strong>的系统。当网络出现故障，将网络分割成两半，网络的两边独自运行，且不能访问对方，这通常被称为网络分区。</p>
+<p>在构建能自动恢复，同时又避免脑裂的多副本系统时，人们发现，关键点在于过半票决（Majority Vote）。这是Raft论文中出现的，用来构建Raft的一个基本概念。过半票决系统的第一步在于，服务器的数量要是奇数，而不是偶数。例如在上图中（只有两个服务器），中间出现故障，那两边就太过对称了。这里被网络故障分隔的两边，它们看起来完全是一样的，它们运行了同样的软件，所以它们也会做相同的事情，这样不太好（会导致脑裂）。</p>
+<p>但是，如果服务器的数量是奇数的，那么当出现一个网络分割时，两个网络分区将不再对称。假设出现了一个网络分割，那么一个分区会有两个服务器，另一个分区只会有一个服务器，这样就不再是对称的了。这是过半票决吸引人的地方。所以，首先你要有奇数个服务器。然后为了完成任何操作，例如Raft的Leader选举，例如提交一个Log条目，<strong>在任何时候为了完成任何操作，你必须凑够过半的服务器来批准相应的操作</strong>。这里的过半是指超过服务器总数的一半。直观来看，如果有3个服务器，那么需要2个服务器批准才能完成任何的操作。</p>
+<p>这里背后的逻辑是，如果网络存在分区，那么必然不可能有超过一个分区拥有过半数量的服务器。例如，假设总共有三个服务器，如果一个网络分区有一个服务器，那么它不是一个过半的分区。如果一个网络分区有两个服务器，那么另一个分区必然只有一个服务器。因此另一个分区必然不能凑齐过半的服务器，也必然不能完成任何操作。</p>
+<p>这里有一点需要明确，当我们在说过半的时候，我们是在说所有服务器数量的一半，而不是当前开机服务器数量的一半。这个点困扰了我（Robert教授）很长时间。如果你有一个系统有3个服务器，其中某些已经故障了，如果你要凑齐过半的服务器，你总是需要从3个服务器中凑出2个，即便你知道1个服务器已经因为故障关机了。过半总是相对于服务器的总数来说。</p>
+<p>对于过半票决，可以用一个更通用的方程式来描述。在一个过半票决的系统中，如果有3台服务器，那么需要至少2台服务器来完成任意的操作。换个角度来看，这个系统可以接受1个服务器的故障，任意2个服务器都足以完成操作。如果你需要构建一个更加可靠的系统，那么你可以为系统加入更多的服务器。所以，更通用的方程是：</p>
+<blockquote>
+<p><strong>如果系统有 2 * F + 1 个服务器，那么系统最多可以接受F个服务器出现故障，仍然可以正常工作。</strong></p>
+</blockquote>
+<p>通常这也被称为多数投票（quorum）系统，因为3个服务器中的2个，就可以完成多数投票。</p>
+<p>前面已经提过，有关过半票决系统的一个特性就是，最多只有一个网络分区会有过半的服务器，所以我们不可能有两个分区可以同时完成操作。这里背后更微妙的点在于，如果你总是需要过半的服务器才能完成任何操作，同时你有一系列的操作需要完成，其中的每一个操作都需要过半的服务器来批准，例如选举Raft的Leader，那么每一个操作对应的过半服务器，必然至少包含一个服务器存在于上一个操作的过半服务器中。也就是说，任意两组过半服务器，至少有一个服务器是重叠的。实际上，相比其他特性，Raft更依赖这个特性来避免脑裂。例如，当一个Raft Leader竞选成功，那么这个Leader必然凑够了过半服务器的选票，而这组过半服务器中，必然与旧Leader的过半服务器有重叠。所以，新的Leader必然知道旧Leader使用的任期号（term number），因为新Leader的过半服务器必然与旧Leader的过半服务器有重叠，而旧Leader的过半服务器中的每一个必然都知道旧Leader的任期号。类似的，任何旧Leader提交的操作，必然存在于过半的Raft服务器中，而任何新Leader的过半服务器中，必然有至少一个服务器包含了旧Leader的所有操作。这是Raft能正确运行的一个重要因素。</p>
+<blockquote>
+<p>学生提问：可以为Raft添加服务器吗？</p>
+<p>Rober教授：Raft的服务器是可以添加或者修改的，Raft的论文有介绍，可能在Section 6。如果是一个长期运行的系统，例如运行5年或者10年，你可能需要定期更换或者升级一些服务器，因为某些服务器可能会出现永久的故障，又或者你可能需要将服务器搬到另一个机房去。所以，肯定需要支持修改Raft服务器的集合。虽然这不是每天都发生，但是这是一个长期运行系统的重要维护工作。Raft的作者提出了方法来处理这种场景，但是比较复杂。</p>
+</blockquote>
+<p>所以，在过半票决这种思想的支持下，大概1990年的时候，有两个系统基本同时被提出。这两个系统指出，你可以使用这种过半票决系统，从某种程度上来解决之前明显不可能避免的脑裂问题，例如，通过使用3个服务器而不是2个，同时使用过半票决策略。两个系统中的一个叫做Paxos，Raft论文对这个系统做了很多的讨论；另一个叫做ViewStamped Replication（VSR）。尽管Paxos的知名度高得多，Raft从设计上来说，与VSR更接近。VSR是由MIT发明的。这两个系统有着数十年的历史，但是他们仅仅是在15年前，也就是他们发明的15年之后，才开始走到最前线，被大量的大规模分布式系统所使用。</p>
+<h2 id="3-Raft-初探"><a href="#3-Raft-初探" class="headerlink" title="3. Raft 初探"></a>3. Raft 初探</h2><p>Raft会以库（Library）的形式存在于服务中。如果你有一个基于Raft的多副本服务，那么每个服务的副本将会由两部分组成：应用程序代码和Raft库。应用程序代码接收RPC或者其他客户端请求；不同节点的Raft库之间相互合作，来维护多副本之间的操作同步。</p>
+<p>从软件的角度来看一个Raft节点，我们可以认为在该节点的上层，是应用程序代码。例如对于Lab 3来说，这部分应用程序代码就是一个Key-Value数据库。应用程序通常都有状态，Raft层会帮助应用程序将其状态拷贝到其他副本节点。对于一个Key-Value数据库而言，对应的状态就是Key-Value Table。应用程序往下，就是Raft层。所以，Key-Value数据库需要对Raft层进行函数调用，来传递自己的状态和Raft反馈的信息。</p>
+<p>同时，如Raft论文中的图2所示，Raft本身也会保持状态。对我们而言，Raft的状态中，最重要的就是Raft会记录操作的日志。</p>
+<p><img    class="lazyload" data-original="./image-20250131224240484.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 67%;" /><span class="image-caption">image-20250131224240484</span></p>
+<p>对于一个拥有三个副本的系统来说，很明显我们会有三个服务器，这三个服务器有完全一样的结构（上面是应用程序层，下面是Raft层）。理想情况下，也会有完全相同的数据分别存在于两层（应用程序层和Raft层）中。除此之外，还有一些客户端，假设我们有了客户端1（C1），客户端2（C2）等等。</p>
+<p><img    class="lazyload" data-original="./image-20250131224341803.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131224341803</span></p>
+<p>客户端就是一些外部程序代码，它们想要使用服务，同时它们不知道，也没有必要知道，它们正在与一个多副本服务交互。从客户端的角度来看，这个服务与一个单点服务没有区别。</p>
+<p>客户端会将请求发送给当前Raft集群中的Leader节点对应的应用程序。这里的请求就是应用程序级别的请求，例如一个访问Key-Value数据库的请求。这些请求可能是Put也可能是Get。Put请求带了一个Key和一个Value，将会更新Key-Value数据库中，Key对应的Value；而Get向当前服务请求某个Key对应的Value。</p>
+<p>所以，看起来似乎没有Raft什么事，看起来就像是普通的客户端服务端交互。一旦一个Put请求从客户端发送到了服务端，对于一个单节点的服务来说，应用程序会直接执行这个请求，更新Key-Value表，之后返回对于这个Put请求的响应。但是对于一个基于Raft的多副本服务，就要复杂一些。</p>
+<p>假设客户端将请求发送给Raft的Leader节点，在服务端程序的内部，应用程序只会将来自客户端的请求对应的操作向下发送到Raft层，并且告知Raft层，请把这个操作提交到多副本的日志（Log）中，并在完成时通知我。</p>
+<p>之后，Raft节点之间相互交互，直到过半的Raft节点将这个新的操作加入到它们的日志中，也就是说这个操作被过半的Raft节点复制了。</p>
+<p>当且仅当Raft的Leader节点知道了所有（课程里说的是所有，但是这里应该是过半节点）的副本都有了这个操作的拷贝之后。Raft的Leader节点中的Raft层，会向上发送一个通知到应用程序，也就是Key-Value数据库，来说明：刚刚你提交给我的操作，我已经提交给所有（注：同上一个说明）副本，并且已经成功拷贝给它们了，现在，你可以真正的执行这个操作了。</p>
+<p>所以，客户端发送请求给Key-Value数据库，这个请求不会立即被执行，因为这个请求还没有被拷贝。当且仅当这个请求存在于过半的副本节点中时，Raft才会通知Leader节点，只有在这个时候，Leader才会实际的执行这个请求。对于Put请求来说，就是更新Value，对于Get请求来说，就是读取Value。最终，请求返回给客户端，这就是一个普通请求的处理过程。</p>
+<blockquote>
+<p>学生提问：问题听不清。。。这里应该是学生在纠正前面对于所有节点和过半节点的混淆</p>
+<p>Robert教授：这里只需要拷贝到过半服务器即可。为什么不需要拷贝到所有的节点？因为我们想构建一个容错系统，所以即使某些服务器故障了，我们依然期望服务能够继续工作。所以只要过半服务器有了相应的拷贝，那么请求就可以提交。</p>
+<p>学生提问：除了Leader节点，其他节点的应用程序层会有什么样的动作？</p>
+<p>Robert教授：哦对，抱歉。当一个操作最终在Leader节点被提交之后，每个副本节点的Raft层会将相同的操作提交到本地的应用程序层。在本地的应用程序层，会将这个操作更新到自己的状态。所以，理想情况是，所有的副本都将看到相同的操作序列，这些操作序列以相同的顺序出现在Raft到应用程序的upcall中，之后它们以相同的顺序被本地应用程序应用到本地的状态中。假设操作是确定的（比如一个随机数生成操作就不是确定的），所有副本节点的状态，最终将会是完全一样的。我们图中的Key-Value数据库，就是Raft论文中说的状态（也就是Key-Value数据库的多个副本最终会保持一致）。</p>
+</blockquote>
+<h2 id="4-Log-同步时序"><a href="#4-Log-同步时序" class="headerlink" title="4. Log 同步时序"></a>4. Log 同步时序</h2><p>接下来我将画一个时序图来描述Raft内部的消息是如何工作的。假设我们有一个客户端，服务器1是当前Raft集群的Leader。同时，我们还有服务器2，服务器3。这张图的纵坐标是时间，越往下时间越长。假设客户端将请求发送给服务器1，这里的客户端请求就是一个简单的请求，例如一个Put请求。</p>
+<p><img    class="lazyload" data-original="./image-20250131225756591.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131225756591</span></p>
+<p>之后，服务器1的Raft层会发送一个添加日志（AppendEntries）的RPC到其他两个副本（S2，S3）。现在服务器1会一直等待其他副本节点的响应，一直等到过半节点的响应返回。这里的过半节点包括Leader自己。所以在一个只有3个副本节点的系统中，Leader只需要等待一个其他副本节点。</p>
+<p><img    class="lazyload" data-original="./image-20250131225809410.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131225809410</span></p>
+<p>一旦过半的节点返回了响应，这里的过半节点包括了Leader自己，所以在一个只有3个副本的系统中，Leader只需要等待一个其他副本节点返回对于AppendEntries的正确响应。</p>
+<p><img    class="lazyload" data-original="./image-20250131225825412.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131225825412</span></p>
+<p>当Leader收到了过半服务器的正确响应，Leader会执行（来自客户端的）请求，得到结果，并将结果返回给客户端。</p>
+<p><img    class="lazyload" data-original="./image-20250131225835695.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131225835695</span></p>
+<p>与此同时，服务器3可能也会将它的响应返回给Leader，尽管这个响应是有用的，但是这里不需要等待这个响应。这一点对于理解Raft论文中的图2是有用的。</p>
+<p><img    class="lazyload" data-original="./image-20250131225855632.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131225855632</span></p>
+<p>好了，大家明白了吗？这是系统在没有故障情况下，处理普通操作的流程。</p>
+<blockquote>
+<p>学生提问：S2和S3的状态怎么保持与S1同步？</p>
+<p>Robert教授：我的天，我忘了一些重要的步骤。现在Leader知道过半服务器已经添加了Log，可以执行客户端请求，并返回给客户端。但是服务器2还不知道这一点，服务器2只知道：我从Leader那收到了这个请求，但是我不知道这个请求是不是已经被Leader提交（committed）了，这取决于我的响应是否被Leader收到。服务器2只知道，它的响应提交给了网络，或许Leader没有收到这个响应，也就不会决定commit这个请求。所以这里还有一个阶段。一旦Leader发现请求被commit之后，它需要将这个消息通知给其他的副本。所以这里有一个额外的消息。</p>
+</blockquote>
+<p><img    class="lazyload" data-original="./image-20250131225909195.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131225909195</span></p>
+<p>这条消息的具体内容依赖于整个系统的状态。至少在Raft中，没有明确的committed消息。相应的，committed消息被夹带在下一个AppendEntries消息中，由Leader下一次的AppendEntries对应的RPC发出。任何情况下，当有了committed消息时，这条消息会填在AppendEntries的RPC中。下一次Leader需要发送心跳，或者是收到了一个新的客户端请求，要将这个请求同步给其他副本时，Leader会将新的更大的commit号随着AppendEntries消息发出，当其他副本收到了这个消息，就知道之前的commit号已经被Leader提交，其他副本接下来也会执行相应的请求，更新本地的状态。</p>
+<p><img    class="lazyload" data-original="./image-20250131225921613.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250131225921613</span></p>
+<blockquote>
+<p>学生提问：这里的内部交互有点多吧？</p>
+<p>Robert教授：是的，这是一个内部需要一些交互的协议，它不是特别的快。实际上，客户端发出请求，请求到达某个服务器，这个服务器至少需要与一个其他副本交互，在返回给客户端之前，需要等待多条消息。所以，一个客户端响应的背后有多条消息的交互。</p>
+<p>学生提问：也就是说commit信息是随着普通的AppendEntries消息发出的？那其他副本的状态更新就不是很及时了。</p>
+<p>Robert教授：是的，作为实现者，这取决于你在什么时候将新的commit号发出。如果客户端请求很稀疏，那么Leader或许要发送一个心跳或者发送一条特殊的AppendEntries消息。如果客户端请求很频繁，那就无所谓了。因为如果每秒有1000个请求，那么下一条AppendEntries很快就会发出，你可以在下一条消息中带上新的commit号，而不用生成一条额外的消息。额外的消息代价还是有点高的，反正你要发送别的消息，可以把新的commit号带在别的消息里。</p>
+<p>实际上，我不认为其他副本（非Leader）执行客户端请求的时间很重要，因为没有人在等这个步骤。至少在不出错的时候，其他副本执行请求是个不太重要的步骤。例如说，客户端就没有等待其他副本执行请求，客户端只会等待Leader执行请求。所以，其他副本在什么时候执行请求，不会影响客户端感受的请求时延。</p>
+</blockquote>
+<h2 id="5-日志"><a href="#5-日志" class="headerlink" title="5. 日志"></a>5. 日志</h2><p>Raft系统之所以对Log关注这么多的一个原因是，Log是Leader用来对操作排序的一种手段。这对于复制状态机（详见4.2）而言至关重要，对于这些复制状态机来说，所有副本不仅要执行相同的操作，还需要用相同的顺序执行这些操作。而Log与其他很多事物，共同构成了Leader对接收到的客户端操作分配顺序的机制。比如说，我有10个客户端同时向Leader发出请求，Leader必须对这些请求确定一个顺序，并确保所有其他的副本都遵从这个顺序。实际上，Log是一些按照数字编号的槽位（类似一个数组），槽位的数字表示了Leader选择的顺序。</p>
+<h1 id="Lab-2-Key-Value-Server"><a href="#Lab-2-Key-Value-Server" class="headerlink" title="Lab 2: Key/Value Server"></a>Lab 2: Key/Value Server</h1><h2 id="intro"><a href="#intro" class="headerlink" title="intro"></a>intro</h2><p>在本实验中，你将构建一个单机键值服务器，该服务器确保每个操作即使在网络故障的情况下也能仅执行一次，并且操作是可线性化的。后续实验将复制此类服务器以处理服务器崩溃的情况。</p>
+<p>客户端可以向键值服务器发送三种不同的远程过程调用（RPC）：Put(key, value)、Append(key, arg) 和 Get(key)。服务器维护一个内存中的键值对映射。键和值均为字符串。Put(key, value) 用于在映射中安装或替换特定键的值，Append(key, arg) 将参数 arg 追加到键的值并返回旧值，Get(key) 获取键的当前值。对于不存在的键，Get 应返回空字符串。对于不存在的键执行 Append 操作时，应将其视为现有值为零长度字符串的情况。每个客户端通过 Clerk（包含 Put/Append/Get 方法）与服务器通信。Clerk 管理与服务器的 RPC 交互。</p>
+<p>你的服务器必须确保应用程序对 Clerk 的 Get/Put/Append 方法的调用是可线性化的。如果客户端请求不是并发的，每个客户端的 Get/Put/Append 调用应观察到前面一系列调用所隐含的状态修改。对于并发调用，返回值和最终状态必须与操作按某种顺序依次执行时相同。调用在时间上有重叠时即为并发，例如，如果客户端 X 调用 Clerk.Put()，客户端 Y 调用 Clerk.Append()，然后客户端 X 的调用返回。一个调用必须观察到在其开始之前已完成的所有调用的效果。</p>
+<p>线性化对于应用程序来说非常方便，因为这是你从一个依次处理请求的单个服务器中看到的行为。例如，如果一个客户端从服务器获得更新请求的成功响应，随后其他客户端发起的读取操作将肯定能看到该更新的效果。对于单个服务器，提供线性化相对容易。</p>
+<h2 id="线性化"><a href="#线性化" class="headerlink" title="线性化"></a>线性化</h2><p>Q: 什么是线性化（linearizability）？</p>
+<p>A: 线性化是定义服务在面对并发客户端请求时行为正确性的一种方式。大致来说，它规定服务应看起来像是按请求到达的顺序依次执行请求。</p>
+<p>线性化是基于“历史记录”定义的：实际客户端请求和服务器响应的轨迹，标注了客户端发送和接收每条消息的时间。线性化告诉你单个历史记录是否合法；我们可以说，如果服务可以生成的每个历史记录都是线性化的，那么该服务就是线性化的。</p>
+<p>对于每个客户端请求，请求消息和对应的响应消息是历史记录中的独立元素，每条消息出现在客户端发送或接收的时间点。因此，历史记录明确展示了请求的并发性和网络延迟。</p>
+<p>如果可以为每个操作分配一个“线性化点”（一个时间点），使得每个操作的点位于客户端发送请求和接收响应的时间之间，并且历史记录的响应值与按点的顺序依次执行请求时得到的值相同，那么这个历史记录就是线性化的。如果没有任何线性化点的分配能满足这两个要求，那么该历史记录就不是线性化的。</p>
+<p>线性化的一个重要后果是，服务在执行并发（时间上重叠）操作的顺序上有一定的自由度。特别是，如果来自客户端C1和C2的请求是并发的，服务器可能会先执行C2的请求，即使C1发送请求消息的时间早于C2。另一方面，如果C1在C2发送请求之前收到了响应，线性化要求服务表现得像是先执行了C1的请求（即C2的操作必须观察到C1操作的效果，如果有的话）。</p>
+<p>Q: 线性化检查器是如何工作的？</p>
+<p>A: 一个简单的线性化检查器会尝试每一种可能的顺序（或线性化点的选择），以查看是否有一种是根据线性化定义的规则有效的。由于在大型历史记录上这样做会太慢，聪明的检查器会避免查看明显不可能的顺序（例如，提议的线性化点在操作开始时间之前），在可能的情况下将历史记录分解为可以单独检查的子历史记录，并使用启发式方法首先尝试更可能的顺序。</p>
+<p>这些论文描述了这些技术；我认为Knossos是基于第一篇论文，而Porcupine增加了第二篇论文中的想法：</p>
+<p><a target="_blank" rel="noopener" href="http://www.cs.ox.ac.uk/people/gavin.lowe/LinearizabiltyTesting/paper.pdf">http://www.cs.ox.ac.uk/people/gavin.lowe/LinearizabiltyTesting/paper.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1504.00204.pdf">https://arxiv.org/pdf/1504.00204.pdf</a></p>
+<p>Q: 服务是否使用线性化检查器来实现线性化？</p>
+<p>A: 不；检查器仅在测试中使用。</p>
+<p>Q: 那么服务是如何实现线性化的？</p>
+<p>A: 如果服务实现为单个服务器，没有复制、缓存或内部并行性，那么服务几乎只需要按请求到达的顺序依次执行客户端请求。主要的复杂性来自于客户端因为认为网络丢失了消息而重新发送请求：对于有副作用的请求，服务必须小心不要执行任何给定的客户端请求超过一次。如果服务涉及复制或缓存，则需要更复杂的设计。</p>
+<p>Q: 你知道有哪些现实世界中的系统使用Porcupine或类似的测试框架进行测试的例子吗？</p>
+<p>A: 这种测试很常见——例如，可以看看 <a target="_blank" rel="noopener" href="https://jepsen.io/analyses；Jepsen是一个测试了许多存储系统正确性（以及适当情况下的线性化）的组织。">https://jepsen.io/analyses；Jepsen是一个测试了许多存储系统正确性（以及适当情况下的线性化）的组织。</a></p>
+<p>特别是Porcupine的一个例子：</p>
+<p><a target="_blank" rel="noopener" href="https://www.vldb.org/pvldb/vol15/p2201-zare.pdf">https://www.vldb.org/pvldb/vol15/p2201-zare.pdf</a></p>
+<p>Q: 还有哪些其他的一致性模型？</p>
+<p>A: 查找以下模型：</p>
+<ul>
+<li>最终一致性</li>
+<li>因果一致性</li>
+<li>叉一致性</li>
+<li>可串行化</li>
+<li>顺序一致性</li>
+<li>时间线一致性</li>
+</ul>
+<p>还有数据库、CPU内存/缓存系统和文件系统中的其他模型。</p>
+<p>一般来说，不同的模型在对应用程序开发者的直观性和性能方面有所不同。例如，最终一致性允许许多异常结果（例如，即使写入已完成，后续读取可能看不到它），但在分布式/复制环境中，它可以比线性化实现更高的性能。</p>
+<p>Q: 为什么线性化被称为强一致性模型？</p>
+<p>A: 它之所以被称为强一致性模型，是因为它禁止了许多可能会让应用程序开发者感到惊讶的情况。</p>
+<p>例如，如果我调用put(x, 22)，并且我的put完成，之后没有其他人写x，随后你调用get(x)，你保证会看到22，而不是其他值。也就是说，读取会看到最新的数据。</p>
+<p>另一个例子是，如果没有人写x，我调用get(x)，你调用get(x)，我们不会看到不同的值。</p>
+<p>这些属性在我们将要研究的其他一致性模型（如最终一致性和因果一致性）中并不成立。这些模型通常被称为“弱”一致性模型。</p>
+<p>Q: 人们在实践中如何确保他们的分布式系统是正确的？</p>
+<p>A: 我猜彻底的测试是最常见的计划。</p>
+<p>正式方法的使用也很普遍；可以看看这里的一些例子：</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2210.13661.pdf">https://arxiv.org/pdf/2210.13661.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://assets.amazon.science/67/f9/92733d574c11ba1a11bd08bfb8ae/how-amazon-web-services-uses-formal-methods.pdf">https://assets.amazon.science/67/f9/92733d574c11ba1a11bd08bfb8ae/how-amazon-web-services-uses-formal-methods.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3477132.3483540">https://dl.acm.org/doi/abs/10.1145/3477132.3483540</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ccs.neu.edu/~stavros/papers/2022-cpp-published.pdf">https://www.ccs.neu.edu/~stavros/papers/2022-cpp-published.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cs.purdue.edu/homes/pfonseca/papers/eurosys2017-dsbugs.pdf">https://www.cs.purdue.edu/homes/pfonseca/papers/eurosys2017-dsbugs.pdf</a></p>
+<p>Q: 为什么线性化被用作一致性模型，而不是其他模型，如最终一致性？</p>
+<p>A: 人们确实经常构建提供比线性化更弱一致性的存储系统，如最终一致性和因果一致性。</p>
+<p>线性化对应用程序编写者有一些很好的特性：</p>
+<ul>
+<li>读取总是观察到最新的数据。</li>
+<li>如果没有并发写入，所有读者看到相同的数据。</li>
+<li>在大多数线性化系统上，你可以添加像test-and-set这样的小型事务（因为大多数线性化设计最终会依次执行每个数据项的操作）。</li>
+</ul>
+<p>像最终一致性和因果一致性这样的更弱方案可以允许更高的性能，因为它们不要求立即更新所有数据副本。这种更高的性能通常是决定因素。然而，弱一致性为应用程序编写者引入了一些复杂性：</p>
+<ul>
+<li>读取可以观察到过时的数据。</li>
+<li>读取可以观察到写入的顺序错误。</li>
+<li>如果你写入，然后读取，你可能看不到你的写入，而是看到过时的数据。</li>
+<li>对同一项目的并发更新不是依次执行的，因此很难实现像test-and-set这样的小型事务。</li>
+</ul>
+<p>Q: 如何决定线性化的小橙线的位置——操作的线性化点？在图上看起来像是随机画在请求主体内的某个地方？</p>
+<p>A: 这个想法是，为了证明执行是线性化的，你需要（作为人类）找到放置小橙线（线性化点）的位置。也就是说，为了证明历史记录是线性化的，你需要找到符合这些要求的操作顺序：</p>
+<ul>
+<li>所有函数调用都有一个线性化点，位于其调用和响应之间。</li>
+<li>所有函数似乎在它们的线性化点瞬间发生，按照顺序定义的行为。</li>
+</ul>
+<p>因此，一些线性化点的放置是无效的，因为它们位于请求时间范围之外；其他放置是无效的，因为它们违反了顺序定义（对于键值存储，违反意味着读取没有观察到最新写入的值，其中“最新”指的是线性化点）。</p>
+<p>在复杂情况下，你可能需要尝试许多线性化点顺序的组合，以找到一个能够证明历史记录是线性化的组合。如果你尝试了所有组合，但没有一个有效，那么该历史记录就不是线性化的。</p>
+<p>Q: 是否存在这种情况：如果两个命令同时执行，我们能够强制执行特定行为，使得一个命令总是首先执行（即它总是有更早的线性化点）？</p>
+<p>A: 在线性化的存储服务中（例如GFS或你的Lab 3），如果来自多个客户端的请求几乎同时到达，服务可以选择执行它们的顺序。尽管在实践中，大多数服务会按照请求数据包到达网络的顺序执行并发请求。</p>
+<p>线性化点的概念是检查历史记录是否线性化的一种策略的一部分。实际实现通常不涉及线性化点的明确概念。相反，它们通常只是按某种串行（依次）顺序执行传入请求。你可以将每个操作的线性化点视为发生在服务执行请求期间的某个时间点。</p>
+<p>Q: 我们还可以执行哪些更强的一致性检查？线性化在直觉上感觉不太有用，因为即使同时执行两个命令，你仍然可能读取到不同的数据。</p>
+<p>A: 的确，线性化类似于在程序中使用线程而不使用锁——对同一数据的任何并发访问都是竞争条件。以这种方式编程是可能的，但需要小心。</p>
+<p>下一个最强的一致性概念涉及事务，如许多数据库中所使用的，这实际上锁定了任何使用的数据。对于读取和写入多个数据项的程序，事务比线性化更容易编程。“可串行化”是一个提供事务的一致性模型的名称。</p>
+<p>然而，事务系统比线性化系统更复杂、更慢、更难实现容错。</p>
+<p>Q: 为什么验证现实系统涉及“巨大努力”？</p>
+<p>A: 验证意味着证明程序是正确的，即它保证符合某些规范。事实证明，证明复杂程序的重要定理是困难的——比普通编程困难得多。</p>
+<p>你可以通过尝试这门课程的实验来感受这一点：</p>
+<p><a target="_blank" rel="noopener" href="https://6826.csail.mit.edu/2020/">https://6826.csail.mit.edu/2020/</a></p>
+<p>Q: 从指定的阅读材料来看，大多数分布式系统没有经过正式证明是正确的。那么一个团队如何决定一个框架或系统已经经过足够充分的测试，可以作为实际产品发布？</p>
+<p>A: 在公司耗尽资金并破产之前，开始发布产品并获得收入是一个好主意。人们在这一点之前尽可能多地进行测试，并且通常会尝试说服一些早期客户使用该产品（并帮助发现漏洞），并明确表示产品可能无法正确工作。也许当产品功能足以满足许多客户并且没有已知的重大漏洞时，你就可以准备发布了。</p>
+<p>除此之外，明智的客户也会测试他们依赖的软件。没有严肃的组织期望任何软件是无漏洞的。</p>
+<p>Q: 为什么不使用客户端发送命令的时间作为线性化点？即让系统按客户端发送请求的顺序执行操作？</p>
+<p>A: 很难构建一个保证这种行为的系统——开始时间是客户端代码发出请求的时间，但由于网络延迟，服务可能要到很久之后才会收到请求。也就是说，请求可能以与开始时间顺序大不相同的顺序到达服务。服务原则上可以延迟执行每个到达的请求，以防稍后到达一个具有更早发出时间的请求，但很难正确实现这一点，因为网络不保证限制延迟。而且这可能会增加每个请求的延迟，可能增加很多。话说回来，我们稍后会看到的Spanner使用了相关技术。</p>
+<p>像线性化这样的正确性规范需要在足够宽松以高效实现和足够严格以提供对应用程序程序有用的保证之间找到平衡。“看起来按调用顺序执行操作”太严格，难以高效实现，而线性化的“看起来在调用和响应之间执行”虽然对应用程序开发者来说不那么直观，但可以实现。</p>
+<p>Q: 如果有并发的get()操作，而同时也有并发的put()操作，get()操作可能会看到不同的值，这是否是个问题？</p>
+<p>A: 在存储系统的上下文中，这通常不是问题。例如，如果我们谈论的值是我的个人资料照片，而两个人在更新照片的同时请求查看它，那么他们看到不同的照片（旧的或新的）是完全合理的。</p>
+<p>一些存储系统提供了更复杂的方案，特别是事务，这使得这种情况更容易处理。“可串行化”是一个提供事务的一致性模型的名称。然而，事务系统比线性化系统更复杂、更慢、更难实现容错。</p>
+<h1 id=""><a href="#" class="headerlink" title=" "></a> </h1>
       </section>
       <section class="extra">
         
@@ -322,7 +534,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Patterns-and-Hints-for-Concurrency-in-Go"><span class="toc-text">Patterns and Hints for Concurrency in Go</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concurrency-and-Parallelism"><span class="toc-text">Concurrency and Parallelism</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Goroutines-for-State"><span class="toc-text">Goroutines for State</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MapReduce"><span class="toc-text">MapReduce</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87"><span class="toc-text">论文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce-%E7%BB%93%E6%9E%84"><span class="toc-text">MapReduce 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E9%A1%BA%E5%BA%8F%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">单机顺序式实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">分布式实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-text">运行方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%A6%81%E6%B1%82"><span class="toc-text">一些要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%B8%AE%E5%8A%A9"><span class="toc-text">一些帮助</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第一个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第二个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第三个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第四个版本</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Patterns-and-Hints-for-Concurrency-in-Go"><span class="toc-text">Patterns and Hints for Concurrency in Go</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concurrency-and-Parallelism"><span class="toc-text">Concurrency and Parallelism</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Goroutines-for-State"><span class="toc-text">Goroutines for State</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab1-MapReduce"><span class="toc-text">Lab1: MapReduce</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87"><span class="toc-text">论文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce-%E7%BB%93%E6%9E%84"><span class="toc-text">MapReduce 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E9%A1%BA%E5%BA%8F%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">单机顺序式实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">分布式实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-text">运行方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%A6%81%E6%B1%82"><span class="toc-text">一些要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%B8%AE%E5%8A%A9"><span class="toc-text">一些帮助</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第一个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第二个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第三个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第四个版本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GFS"><span class="toc-text">GFS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GFS-%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">GFS 一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#master"><span class="toc-text">master</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#client-%E8%AF%BB%E6%96%87%E4%BB%B6"><span class="toc-text">client 读文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Raft"><span class="toc-text">Raft</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%84%91%E8%A3%82%EF%BC%88Split-Brain%EF%BC%89"><span class="toc-text">1. 脑裂（Split Brain）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%84%91%E8%A3%82%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="toc-text">1. 脑裂的场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%84%91%E8%A3%82%E7%9A%84%E5%8F%91%E7%94%9F"><span class="toc-text">2. 脑裂的发生</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%84%91%E8%A3%82%E7%9A%84%E5%90%8E%E6%9E%9C"><span class="toc-text">3. 脑裂的后果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%81%BF%E5%85%8D%E8%84%91%E8%A3%82%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">4. 避免脑裂的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5. 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%87%E5%8D%8A%E7%A5%A8%E5%86%B3%EF%BC%88Majority-Vote%EF%BC%89"><span class="toc-text">2. 过半票决（Majority Vote）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Raft-%E5%88%9D%E6%8E%A2"><span class="toc-text">3. Raft 初探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Log-%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F"><span class="toc-text">4. Log 同步时序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%97%A5%E5%BF%97"><span class="toc-text">5. 日志</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-2-Key-Value-Server"><span class="toc-text">Lab 2: Key&#x2F;Value Server</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#intro"><span class="toc-text">intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E5%8C%96"><span class="toc-text">线性化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text"> </span></a></li></ol>
   </aside>
 
         
