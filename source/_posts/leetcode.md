@@ -385,6 +385,332 @@ class Solution {
 }
 ```
 
+## 排序链表
+
+要点在于排序 + 链表操作
+
+题目的进阶问题要求达到 O(nlogn) 的时间复杂度和 O(1) 的空间复杂度，时间复杂度是 O(nlogn) 的排序算法包括归并排序、堆排序和快速排序（快速排序的最差时间复杂度是 O(n^2)），其中最适合链表的排序算法是归并排序。
+
+归并排序基于分治算法。最容易想到的实现方式是自顶向下的递归实现，考虑到递归调用的栈空间，自顶向下归并排序的空间复杂度是 O(logn)。如果要达到 O(1) 的空间复杂度，则需要使用自底向上的实现方式。=
+
+递归写法：
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode mid = findMiddle(head);
+        ListNode rightHead = mid.next;
+        mid.next = null; // 断开链表
+
+        // 排序
+        ListNode left = sortList(head);
+        ListNode right = sortList(rightHead);
+        
+        // 合并有序链表
+        return mergeList(left, right);
+    }
+
+    private ListNode mergeList(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                cur.next = l1;
+                l1 = l1.next;
+            } else {
+                cur.next = l2;
+                l2 = l2.next;
+            }
+            cur = cur.next;
+        }
+        // 接上剩余链表，这里不需要用 while，因为肯定要么 l1 要么 l2 剩余，剩余部分本来就是接好的
+        if (l1 != null) {
+            cur.next = l1;
+        }
+
+        if (l2 != null) {
+            cur.next = l2;
+        }
+
+        return dummy.next;
+    }
+
+    private ListNode findMiddle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head.next; // 重要！fast 从 head.next 开始，确保 slow 指向中点或者左中点
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+}
+```
+
+迭代写法：
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    // 1. 获取链表长度
+    // 2. 设置合并的长度（step）
+    // 3. 合并根据长度划分的所有链表
+    // 4. step *= 2
+    public ListNode sortList(ListNode head) {
+        ListNode dummy = new ListNode(0, head);
+        int length = listLength(head);
+        for (int step = 1; step < length; step *= 2) {
+            ListNode cur = dummy.next;
+            ListNode newTail = dummy;
+            while (cur != null) {
+                // 从 cur 开始，分割出两段长为 step 的链表，头节点分别为 head1 和 head2
+                ListNode head1 = cur;
+                ListNode head2 = splitList(head1, step);
+                // 下一轮的起点，也是为了分割开链表
+                cur = splitList(head2, step); 
+                // 合并两段长度为 step 的链表
+                ListNode merged = mergeList(head1, head2);
+                // 找到下一个要合并的链表的 head
+                int len = 0;
+                ListNode curr = merged;
+                while(len < step * 2 && curr.next != null) {
+                    len++;
+                    curr = curr.next;
+                }
+                // 合并后的头节点插入到 newTail 后面
+                newTail.next = merged;
+                newTail = curr;
+            }
+        }
+        return dummy.next;
+    }
+
+    private ListNode splitList(ListNode head, int size) {
+        ListNode cur = head;
+        // nextHead 的前一个节点，用于断开链表
+        for (int i = 0; i < size - 1 && cur != null; i++) {
+            cur = cur.next;
+        }
+
+        if (cur == null || cur.next == null) return null;
+
+        ListNode nextHead = cur.next;
+        cur.next = null; // 断开链表
+        return nextHead;
+    }
+
+    private int listLength(ListNode head) {
+        int length = 0;
+        while (head != null) {
+            head = head.next;
+            length++;
+        }
+        return length;
+    }
+
+    // 返回合并链表的头节点
+    private ListNode mergeList(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                cur.next = l1;
+                l1 = l1.next;
+            } else {
+                cur.next = l2;
+                l2 = l2.next;
+            }
+            cur = cur.next;
+        }
+        // 接上剩余链表，这里要用 while，因为肯定要么 l1 要么 l2 剩余，剩余部分本来就是接好的
+        if (l1 != null) {
+            cur.next = l1;
+        }
+
+        if (l2 != null) {
+            cur.next = l2;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
+## 合并 K 个升序链表
+
+### 朴素做法
+
+用一个数组存储所有的 head，然后每次取出所有数组的最小值，然后插入到链表最后面。
+
+每次取出最小值，复杂度为 O(k)，然后一共要取 k * n 次，n 是最长链表的长度，这样时间复杂度为 O(k^2 * n)，每次取出最小值的时候，有比较被浪费掉了。
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        ListNode[] head = new ListNode[lists.length];
+        int allLength = 500 * 10000;
+        for (int i = 0; i < lists.length; i++) {
+            head[i] = lists[i];
+        }
+
+        int i = 0;
+        while (i < allLength) {
+            int minVal = 0x3f3f3f3f;
+            int minIndex = -1;
+            for (int j = 0; j < lists.length; j++) {
+                if (head[j] != null && minVal > head[j].val) {
+                    minVal = head[j].val;
+                    minIndex = j;
+                }
+            }
+            // 所有链表都为空
+            if (minIndex == -1) break;
+            cur.next = head[minIndex];
+            cur = cur.next;
+            head[minIndex] = head[minIndex].next;
+            i++;
+        }
+        return dummy.next;
+    }
+}
+```
+
+### 二分做法
+
+![img](./6f70a6649d2192cf32af68500915d84b476aa34ec899f98766c038fc9cc54662-image.png)
+
+复杂度计算：
+
+![image-20250202004335203](./image-20250202004335203.png)
+
+链表两两合并避免比较浪费，左闭右闭实现：
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        return mergeLists(lists, 0, lists.length - 1);
+    }
+
+    private ListNode mergeLists(ListNode[] lists, int l, int r) {
+        if (l == r) return lists[l];
+        if (l > r) return null;
+        int mid = l + (r - l) / 2;
+        // 左闭右闭
+        return mergeTwoLists(mergeLists(lists, l, mid), mergeLists(lists, mid + 1, r));
+    }
+
+    private ListNode mergeTwoLists(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        while (a != null && b != null) {
+            if (a.val <= b.val) {
+                cur.next = a;
+                a = a.next;
+            } else {
+                cur.next = b;
+                b = b.next;
+            }
+            cur = cur.next;
+        }
+
+        if (a != null) cur.next = a;
+        if (b != null) cur.next = b;
+
+        return dummy.next;
+    }
+}
+```
+
+左闭右开实现：
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        return mergeLists(lists, 0, lists.length);
+    }
+
+    private ListNode mergeLists(ListNode[] lists, int l, int r) {
+        if (l >= r) return null;
+        if (r - l == 1) return lists[l];
+        int mid = l + (r - l) / 2;
+        // 左闭右开
+        return mergeTwoLists(mergeLists(lists, l, mid), mergeLists(lists, mid, r));
+    }
+
+    private ListNode mergeTwoLists(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        while (a != null && b != null) {
+            if (a.val <= b.val) {
+                cur.next = a;
+                a = a.next;
+            } else {
+                cur.next = b;
+                b = b.next;
+            }
+            cur = cur.next;
+        }
+
+        if (a != null) cur.next = a;
+        if (b != null) cur.next = b;
+
+        return dummy.next;
+    }
+}
+```
+
 
 
 # 子串
