@@ -711,6 +711,565 @@ class Solution {
 }
 ```
 
+# 二叉树
+
+## 二叉树的中序遍历
+
+递归做法：
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    List<Integer> list = new ArrayList<>();
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        helper(root);
+        return list;
+    }
+
+    private void helper(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        helper(root.left);
+        list.add(root.val);
+        helper(root.right);
+    }
+}
+```
+
+非递归做法，用一个栈模拟递归栈。
+
+前序遍历是中左右，如果还有左子树就一直向下找。完了之后再返回从最底层逐步向上向右找。
+
+```java
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Deque<TreeNode> stack = new LinkedList<>();
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                list.add(root.val);
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            root = root.right;
+        }
+        return list;
+    }
+}
+```
+
+
+
+中序是左中右，如果还有左子树就一直向下找，直到左边最底部，然后处理节点：
+
+```java
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Deque<TreeNode> stack = new LinkedList<>();
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            list.add(root.val);
+            root = root.right;
+        }
+        return list;
+    }
+}
+```
+
+前序是先中间，再左边然后右边，而这里是先中间，再后边然后左边。那我们完全可以改造一下前序遍历，得到序列new_seq之后再reverse一下就是想要的结果了：
+
+```java
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Deque<TreeNode> stack = new LinkedList<>();
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                list.add(root.val);
+                stack.push(root);
+                root = root.right;
+            }
+            root = stack.pop();
+            root = root.left;
+        }
+        Collections.reverse(list);
+        return list;
+    }
+}
+```
+
+## 二叉树的最大深度
+
+要点在于如何记录深度，递归的时候可以通过传参解决：
+
+```java
+class Solution {
+    int maxDepth = 0;
+
+    public int maxDepth(TreeNode root) {
+        helper(root, 0);
+        return maxDepth;
+    }
+
+    private void helper(TreeNode root, int depth) {
+        if (root == null) {
+            maxDepth = Math.max(maxDepth, depth);
+            return;
+        }
+        helper(root.left, depth + 1);
+        helper(root.right, depth + 1);
+    }
+}
+```
+
+```java
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else {
+            int leftHeight = maxDepth(root.left);
+            int rightHeight = maxDepth(root.right);
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
+    }
+}
+```
+
+## 反转二叉树
+
+```java
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        helper(root);
+        return root;
+    }
+
+    private TreeNode helper(TreeNode root) {
+        if (root == null) return null;
+        TreeNode left = helper(root.right);
+        TreeNode right = helper(root.left);
+        root.left = left;
+        root.right = right;
+        return root;
+    }
+}
+```
+
+## 对称二叉树
+
+这里注意条件是 `left.val == right.val && helper(left.left, right.right) && helper(left.right, right.left)` ，因为对称是中心轴对称，而不是左右相等。
+
+```java 
+class Solution {
+    List<Integer> list = new ArrayList<>();
+    public boolean isSymmetric(TreeNode root) {
+        return helper(root.left, root.right);
+    }
+
+    private boolean helper(TreeNode left, TreeNode right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return left.val == right.val
+            && helper(left.left, right.right)
+            && helper(left.right, right.left);
+    }
+}
+```
+
+## 二叉树的直径
+
+二叉树的直径 = 最深左子树深度 + 最深右子树深度
+
+```java
+class Solution {
+    int ans = 0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        helper(root);
+        return ans;
+    }
+
+    private int helper(TreeNode root) {
+        if (root == null) return 0;
+        int leftMax = helper(root.left);
+        int rightMax = helper(root.right);
+        ans = Math.max(ans, leftMax + rightMax);
+        return Math.max(leftMax, rightMax) + 1;
+    }
+}
+```
+
+## 二叉树层序遍历
+
+我的做法：先序遍历（root，左，右）的时候记住 depth 存到 map 中，然后最后把 map 中的数组组合起来：
+
+```java
+class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
+    Map<Integer, List<Integer>> map = new HashMap<>();
+
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        int depth = helper(root, 0);
+        for (int i = 0; i < depth; i++) {
+            ans.add(map.get(i));
+        }
+        return ans;
+    }
+
+    private int helper(TreeNode root, int depth) {
+        if (root == null) return depth;
+        List<Integer> arr = map.getOrDefault(depth, new ArrayList<Integer>());
+        arr.add(root.val);
+        map.put(depth, arr);
+        int leftMax = helper(root.left, depth + 1);
+        int rightMax = helper(root.right, depth + 1);
+        return Math.max(leftMax, rightMax);
+    }
+}
+```
+
+bfs 做法：
+
+- root 入队列
+- 队列不为空的时候
+  - 求当前队列长度 $s_i$
+  - 取 $s_i$ 个元素进行拓展，进入下一次迭代
+
+它和普通广度优先搜索的区别在于，普通广度优先搜索每次只取一个元素拓展，而这里每次取 $s_i$ 个元素。在上述过程中的第 $i$ 次迭代得到了二叉树第 $i$ 层的 $s_i$ 个元素。（说白了就是每次迭代的时候把下一层级的所有元素都加到队列里面，这样每一次迭代整个队列元素的时候就是一个层级的所有元素）
+
+```java
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) return ans;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            List<Integer> list = new ArrayList<>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode front = queue.poll();
+                if (front.left != null) queue.offer(front.left);
+                if (front.right != null) queue.offer(front.right);
+                list.add(front.val);
+            }
+            ans.add(list);
+        }
+        return ans;
+    }
+}
+```
+
+## 将有序数组转换为二叉搜索树
+
+递归建树：
+
+- `1 <= nums.length <= 10^4`
+- `-10^4 <= nums[i] <= 10^4`
+- `nums` 按 **严格递增** 顺序排列
+
+
+
+![image-20250205185730436](./image-20250205185730436.png)
+
+```java
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return helper(nums, 0, nums.length);
+    }
+
+    private TreeNode helper(int[] nums, int left, int right) {
+        if (left >= right) return null;
+        int mid = left + (right - left) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = helper(nums, left, mid);
+        root.right = helper(nums, mid + 1, right);
+        return root;
+    }
+}
+```
+
+## 验证二叉搜索树
+
+给你一个二叉树的根节点 `root` ，判断其是否是一个有效的二叉搜索树。
+
+**有效** 二叉搜索树定义如下：
+
+- 节点的左子树只包含 **小于** 当前节点的数。
+- 节点的右子树只包含 **大于** 当前节点的数。
+- 所有左子树和右子树自身必须也是二叉搜索树。
+
+这里有一个问题是需要判断所有的子节点都大于或者都小于根节点。
+
+**二叉搜索树的中序遍历是递增的。**所以可以中序遍历，之后每个元素都小于前一个元素，则是二叉搜索树。
+
+递归写法：
+
+```java
+class Solution {
+    List<Integer> list = new ArrayList<>();
+
+    public boolean isValidBST(TreeNode root) {
+        helper(root);
+        for (int i = 0; i < list.size() - 1; i++) {
+            if (list.get(i) >= list.get(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void helper(TreeNode root) {
+        if (root == null) return;
+        helper(root.left);
+        list.add(root.val);
+        helper(root.right);
+    }
+}
+```
+
+递归写法2：
+
+```java
+class Solution {
+    long left = Long.MIN_VALUE;
+    public boolean isValidBST(TreeNode root) {
+        return helper(root);
+    }
+
+    private boolean helper(TreeNode root) {
+        if (root == null) return true;
+        boolean l = helper(root.left);
+        boolean tmp = left < root.val;
+        left = root.val;
+        boolean r = helper(root.right);
+        return l && r && tmp;
+    }
+}
+```
+
+递归写法3：
+
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return helper(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private boolean helper(TreeNode root, long lower, long upper) {
+        if (root == null) return true;
+        if (root.val <= lower || root.val >= upper) return false;
+        return helper(root.left, lower, root.val) && helper(root.right, root.val, upper);
+    }
+}
+```
+
+
+
+迭代写法：
+
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return helper(root);
+    }
+
+    private boolean helper(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<TreeNode>();
+        long left = Long.MIN_VALUE;
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            if (left >= root.val) return false;
+            left = root.val;
+            root = root.right;
+        }
+        return true;
+        
+    }
+}
+```
+
+## 二叉搜索树中第 K 小的元素
+
+和验证二叉搜索树一样，在最外层存储一下状态。
+```java
+class Solution {
+    int count = 0, target; // 存储状态
+    public int kthSmallest(TreeNode root, int k) {
+        target = k;
+        return helper(root);
+    }
+
+    private int helper(TreeNode root) {
+        if (root == null) return -1; 
+        int left = helper(root.left);
+        if (left != -1) return left;
+        count++;
+        if (target == count) {
+            return root.val;
+        }
+        int right = helper(root.right);
+        if (right != -1) return right;
+        return -1;
+    }
+}
+```
+
+## 二叉树的右视图
+
+给定一个二叉树的 **根节点** `root`，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+
+层序遍历中最右面的那个元素就是答案，放进去就好了。
+
+```java
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        if (root == null) return ans;
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+                if (i == size - 1) {
+                    ans.add(node.val);
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+## 二叉树展开为链表
+
+给你二叉树的根结点 `root` ，请你将它展开为一个单链表：
+
+- 展开后的单链表应该同样使用 `TreeNode` ，其中 `right` 子指针指向链表中下一个结点，而左子指针始终为 `null` 。
+- 展开后的单链表应该与二叉树 [**先序遍历**](https://baike.baidu.com/item/先序遍历/6442839?fr=aladdin) 顺序相同。
+
+### 递归
+
+先序遍历二叉树，然后记录 last，然后修改 last 的 left 和 right，但是这样会栈溢出。
+
+原因是递归遍历 root.left 的时候，root.right 被改成了 root.left 导致死循环，保存一下状态就好了。
+
+```java
+class Solution {
+    private TreeNode last;
+    public void flatten(TreeNode root) {
+        last = new TreeNode(0, null, root);
+        helper(root);
+    }
+
+    private void helper(TreeNode root) {
+        if (root == null) return;
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        last.left = null;
+        last.right = root;
+        last = root;
+        helper(left);
+        helper(right);
+    }
+}
+```
+
+### 迭代1
+
+迭代写法，这里注意是第三种先序遍历的方法（递归，迭代1，迭代2），注意先入栈右边再入左边，保证左边先处理：
+
+```java
+class Solution {
+    public void flatten(TreeNode root) {
+        helper(root);
+    }
+
+    private void helper(TreeNode root) {
+        if (root == null) return;
+        TreeNode last = new TreeNode(0, null, root);
+        Deque<TreeNode> stack = new LinkedList<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode top = stack.poll();
+            last.left = null;
+            last.right = top;
+            last = top;
+            // 右边先入栈，保证左边先处理
+            if (top.right != null) stack.push(top.right);
+            if (top.left != null) stack.push(top.left);
+        }
+    }
+}
+```
+
+### 迭代2
+
+```java
+class Solution {
+    public void flatten(TreeNode root) {
+        helper(root);
+    }
+
+    // 先序遍历树的时候顺序是中左右
+    // 如果一个节点的左子节点为空，则为 中、右 ，中的右边就是下一个节点
+    // 如果一个节点的左子节点不为空，则为 中、左子节点的最右节点、右
+    // 也就是说一个节点的左子节点不为空时，中的右边应该是左子节点的最右节点，然后再跟着右节点
+    private void helper(TreeNode root) {
+        while (root != null) {
+            if (root.left != null) {
+                TreeNode next = root.left;
+                TreeNode pre = next;
+                // 找左子节点的最右节点
+                while (pre.right != null) {
+                    pre = pre.right;
+                }
+                // 左子节点的最右节点的下一个为右节点
+                pre.right = root.right;
+                root.left = null;
+                root.right = next;
+            }
+            root = root.right;
+        }
+    }
+}
+```
+
+
+
 
 
 # 子串
@@ -747,6 +1306,8 @@ class Solution {
     }
 }
 ```
+
+
 
 ## 优化前缀和中的 O(n^2)
 
