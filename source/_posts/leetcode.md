@@ -1268,6 +1268,269 @@ class Solution {
 }
 ```
 
+## 路径总和 III
+
+- 二叉树的节点个数的范围是 `[0,1000]`
+- `-10^9 <= Node.val <= 10^9` 
+- `-1000 <= targetSum <= 1000` 
+
+给定一个二叉树的根节点 `root` ，和一个整数 `targetSum` ，求该二叉树里节点值之和等于 `targetSum` 的 **路径** 的数目。
+
+**路径** 不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
+
+### 穷举 O(N^2)
+
+访问每一个节点 *node*，检测以 *node* 为起始节点且向下延深的路径有多少种。我们递归遍历每一个节点的所有可能的路径，然后将这些路径数目加起来即为返回结果。
+
+- 定义 helper(p, val) 表示以 p 为起点向下满足和为 val 的路径数目。对每个节点 p 求出 helper(p, targetSum) 就是答案。
+
+  - helper 的实现为
+
+    ```java
+        private int helper(TreeNode root, long targetSum) {
+            int ret = 0;
+            if (root == null) return 0;
+            if (root.val == targetSum) ret++;
+            ret += helper(root.left, targetSum - root.val);
+            ret += helper(root.right, targetSum - root.val);
+            return ret;
+        }
+    ```
+
+- 接下来是对于每个节点都进行 helper，这里先 dfs 遍历所有节点，并对所有节点进行 helper 即可。
+
+```java
+class Solution {
+    public int pathSum(TreeNode root, long targetSum) {
+        return dfs(root, targetSum);
+    }
+
+    // 计算所有节点的 helper
+    private int dfs(TreeNode root, long targetSum) {
+        if (root == null) return 0;
+        int ret = 0;
+        ret += helper(root, targetSum);
+        ret += dfs(root.left, targetSum);
+        ret += dfs(root.right, targetSum);
+        return ret;
+    }
+
+    // 计算以 root 节点向下和为 val 的路径数目
+    private int helper(TreeNode root, long targetSum) {
+        int ret = 0;
+        if (root == null) return 0;
+        if (root.val == targetSum) ret++;
+        ret += helper(root.left, targetSum - root.val);
+        ret += helper(root.right, targetSum - root.val);
+        return ret;
+    }
+}
+```
+
+### 前缀和优化 O(N)
+
+我们定义节点的前缀和为：由根结点到当前结点的路径上所有节点的和。
+
+我们利用先序遍历二叉树，记录下根节点 root 到当前节点 p 的路径上除当前节点以外所有节点的前缀和，在已保存的路径前缀和中查找是否存在前缀和刚好等于当前节点到根节点的前缀和 cur 减去 targetSum。
+
+如果 (cur - targetSum) 存在，那么 cur - (cur - targetSum) = targetSum 也存在，就是从某个路径到当前节点的和为 targetSum。
+
+key保存前缀和，value保存对应此前缀和的数量。
+
+然后总体的思路和 560 是一样的。
+
+```java
+class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+        Map<Long, Integer> prefix = new HashMap<Long, Integer>();
+        prefix.put(0L, 1);
+        return dfs(root, prefix, 0L, targetSum);
+    }
+
+    private int dfs(TreeNode root, Map<Long, Integer> prefix, long cur, int targetSum) {
+        if (root == null) return 0;
+        int ret = 0;
+        // 前缀和
+        cur += root.val;
+
+        // 当前从根节点 root 到节点 node 的前缀和为 cur
+        // 两节点间的路径和 = 两节点的前缀和之差
+        // 查找是否存在 cur - targetSum 的前缀和
+        // 如果该前缀和存在，那么 cur - (cur - targetSum) = targetSum 存在
+        // 也就是说
+
+        ret = prefix.getOrDefault(cur - targetSum, 0);
+        prefix.put(cur, prefix.getOrDefault(cur, 0) + 1);
+        ret += dfs(root.left, prefix, cur, targetSum);
+        ret += dfs(root.right, prefix, cur, targetSum);
+        prefix.put(cur, prefix.getOrDefault(cur, 0) - 1);
+
+        return ret;
+    }
+}
+```
+
+## 二叉树的最近公共祖先
+
+### 暴力递归做法
+
+每个节点判断是不是子节点是不是同时包含 p 和 q
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return dfs(root, p, q);
+    }
+
+    // 遍历每个节点，当节点的子树同时包含 p 和 q 时，该节点为最近公共祖先
+    private TreeNode dfs(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == p || root == q) return root;
+        if (check(root.left, p, q) && check(root.right, p, q)) return root;
+        if (check(root.right, p, q) == false) return dfs(root.left, p, q);
+        return dfs(root.right, p, q);
+    }
+
+    // root 开始遍历的所有节点中是否有 p 或者 q
+    private boolean check(TreeNode root, TreeNode p, TreeNode q) {
+        // 如果 p，q 的公共节点为 root，那么从 root 能遍历得到 p 和 q
+        if (root == null) return false;
+        if (root == p || root == q) return true;
+        return check(root.left, p, q) || check(root.right, p, q);
+    }
+}
+```
+
+### 改进递归做法
+
+分为两种情况
+
+- 一种是 p q 在左右不同子树中（都在各自子树中找到的才是最近公共祖先）
+- 另一种是在相同子树中（那么先找到的就是最近公共祖先）
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return dfs(root, p, q);
+    }
+
+    // 对于 root 找 p 和 q
+    private TreeNode dfs(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) return null;
+        if (root == p || root == q) return root;
+
+        TreeNode left = dfs(root.left, p, q);
+        TreeNode right = dfs(root.right, p, q);
+        if (left == null) return right;
+        if (right == null) return left;
+        // 能从 root 找到 p 或者找到 q
+        if (left != null && right != null) return root;
+        return null;
+    }
+    
+}
+```
+
+### 记录父节点的做法
+
+用哈希表记录每个 TreeNode 的父节点，然后遍历 p 的父节点和 q 的父节点，最先出现的那个就是最近公共祖先
+
+```java
+class Solution {
+    private HashMap<TreeNode, TreeNode> map = new HashMap<>();
+    private Set<TreeNode> set = new HashSet<>();
+
+    private void dfs(TreeNode root) {
+        if (root == null) return;
+        if (root.left != null) {
+            map.put(root.left, root);
+            dfs(root.left);
+        }
+        if (root.right != null) {
+            map.put(root.right, root);
+            dfs(root.right);
+        }
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        dfs(root);
+        while(p != null) {
+            set.add(p); // 要在 get 之前，这样能够处理一个 p 是 q 的父节点的情况
+            p = map.get(p);
+        }
+
+        while (q != null) {
+            if (set.contains(q)) return q;
+            q = map.get(q);
+        }
+
+        return null;
+    }
+}
+```
+
+## 二叉树中的最大路径和
+
+与二叉树最大直径有异曲同工之妙。
+
+```java
+class Solution {
+    private int ans = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        helper(root);
+        return ans;
+    }
+
+    private int helper(TreeNode root) {
+        if (root == null) return 0;
+        int leftMax = Math.max(helper(root.left), 0);
+        int rightMax = Math.max(helper(root.right), 0);
+        ans = Math.max(leftMax + rightMax + root.val, ans);
+        return root.val + Math.max(leftMax, rightMax);
+    }
+}
+```
+
+# 回溯
+
+## 全排列
+
+主要就是回溯前后的状态的更新和恢复
+
+```java
+class Solution {
+    private int n;
+    private boolean[] visited;
+    private List<List<Integer>> ans;
+    private List<Integer> tmp;
+
+    public List<List<Integer>> permute(int[] nums) {
+        n = nums.length;
+        visited = new boolean[n];
+        ans = new ArrayList<>();
+        tmp = new ArrayList<>();
+        dfs(nums, 0);
+        return ans;
+    }
+
+    private void dfs(int[] nums, int times) {
+        if (times == n) {
+            ans.add(new ArrayList<>(tmp));
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                tmp.add(nums[i]);
+                visited[i] = true;
+                dfs(nums, times + 1);
+                visited[i] = false;
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+    }
+}
+```
+
 
 
 
