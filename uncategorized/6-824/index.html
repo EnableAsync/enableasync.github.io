@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 21, 2025</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>153850</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>154217</span>
     </div>
   </div>
 </section>
@@ -873,7 +873,10 @@
 <p>按照论文的写法应该是：<code>return rf.role == Leader &amp;&amp; rf.nextIndex[peer] &lt;= rf.log[len(rf.log)-1].Index</code></p>
 <p>但是过不去 <code>TestFailAgree3B</code> 以及 <code>TestRejoin3B</code>、<code>TestBackup3B</code>，除此之外都是 ok 的。</p>
 <p><code>TestRejoin3B</code> 过不去原因是 <code>apply error: commit index=3 server=1 105 != server=2 104</code>，但是有时候能过去。</p>
-<p>修改了 <code>rf.commitIndex = min(args.LeaderCommit, args.PrevLogIndex+len(args.Entries))</code> 之后，剩余 <code>TestFailAgree3B</code> 和 <code>TestBackup3B</code></p>
+<p>修改了 <code>rf.commitIndex = min(args.LeaderCommit, args.PrevLogIndex+len(args.Entries))</code> 之后，剩余 <code>TestFailAgree3B</code> 和 <code>TestBackup3B</code>（测试了好几次能过去了）</p>
+<p>TestFailAgree3B 是相互之间都不给对方投票，因为 candidate’s older log。原因是上面的 isLogLeastAsReceiver 写错了，改写成</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(rf *Raft)</span></span> isLogLeastAsReceiver(args *RequestVoteArgs) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> args.LastLogTerm &gt; rf.log[<span class="hljs-built_in">len</span>(rf.log)<span class="hljs-number">-1</span>].Term ||<br>		(args.LastLogTerm == rf.log[<span class="hljs-built_in">len</span>(rf.log)<span class="hljs-number">-1</span>].Term &amp;&amp;<br>			args.LastLogIndex &gt;= rf.log[<span class="hljs-built_in">len</span>(rf.log)<span class="hljs-number">-1</span>].Index)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>就 OK 了。</p>
 <p>还有 <code>rf.replicatorCond[peer].L.Lock()</code> 不要乱用。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-824">https://mit-public-courses-cn-translatio.gitbook.io/mit6-824</a></li>

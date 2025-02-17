@@ -51,6 +51,39 @@
       </tags>
   </entry>
   <entry>
+    <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
+    <url>/internlm/internlm-01/</url>
+    <content><![CDATA[<h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
+<p><img  src="image.png"  ><span class="image-caption">大模型成为热门关键词</span></p>
+<h3 id="大模型成为了发展通用人工智能的重要途径"><a href="#大模型成为了发展通用人工智能的重要途径" class="headerlink" title="大模型成为了发展通用人工智能的重要途径"></a>大模型成为了发展通用人工智能的重要途径</h3><p><img  src="image-20240104194412083.png"  ><span class="image-caption">大模型成为了发展通用人工智能的重要途径</span></p>
+<h2 id="书生·浦语大模型"><a href="#书生·浦语大模型" class="headerlink" title="书生·浦语大模型"></a>书生·浦语大模型</h2><h3 id="开源历程"><a href="#开源历程" class="headerlink" title="开源历程"></a>开源历程</h3><p><img  src="image-20240104194442165.png"  ><span class="image-caption">书生·浦语的开源历程</span></p>
+<p>书生·浦语大模型从 6.7 开始，开源了 InternLM-7B、InternLM-Chat-7B、Lagent、InternLM-20B 等项目。</p>
+<h3 id="系列模型"><a href="#系列模型" class="headerlink" title="系列模型"></a>系列模型</h3><p><img  src="image-20240104194623711.png"  ><span class="image-caption">书生·浦语系列模型</span></p>
+<h3 id="性能比较"><a href="#性能比较" class="headerlink" title="性能比较"></a>性能比较</h3><p><img  src="image-20240104194715248.png"  ><span class="image-caption">性能比较</span></p>
+<p>可以看出，书生·浦语 20B 模型全面领先相近量级的开源模型，并且达到了和 Llama2-70B 相近的水平。</p>
+<h2 id="书生·浦语全链条开源体系"><a href="#书生·浦语全链条开源体系" class="headerlink" title="书生·浦语全链条开源体系"></a>书生·浦语全链条开源体系</h2><h3 id="体系概述"><a href="#体系概述" class="headerlink" title="体系概述"></a>体系概述</h3><p><strong><a href="https://github.com/orgs/InternLM/repositories?type=all">InternLM (github.com)</a></strong></p>
+<p><img  src="image-20240104194911061.png"  ><span class="image-caption">体系概述</span></p>
+<h3 id="数据开源"><a href="#数据开源" class="headerlink" title="数据开源"></a>数据开源</h3><p><img  src="image-20240104194948553.png"  ><span class="image-caption">数据开源</span></p>
+<h3 id="预训练开源"><a href="#预训练开源" class="headerlink" title="预训练开源"></a>预训练开源</h3><p><img  src="image-20240104195041865.png"  ><span class="image-caption">预训练开源</span></p>
+<h3 id="微调开源"><a href="#微调开源" class="headerlink" title="微调开源"></a>微调开源</h3><p><strong><a href="https://github.com/InternLM/xtuner">InternLM/xtuner: A toolkit for efficiently fine-tuning LLM (InternLM, Llama, Baichuan, Qwen, ChatGLM) (github.com)</a></strong></p>
+<p><img  src="image-20240104195250624.png"  ><span class="image-caption">微调开源</span></p>
+<h3 id="评测开源"><a href="#评测开源" class="headerlink" title="评测开源"></a>评测开源</h3><p><strong><a href="https://github.com/open-compass/OpenCompass/">open-compass/opencompass: OpenCompass is an LLM evaluation platform, supporting a wide range of models (LLaMA, LLaMa2, ChatGLM2, ChatGPT, Claude, etc) over 50+ datasets. (github.com)</a></strong></p>
+<p><img  src="image-20240104195322676.png"  ><span class="image-caption">评测开源-题目类型</span></p>
+<p><img  src="image-20240104195342281.png"  ><span class="image-caption">评测开源-OpenCompass</span></p>
+<p><img  src="image-20240104195354357.png"  ><span class="image-caption">OpenCompass 架构</span></p>
+<h3 id="部署开源"><a href="#部署开源" class="headerlink" title="部署开源"></a>部署开源</h3><p><strong><a href="https://github.com/InternLM/lmdeploy">InternLM/lmdeploy: LMDeploy is a toolkit for compressing, deploying, and serving LLMs. (github.com)</a></strong></p>
+<p><img  src="image-20240104195614821.png"  ><span class="image-caption">部署开源</span></p>
+<h3 id="智能体开源"><a href="#智能体开源" class="headerlink" title="智能体开源"></a>智能体开源</h3><p><strong><a href="https://github.com/InternLM/lagent">InternLM/lagent: A lightweight framework for building LLM-based agents (github.com)</a></strong></p>
+<p><img  src="image-20240104195658280.png"  ><span class="image-caption">智能体开源</span></p>
+<h3 id="智能体工具箱"><a href="#智能体工具箱" class="headerlink" title="智能体工具箱"></a>智能体工具箱</h3><p><strong><a href="https://github.com/InternLM/agentlego">InternLM/agentlego: Enhance LLM agents with versatile tool APIs (github.com)</a></strong></p>
+<p><img  src="image-20240104195750076.png"  ><span class="image-caption">智能体工具箱</span></p>
+<h2 id="从模型到应用"><a href="#从模型到应用" class="headerlink" title="从模型到应用"></a>从模型到应用</h2><p><img  src="image-20240104194844022.png"  ><span class="image-caption">如何从模型到应用</span></p>
+]]></content>
+      <categories>
+        <category>internlm</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Internlm-02-浦语大模型趣味 Demo</title>
     <url>/internlm/internlm-02/</url>
     <content><![CDATA[<h1 id="浦语大模型趣味-Demo"><a href="#浦语大模型趣味-Demo" class="headerlink" title="浦语大模型趣味 Demo"></a>浦语大模型趣味 Demo</h1><h2 id="大模型及-InternLM-模型简介"><a href="#大模型及-InternLM-模型简介" class="headerlink" title="大模型及 InternLM 模型简介"></a>大模型及 InternLM 模型简介</h2><h3 id="什么是大模型"><a href="#什么是大模型" class="headerlink" title="什么是大模型"></a>什么是大模型</h3><p>大模型是指在机器学习或人工智能领域中具有巨大参数数量和强大计算能力的模型。它们利用海量数据进行训练，拥有数十亿甚至数千亿个参数。大模型的崛起归因于数据量增长、计算能力提升和算法优化等因素。它们在自然语言处理、计算机视觉、语音识别等任务中展现出惊人性能，常采用深度神经网络结构，如Transformer、BERT、GPT等。</p>
@@ -93,39 +126,6 @@
 <p><img  src="灵笔-2.png"  ><span class="image-caption">浦语·灵笔效果展示2</span></p>
 <p><img  src="灵笔-3.png"  ><span class="image-caption">浦语·灵笔效果展示3</span></p>
 <h2 id="huggingface-hub-下载文件"><a href="#huggingface-hub-下载文件" class="headerlink" title="huggingface_hub 下载文件"></a>huggingface_hub 下载文件</h2><p><img  src="huggingface_hub_download.png"  ><span class="image-caption">使用 huggingface_hub 库下载文件</span></p>
-]]></content>
-      <categories>
-        <category>internlm</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
-    <url>/internlm/internlm-01/</url>
-    <content><![CDATA[<h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
-<p><img  src="image.png"  ><span class="image-caption">大模型成为热门关键词</span></p>
-<h3 id="大模型成为了发展通用人工智能的重要途径"><a href="#大模型成为了发展通用人工智能的重要途径" class="headerlink" title="大模型成为了发展通用人工智能的重要途径"></a>大模型成为了发展通用人工智能的重要途径</h3><p><img  src="image-20240104194412083.png"  ><span class="image-caption">大模型成为了发展通用人工智能的重要途径</span></p>
-<h2 id="书生·浦语大模型"><a href="#书生·浦语大模型" class="headerlink" title="书生·浦语大模型"></a>书生·浦语大模型</h2><h3 id="开源历程"><a href="#开源历程" class="headerlink" title="开源历程"></a>开源历程</h3><p><img  src="image-20240104194442165.png"  ><span class="image-caption">书生·浦语的开源历程</span></p>
-<p>书生·浦语大模型从 6.7 开始，开源了 InternLM-7B、InternLM-Chat-7B、Lagent、InternLM-20B 等项目。</p>
-<h3 id="系列模型"><a href="#系列模型" class="headerlink" title="系列模型"></a>系列模型</h3><p><img  src="image-20240104194623711.png"  ><span class="image-caption">书生·浦语系列模型</span></p>
-<h3 id="性能比较"><a href="#性能比较" class="headerlink" title="性能比较"></a>性能比较</h3><p><img  src="image-20240104194715248.png"  ><span class="image-caption">性能比较</span></p>
-<p>可以看出，书生·浦语 20B 模型全面领先相近量级的开源模型，并且达到了和 Llama2-70B 相近的水平。</p>
-<h2 id="书生·浦语全链条开源体系"><a href="#书生·浦语全链条开源体系" class="headerlink" title="书生·浦语全链条开源体系"></a>书生·浦语全链条开源体系</h2><h3 id="体系概述"><a href="#体系概述" class="headerlink" title="体系概述"></a>体系概述</h3><p><strong><a href="https://github.com/orgs/InternLM/repositories?type=all">InternLM (github.com)</a></strong></p>
-<p><img  src="image-20240104194911061.png"  ><span class="image-caption">体系概述</span></p>
-<h3 id="数据开源"><a href="#数据开源" class="headerlink" title="数据开源"></a>数据开源</h3><p><img  src="image-20240104194948553.png"  ><span class="image-caption">数据开源</span></p>
-<h3 id="预训练开源"><a href="#预训练开源" class="headerlink" title="预训练开源"></a>预训练开源</h3><p><img  src="image-20240104195041865.png"  ><span class="image-caption">预训练开源</span></p>
-<h3 id="微调开源"><a href="#微调开源" class="headerlink" title="微调开源"></a>微调开源</h3><p><strong><a href="https://github.com/InternLM/xtuner">InternLM/xtuner: A toolkit for efficiently fine-tuning LLM (InternLM, Llama, Baichuan, Qwen, ChatGLM) (github.com)</a></strong></p>
-<p><img  src="image-20240104195250624.png"  ><span class="image-caption">微调开源</span></p>
-<h3 id="评测开源"><a href="#评测开源" class="headerlink" title="评测开源"></a>评测开源</h3><p><strong><a href="https://github.com/open-compass/OpenCompass/">open-compass/opencompass: OpenCompass is an LLM evaluation platform, supporting a wide range of models (LLaMA, LLaMa2, ChatGLM2, ChatGPT, Claude, etc) over 50+ datasets. (github.com)</a></strong></p>
-<p><img  src="image-20240104195322676.png"  ><span class="image-caption">评测开源-题目类型</span></p>
-<p><img  src="image-20240104195342281.png"  ><span class="image-caption">评测开源-OpenCompass</span></p>
-<p><img  src="image-20240104195354357.png"  ><span class="image-caption">OpenCompass 架构</span></p>
-<h3 id="部署开源"><a href="#部署开源" class="headerlink" title="部署开源"></a>部署开源</h3><p><strong><a href="https://github.com/InternLM/lmdeploy">InternLM/lmdeploy: LMDeploy is a toolkit for compressing, deploying, and serving LLMs. (github.com)</a></strong></p>
-<p><img  src="image-20240104195614821.png"  ><span class="image-caption">部署开源</span></p>
-<h3 id="智能体开源"><a href="#智能体开源" class="headerlink" title="智能体开源"></a>智能体开源</h3><p><strong><a href="https://github.com/InternLM/lagent">InternLM/lagent: A lightweight framework for building LLM-based agents (github.com)</a></strong></p>
-<p><img  src="image-20240104195658280.png"  ><span class="image-caption">智能体开源</span></p>
-<h3 id="智能体工具箱"><a href="#智能体工具箱" class="headerlink" title="智能体工具箱"></a>智能体工具箱</h3><p><strong><a href="https://github.com/InternLM/agentlego">InternLM/agentlego: Enhance LLM agents with versatile tool APIs (github.com)</a></strong></p>
-<p><img  src="image-20240104195750076.png"  ><span class="image-caption">智能体工具箱</span></p>
-<h2 id="从模型到应用"><a href="#从模型到应用" class="headerlink" title="从模型到应用"></a>从模型到应用</h2><p><img  src="image-20240104194844022.png"  ><span class="image-caption">如何从模型到应用</span></p>
 ]]></content>
       <categories>
         <category>internlm</category>
@@ -3480,7 +3480,10 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <p>按照论文的写法应该是：<code>return rf.role == Leader &amp;&amp; rf.nextIndex[peer] &lt;= rf.log[len(rf.log)-1].Index</code></p>
 <p>但是过不去 <code>TestFailAgree3B</code> 以及 <code>TestRejoin3B</code>、<code>TestBackup3B</code>，除此之外都是 ok 的。</p>
 <p><code>TestRejoin3B</code> 过不去原因是 <code>apply error: commit index=3 server=1 105 != server=2 104</code>，但是有时候能过去。</p>
-<p>修改了 <code>rf.commitIndex = min(args.LeaderCommit, args.PrevLogIndex+len(args.Entries))</code> 之后，剩余 <code>TestFailAgree3B</code> 和 <code>TestBackup3B</code></p>
+<p>修改了 <code>rf.commitIndex = min(args.LeaderCommit, args.PrevLogIndex+len(args.Entries))</code> 之后，剩余 <code>TestFailAgree3B</code> 和 <code>TestBackup3B</code>（测试了好几次能过去了）</p>
+<p>TestFailAgree3B 是相互之间都不给对方投票，因为 candidate’s older log。原因是上面的 isLogLeastAsReceiver 写错了，改写成</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(rf *Raft)</span></span> isLogLeastAsReceiver(args *RequestVoteArgs) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> args.LastLogTerm &gt; rf.log[<span class="hljs-built_in">len</span>(rf.log)<span class="hljs-number">-1</span>].Term ||<br>		(args.LastLogTerm == rf.log[<span class="hljs-built_in">len</span>(rf.log)<span class="hljs-number">-1</span>].Term &amp;&amp;<br>			args.LastLogIndex &gt;= rf.log[<span class="hljs-built_in">len</span>(rf.log)<span class="hljs-number">-1</span>].Index)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>就 OK 了。</p>
 <p>还有 <code>rf.replicatorCond[peer].L.Lock()</code> 不要乱用。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-824">https://mit-public-courses-cn-translatio.gitbook.io/mit6-824</a></li>
