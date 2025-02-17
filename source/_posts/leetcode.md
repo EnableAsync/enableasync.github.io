@@ -1491,6 +1491,280 @@ class Solution {
 }
 ```
 
+# 图论
+
+## 岛屿数量
+
+```java
+class Solution {
+    private int count = 0;
+    private boolean[][] visited;
+    private int[][] dirs = {
+        {0, 1},
+        {0, -1},
+        {1, 0},
+        {-1, 0}
+    };
+
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        visited = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (!visited[i][j] && grid[i][j] == '1') {
+                    dfs(grid, i, j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    // 访问所有相邻的岛屿
+    // x是行，y是列
+    private void dfs(char[][] grid, int x, int y) {    
+        visited[x][y] = true;
+        for (int i = 0; i < 4; i++) { // 访问所有相邻的
+            int dirX = dirs[i][0], dirY = dirs[i][1];
+            int m = grid.length;
+            int n = grid[0].length;
+            int newX = x + dirX, newY = y + dirY;
+            if (newX >= 0 && newX < m && newY >= 0 && newY < n && !visited[newX][newY] && grid[newX][newY] == '1') {
+                visited[newX][newY] = true; // 原有的连通岛屿都设置成已经访问
+                dfs(grid, newX, newY);
+            }
+        }
+    }
+}
+```
+
+## 腐烂的橘子
+
+### 单源 bfs
+
+不要改动橘子矩阵，新增一个时间矩阵表示橘子的情况。
+
+bfs，如果时间更小则更新时间矩阵。
+
+这个是单源 bfs，需要对于每个腐烂的橘子都进行 bfs。
+
+```java
+class Solution {
+    private boolean[][] visited;
+    private int[][] dirs = {
+        {-1, 0},
+        {1, 0},
+        {0, 1},
+        {0, -1},
+    }, allTime;
+    private int m, n;
+
+    public int orangesRotting(int[][] grid) {
+        m = grid.length;
+        n = grid[0].length;
+        visited = new boolean[m][n];
+        allTime = new int[m][n];
+        for (int[] row : allTime) {
+            Arrays.fill(row, 0x3f3f3f3f);
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                bfs(grid, i, j);
+            }
+        }
+        int maxTime = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] != 0 && allTime[i][j] == 0x3f3f3f3f) { // 存在没腐烂的橘子
+                    return -1;
+                } else if (grid[i][j] > 0 && allTime[i][j] != 0x3f3f3f3f) {
+                    maxTime = Math.max(allTime[i][j], maxTime);
+                }
+            }
+        }
+        return maxTime;
+    }
+
+    // 返回当前橘子开始最多要多少时间感染所有可感染的橘子
+    private void bfs(int[][] grid, int row, int col) {
+        if (grid[row][col] != 2) return; // 不是腐烂橘子就不能继续传染
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{row, col, 0});
+        allTime[row][col] = 0;
+        visited[row][col] = true;
+        while (!queue.isEmpty()) {
+            int[] pos = queue.poll();
+            for (int i = 0; i < 4; i++) {
+                if (pos[2] == 0x3f3f3f3f) continue; // 不是腐烂橘子就不能继续传染
+                int newRow = dirs[i][0] + pos[0];
+                int newCol = dirs[i][1] + pos[1];
+                int newTime = 1 + pos[2];
+                if (ok(newRow, newCol, newTime) && grid[newRow][newCol] > 0) {
+                    queue.offer(new int[]{newRow, newCol, newTime});
+                    visited[newRow][newCol] = true;
+                    allTime[newRow][newCol] = newTime;
+                    // grad[newRow][newCol] = 2;
+                }
+            }
+        }
+    }
+
+    private boolean ok(int row, int col, int time) {
+        return row >= 0 && row < m && col >= 0 && col < n && (!visited[row][col] || time < allTime[row][col]);
+    }
+}
+```
+
+### 多源 bfs
+
+把所有腐烂的橘子都放到队列里面，进行多源 bfs，这样就不用每个腐烂橘子都 bfs 了。
+
+```java
+class Solution {
+    private boolean[][] visited;
+    private int[][] dirs = {
+        {-1, 0},
+        {1, 0},
+        {0, 1},
+        {0, -1},
+    }, allTime;
+    private int m, n;
+    Queue<int[]> queue = new LinkedList<>();
+
+    public int orangesRotting(int[][] grid) {
+        m = grid.length;
+        n = grid[0].length;
+        visited = new boolean[m][n];
+        allTime = new int[m][n];
+        for (int[] row : allTime) {
+            Arrays.fill(row, 0x3f3f3f3f);
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 2) {
+                    queue.offer(new int[]{i, j, 0});
+                    allTime[i][j] = 0;
+                    visited[i][j] = true;
+                }
+            }
+        }
+
+        bfs(grid);
+
+        int maxTime = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] != 0 && allTime[i][j] == 0x3f3f3f3f) { // 存在没腐烂的橘子
+                    return -1;
+                } else if (grid[i][j] > 0 && allTime[i][j] != 0x3f3f3f3f) {
+                    maxTime = Math.max(allTime[i][j], maxTime);
+                }
+            }
+        }
+        return maxTime;
+    }
+
+    // 返回当前橘子开始最多要多少时间感染所有可感染的橘子
+    private void bfs(int[][] grid) {
+        while (!queue.isEmpty()) {
+            int[] pos = queue.poll();
+            for (int i = 0; i < 4; i++) {
+                int newRow = dirs[i][0] + pos[0];
+                int newCol = dirs[i][1] + pos[1];
+                int newTime = 1 + pos[2];
+                if (ok(newRow, newCol, newTime) && grid[newRow][newCol] > 0) {
+                    queue.offer(new int[]{newRow, newCol, newTime});
+                    visited[newRow][newCol] = true;
+                    allTime[newRow][newCol] = newTime;
+                }
+            }
+        }
+    }
+
+    private boolean ok(int row, int col, int time) {
+        return row >= 0 && row < m && col >= 0 && col < n && (!visited[row][col] || time < allTime[row][col]);
+    }
+}
+```
+
+## Trie 树
+
+### HashMap 实现
+
+```java
+class Trie {
+    Map<String, Boolean> map = new HashMap<>();
+    Map<String, Boolean> prefixMap = new HashMap<>();
+
+    public Trie() {
+        
+    }
+    
+    public void insert(String word) {
+        for (int i = 1; i <= word.length(); i++) {
+            prefixMap.put(word.substring(0, i), true);
+        }
+        map.put(word, true);
+    }
+    
+    public boolean search(String word) {
+        return map.containsKey(word);
+    }
+    
+    public boolean startsWith(String prefix) {
+        return prefixMap.containsKey(prefix);
+    }
+}
+```
+
+### 正常实现
+
+```java
+class Trie {
+    class TrieNode {
+        Map<Character, TrieNode> children = new HashMap<>();
+        boolean isEnd = false;
+        public TrieNode() {
+            
+        }
+    }
+
+    TrieNode root;
+    public Trie() {
+        root = new TrieNode();
+    }
+    
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            node = node.children.computeIfAbsent(ch, v -> new TrieNode());
+        }
+        node.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            node = node.children.get(ch);
+            if (node == null) return false;
+        }
+        return node.isEnd;
+    }
+    
+    public boolean startsWith(String prefix) {
+        TrieNode node = root;
+        for (char ch : prefix.toCharArray()) {
+            node = node.children.get(ch);
+            if (node == null) return false;
+        }
+        return true;
+    }
+}
+```
+
+
+
 # 回溯
 
 ## 全排列
@@ -1907,7 +2181,7 @@ next 数组：**是一个前缀表，前缀表是用来回退的，它记录了�
 
 ## 最长公共子串
 
-状态转移方程如下：
+状态转移方程如下，dp\[i\]\[j\] 表示字符串 x 以 i 结尾，字符串 y 以 j 结尾的最长公共子串，这样就有了：
 $$
 d p[i][j]=\left\{\begin{array}{l}
 d p[i-1][j-1]+1, \text { 当且仅当 } x[i]=y[j] \\
@@ -2312,6 +2586,8 @@ class Solution {
 ### 四平方和定理
 
 ![image-20250107155619501](/image-20250107155619501.png)
+
+
 
 
 
