@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>January 21, 2025</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>130875</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>152409</span>
     </div>
   </div>
 </section>
@@ -581,6 +581,285 @@
 <p>Q: 如果有并发的get()操作，而同时也有并发的put()操作，get()操作可能会看到不同的值，这是否是个问题？</p>
 <p>A: 在存储系统的上下文中，这通常不是问题。例如，如果我们谈论的值是我的个人资料照片，而两个人在更新照片的同时请求查看它，那么他们看到不同的照片（旧的或新的）是完全合理的。</p>
 <p>一些存储系统提供了更复杂的方案，特别是事务，这使得这种情况更容易处理。“可串行化”是一个提供事务的一致性模型的名称。然而，事务系统比线性化系统更复杂、更慢、更难实现容错。</p>
+<h1 id="Lab-3-Raft-协议"><a href="#Lab-3-Raft-协议" class="headerlink" title="Lab 3: Raft 协议"></a>Lab 3: Raft 协议</h1><h2 id="Raft-锁的使用方法"><a href="#Raft-锁的使用方法" class="headerlink" title="Raft 锁的使用方法"></a>Raft 锁的使用方法</h2><p>如果你在 6.824 Raft 实验中对于锁的使用感到困惑，以下规则和思考方式可能会有所帮助。</p>
+<p>规则 1：当多个 goroutine 使用同一份数据，且至少有一个 goroutine 可能修改该数据时，必须使用锁来防止数据的同时访问。Go 的竞态检测器（race detector）能有效检测此类违规（但对以下其他规则的情况可能无法检测）。</p>
+<p>规则 2：当代码对共享数据进行一系列修改操作，且其他 goroutine 在操作中途读取可能导致错误时，必须使用锁包裹整个操作序列。</p>
+<p>示例：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">rf.mu.Lock()<br>rf.currentTerm += <span class="hljs-number">1</span><br>rf.state = Candidate<br>rf.mu.Unlock()<br></code></pre></td></tr></table></figure><br>若其他 goroutine 看到这两个更新中的任意一个单独生效（例如旧状态配新任期，或新任期配旧状态）都会导致错误。因此需要在整个更新序列中持续持有锁。所有使用 <code>rf.currentTerm</code> 或 <code>rf.state</code> 的代码也必须持有锁以确保独占访问。</p>
+<p><code>Lock()</code> 和 <code>Unlock()</code> 之间的代码通常称为”临界区”。程序员选择的锁规则（例如”使用 rf.currentTerm 或 rf.state 时必须持有 rf.mu”）常被称为”锁协议”。</p>
+<p>规则 3：当代码对共享数据进行一系列读取（或读写混合）操作，且该序列中途被修改会导致错误时，必须使用锁包裹整个序列。</p>
+<p>Raft RPC 处理程序中的示例：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">rf.mu.Lock()<br><span class="hljs-keyword">if</span> args.Term &gt; rf.currentTerm &#123;<br>    rf.currentTerm = args.Term<br>&#125;<br>rf.mu.Unlock()<br></code></pre></td></tr></table></figure><br>此代码需要在整个操作序列中持续持有锁。Raft 要求 currentTerm 只能递增不能递减。若允许其他 RPC 处理程序在 if 判断和更新操作之间修改 rf.currentTerm，可能导致任期被错误降低。因此必须在整个序列中持续持有锁，同时所有其他 currentTerm 的使用也必须加锁。</p>
+<p>实际 Raft 代码需要比这些示例更长的临界区。例如，Raft RPC 处理程序可能需要在整个处理过程中持有锁。</p>
+<p>规则 4：在可能引起等待的操作期间持有锁通常是坏习惯，包括：读取 Go 通道、发送到通道、等待定时器、调用 time.Sleep() 或发送 RPC（等待响应）。原因有二：1）等待期间应允许其他 goroutine 继续执行；2）避免死锁。例如两个节点在持有锁时互相发送 RPC，双方的 RPC 处理程序都需要对方持有的锁，导致永久等待。</p>
+<p>等待操作前应先释放锁。若不方便，可创建单独的 goroutine 执行等待。</p>
+<p>规则 5：注意在释放锁后重新获取时的状态假设。这种情况常见于避免持有锁等待的场景。以下发送投票 RPC 的代码是错误的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go">rf.mu.Lock()<br>rf.currentTerm += <span class="hljs-number">1</span><br>rf.state = Candidate<br><span class="hljs-keyword">for</span> &lt;each peer&gt; &#123;<br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        rf.mu.Lock()<br>        args.Term = rf.currentTerm<br>        rf.mu.Unlock()<br>        Call(<span class="hljs-string">&quot;Raft.RequestVote&quot;</span>, &amp;args, ...)<br>        <span class="hljs-comment">// 处理回复...</span><br>    &#125;()<br>&#125;<br>rf.mu.Unlock()<br></code></pre></td></tr></table></figure>
+<p>问题在于 args.Term 可能与发起选举时的 rf.currentTerm 不同。从创建 goroutine 到实际读取 currentTerm 可能经过多轮任期更迭，节点可能已不再是候选人。修正方法是让新 goroutine 使用外层代码在持有锁时制作的 currentTerm 副本。类似地，在 Call() 后处理回复时，必须重新获取锁并验证所有相关假设（例如检查 rf.currentTerm 是否在选举决定后发生变化）。</p>
+<p>实践建议</p>
+<p>这些规则的应用可能令人困惑，尤其是规则 2 和 3 中关于”不应被其他 goroutine 读写打断的操作序列”的界定。如何识别这些序列？如何确定序列的起止？</p>
+<p>方法一：从无锁代码开始，仔细分析需要加锁的位置。这种方法需要对并发代码正确性进行复杂推理。</p>
+<p>更实用的方法：首先注意到如果完全没有并发（无并行执行的 goroutine），就不需要锁。但 RPC 系统创建的 handler goroutine 和为避免等待而创建的 RPC 发送 goroutine 强制引入了并发。可以通过在以下位置获取锁来消除并发：</p>
+<ul>
+<li>RPC handlers 的起始处</li>
+<li>Make() 中创建的后台 goroutine 的起始处<br>并在这些 goroutine 完全执行完毕返回时才释放锁。这种锁协议确保没有真正的并行执行，从而避免违反规则 1-3 和 5。当每个 goroutine 的代码在单线程环境下正确时，用锁抑制并发后仍能保持正确。</li>
+</ul>
+<p>但规则 4 的问题仍然存在。因此下一步需要找出所有等待操作的位置，谨慎地添加锁释放/重新获取（或创建新 goroutine），特别注意重新获取锁后要重新验证状态假设。这种方法可能比直接识别临界区更容易实现正确性。</p>
+<p>（注：这种方法的代价是牺牲多核并行执行的性能优势——代码可能在不需要时持有锁，从而不必要地禁止并行执行。但单个 Raft 节点内部本身也没有太多 CPU 并行机会。）</p>
+<h2 id="Raft-结构设计建议"><a href="#Raft-结构设计建议" class="headerlink" title="Raft 结构设计建议"></a>Raft 结构设计建议</h2><p>一个 Raft 实例需要处理外部事件（Start () 调用、AppendEntries 和 RequestVote RPC、RPC 回复）以及执行周期性任务（选举和心跳）。以下是关于代码结构的若干建议：</p>
+<ol>
+<li>状态管理</li>
+</ol>
+<ul>
+<li>Raft 实例包含状态数据（日志、当前索引等），这些状态需要通过锁机制在并发协程中安全更新</li>
+<li>Go 官方文档建议使用共享数据结构配合锁机制，而非通道消息传递，这种方式对 Raft 实现更为直接</li>
+</ul>
+<ol>
+<li>时间驱动任务</li>
+</ol>
+<ul>
+<li>领导者需要发送心跳</li>
+<li>其他节点在超时未收到心跳时需要发起选举</li>
+<li>建议为每个任务分配独立的长运行协程，而非合并到单一协程</li>
+</ul>
+<ol>
+<li>选举超时管理</li>
+</ol>
+<ul>
+<li>推荐在 Raft 结构体中维护 “最后收到心跳时间” 变量</li>
+<li>选举超时协程应周期性检查（建议使用小常量参数的 time.Sleep ()）</li>
+<li>避免使用 time.Ticker 和 time.Timer（容易出错）</li>
+</ul>
+<ol>
+<li>日志提交协程</li>
+</ol>
+<ul>
+<li>创建独立的长运行协程通过 applyCh 按顺序发送已提交日志</li>
+<li>必须保持单协程发送以确保顺序性</li>
+<li>使用 sync.Cond 条件变量通知该协程更新 commitIndex</li>
+</ul>
+<ol>
+<li>RPC 处理</li>
+</ol>
+<ul>
+<li>每个 RPC 应在其专属协程中发送和处理回复，原因：<br>a) 避免不可达节点阻塞多数响应收集<br>b) 确保心跳和选举定时器持续运行</li>
+<li>RPC 处理应在同一协程完成，而非通过通道传递回复</li>
+</ul>
+<ol>
+<li>网络注意事项</li>
+</ol>
+<ul>
+<li>网络可能延迟或重排 RPC 及其响应</li>
+<li>需注意图 2 中的 RPC 处理规范（如忽略旧 term 的 RPC）</li>
+<li>领导者处理响应时需检查：<br>a) term 是否在发送后发生变化<br>b) 并发 RPC 响应可能改变领导状态（如 nextIndex）</li>
+</ul>
+<p>关键实现提示：</p>
+<ul>
+<li>保持 RPC 处理程序的幂等性</li>
+<li>注意状态变更的原子性操作</li>
+<li>合理使用读写锁优化性能</li>
+<li>实现完善的日志压缩机制</li>
+<li>注意边界条件处理（如日志回滚场景）</li>
+</ul>
+<h2 id="给学生的参考"><a href="#给学生的参考" class="headerlink" title="给学生的参考"></a>给学生的参考</h2><h3 id="学生指南：Raft-（阅读需-30-分钟）"><a href="#学生指南：Raft-（阅读需-30-分钟）" class="headerlink" title="学生指南：Raft （阅读需 30 分钟）"></a>学生指南：Raft （阅读需 30 分钟）</h3><p>发布于 2016 年 3 月 16 日，分享在黑客新闻（Hacker News）、推特（Twitter）、龙虾网（Lobsters）<br>在过去的几个月里，我一直担任麻省理工学院 6.824 分布式系统课程的助教。该课程传统上有一系列基于 Paxos 共识算法的实验，但今年，我们决定改用 Raft 算法。Raft 旨在 “易于理解”，我们希望这一改变能让学生们的学习过程更轻松。</p>
+<p>这篇文章以及配套的《教师指南：Raft》记录了我们使用 Raft 的历程，希望对 Raft 协议的实现者以及试图更好理解 Raft 内部原理的学生有所帮助。如果你在寻找 Paxos 与 Raft 的比较，或者对 Raft 进行更具教学意义的分析，你应该去阅读《教师指南》。本文末尾列出了 6.824 课程学生常问的问题及答案。如果你遇到的问题未在本文主体内容中列出，可以查看问答部分。这篇文章篇幅较长，但其中所讲的都是很多 6.824 课程的学生（以及助教）实际遇到的问题，值得一读。</p>
+<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>在深入探讨 Raft 之前，了解一些背景信息可能会有所帮助。6.824 课程过去有一组基于 Paxos 的实验，用 Go 语言编写。选择 Go 语言，一方面是因为它对学生来说易于学习，另一方面它非常适合编写并发、分布式应用（goroutine 特别好用）。在四个实验过程中，学生们构建一个容错的、分片的键值存储系统。第一个实验要求他们构建一个基于共识的日志库，第二个实验在其基础上添加一个键值存储，第三个实验在多个容错集群之间对键空间进行分片，并由一个容错的分片管理器处理配置更改。我们还有第四个实验，学生们必须处理机器的故障和恢复，包括磁盘完好和损坏的情况。这个实验是学生们默认的期末项目。</p>
+<p>今年，我们决定使用 Raft 重写所有这些实验。前三个实验内容不变，但第四个实验被去掉了，因为 Raft 已经内置了持久化和故障恢复功能。本文将主要讨论我们在第一个实验中的经历，因为它与 Raft 直接相关，不过我也会提及在 Raft 之上构建应用（如第二个实验中的情况）。</p>
+<p>对于刚开始了解 Raft 的人来说，用 Raft 协议网站上的文字来描述它最为合适：</p>
+<p>Raft 是一种共识算法，旨在易于理解。它在容错性和性能方面与 Paxos 相当。不同之处在于，它被分解为相对独立的子问题，并且清晰地解决了实际系统所需的所有主要部分。我们希望 Raft 能让更多人了解共识算法，并且这些人能够开发出比目前更多高质量的基于共识的系统。</p>
+<p>像这样的可视化图表很好地概述了该协议的主要组件，相关论文也很好地阐述了为什么需要各个部分。如果你还没有读过 Raft 的扩展论文，在继续阅读本文之前，你应该先去读一下，因为我将假设你对 Raft 有一定程度的熟悉。</p>
+<p>与所有分布式共识协议一样，细节决定成败。在没有故障的稳定状态下，Raft 的行为很容易理解，可以直观地进行解释。例如，从可视化图表中很容易看出，假设没有故障，最终会选出一个领导者，并且最终发送给领导者的所有操作都会被追随者按正确顺序应用。然而，当引入消息延迟、网络分区和服务器故障时，每一个 “如果”“但是” 和 “并且” 都变得至关重要。特别是，由于阅读论文时的误解或疏忽，我们会反复看到一些错误。这个问题并非 Raft 独有，在所有提供正确性保证的复杂分布式系统中都会出现。</p>
+<h4 id="实现-Raft"><a href="#实现-Raft" class="headerlink" title="实现 Raft"></a>实现 Raft</h4><p>Raft 的终极指南在 Raft 论文的图 2 中。该图指定了 Raft 服务器之间交换的每个 RPC 的行为，给出了服务器必须维护的各种不变量，并指定了某些操作应在何时发生。在本文的其余部分，我们会经常提到图 2。必须严格按照它来实现。</p>
+<p>图 2 定义了每个服务器在每种状态下，对于每个传入的 RPC 应该做什么，以及某些其他事情应该在何时发生（例如何时安全地应用日志中的条目）。一开始，你可能会想把图 2 当作一种非正式的指南，读一遍后，就开始编码实现，大致按照它说的去做。这样做，你很快就能让一个基本可用的 Raft 实现运行起来。然后问题就开始出现了。</p>
+<p>实际上，图 2 极其精确，从规范的角度来说，它所做的每一个陈述都应该被视为 “必须”（MUST），而不是 “应该”（SHOULD）。例如，当你收到 AppendEntries 或 RequestVote RPC 时，你可能会合理地重置某个对等节点的选举计时器，因为这两个 RPC 都表明其他某个对等节点要么认为自己是领导者，要么正在试图成为领导者。直观地说，这意味着我们不应该干扰。然而，如果你仔细阅读图 2，它说：</p>
+<p>如果在没有收到当前领导者的 AppendEntries RPC，也没有投票给候选者的情况下，选举超时时间到了，就转换为候选者状态。</p>
+<p>结果证明，这种区别很重要，因为前一种实现方式在某些情况下会显著降低系统的活性。</p>
+<h4 id="细节的重要性"><a href="#细节的重要性" class="headerlink" title="细节的重要性"></a>细节的重要性</h4><p>为了让讨论更具体，让我们考虑一个绊倒了许多 6.824 课程学生的例子。Raft 论文在多个地方提到了心跳 RPC。具体来说，领导者会偶尔（至少每心跳间隔一次）向所有对等节点发送 AppendEntries RPC，以防止它们发起新的选举。如果领导者没有新的条目要发送给某个特定的对等节点，AppendEntries RPC 就不包含任何条目，此时它被视为心跳。</p>
+<p>我们的许多学生认为心跳在某种程度上是 “特殊的”，即当一个对等节点收到心跳时，它应该与处理非心跳的 AppendEntries RPC 区别对待。特别是，许多学生在收到心跳时，只是简单地重置选举计时器，然后返回成功，而不执行图 2 中指定的任何检查。这是极其危险的。通过接受这个 RPC，追随者隐含地告诉领导者，他们的日志与领导者的日志在包括 AppendEntries 参数中 prevLogIndex 所指位置及之前的部分是匹配的。收到回复后，领导者可能会（错误地）决定某个条目已经被复制到了大多数服务器上，并开始提交它。</p>
+<p>许多学生（通常是在修复了上述问题之后）遇到的另一个问题是，在收到心跳时，他们会在 prevLogIndex 之后截断追随者的日志，然后追加 AppendEntries 参数中包含的任何条目。这也是不正确的。我们可以再次参考图 2：</p>
+<p>如果现有条目与新条目冲突（相同索引但不同任期），删除现有条目及其之后的所有条目。</p>
+<p>这里的 “如果” 至关重要。如果追随者拥有领导者发送的所有条目，追随者 “绝不能” 截断其日志。领导者发送的条目之后的任何元素都必须保留。这是因为我们可能收到了领导者过时的 AppendEntries RPC，截断日志意味着 “撤销” 我们可能已经告诉领导者我们日志中已有的条目。</p>
+<h4 id="调试-Raft"><a href="#调试-Raft" class="headerlink" title="调试 Raft"></a>调试 Raft</h4><p>不可避免的是，你的 Raft 实现的第一个版本会有漏洞。第二个版本也会有，第三个、第四个同样如此。一般来说，每个版本的漏洞会比前一个版本少，根据经验，你的大多数漏洞将是由于没有忠实地遵循图 2 导致的。</p>
+<p>在调试 Raft 时，通常有四个主要的漏洞来源：活锁、不正确或不完整的 RPC 处理程序、未遵循规则以及任期混淆。死锁也是一个常见问题，但通常可以通过记录所有的加锁和解锁操作，并找出哪些锁被获取但未释放来进行调试。让我们依次考虑这些问题：</p>
+<h4 id="活锁"><a href="#活锁" class="headerlink" title="活锁"></a>活锁</h4><p>当你的系统出现活锁时，系统中的每个节点都在做一些事情，但总体上，你的节点处于一种无法取得进展的状态。这种情况在 Raft 中很容易发生，尤其是如果你没有严格遵循图 2 的话。有一种活锁场景特别常见：无法选出领导者，或者一旦选出了领导者，其他某个节点就开始选举，迫使刚当选的领导者立即退位。</p>
+<p>出现这种情况的原因有很多，但我们看到许多学生犯了以下几个错误：</p>
+<ol>
+<li>确保你在图 2 指定的时间准确重置选举计时器。具体来说，只有在以下情况下你才应该重新启动选举计时器：a) 你从当前领导者那里收到了 AppendEntries RPC（即，如果 AppendEntries 参数中的任期过时，你不应该重置计时器）；b) 你正在启动一次选举；或者 c) 你投票给了另一个对等节点。</li>
+</ol>
+<p>最后一种情况在不可靠的网络中尤其重要，在这种网络中，追随者很可能拥有不同的日志。在那些情况下，你最终往往会发现只有少数服务器能够得到大多数服务器愿意投票支持。如果你在有人请求你投票时就重置选举计时器，那么拥有过时日志的服务器和拥有更新日志的服务器成为领导者的可能性就会一样大。</p>
+<p>事实上，由于拥有足够新日志的服务器很少，这些服务器不太可能在足够平静的情况下举行选举并当选。如果你遵循图 2 中的规则，拥有更新日志的服务器就不会被过时服务器的选举打断，因此更有可能完成选举并成为领导者。</p>
+<ol>
+<li>按照图 2 中关于何时应该启动选举的指示操作。特别要注意的是，如果你是候选者（即你当前正在进行选举），但选举计时器超时了，你应该启动另一次选举。这对于避免由于 RPC 延迟或丢失导致系统停滞很重要。</li>
+<li>确保在处理传入的 RPC 之前遵循 “服务器规则” 中的第二条规则。第二条规则规定：</li>
+</ol>
+<p>如果 RPC 请求或响应包含的任期 T 大于当前任期，将当前任期设置为 T，转换为追随者状态（§5.1）。</p>
+<p>例如，如果你已经在当前任期内投过票，而传入的 RequestVote RPC 的任期比你高，你应该首先退位并采用他们的任期（从而重置 votedFor），然后处理这个 RPC，这将导致你授予投票。</p>
+<h4 id="不正确的-RPC-处理程序"><a href="#不正确的-RPC-处理程序" class="headerlink" title="不正确的 RPC 处理程序"></a>不正确的 RPC 处理程序</h4><p>尽管图 2 清楚地说明了每个 RPC 处理程序应该做什么，但一些微妙之处仍然很容易被忽略。以下是我们反复看到的一些问题，你在实现过程中应该留意：</p>
+<ol>
+<li>如果某一步说 “回复 false”，这意味着你应该立即回复，并且不执行后续的任何步骤。</li>
+<li>如果你收到一个 AppendEntries RPC，其 prevLogIndex 指向的位置超出了你日志的末尾，你应该像处理存在该条目但任期不匹配的情况一样处理它（即回复 false）。</li>
+<li>即使领导者没有发送任何条目，AppendEntries RPC 处理程序的检查 2 也应该执行。</li>
+<li>AppendEntries 最后一步（#5）中的 min 操作是必要的，并且需要用最后一个新条目的索引来计算。仅仅让从日志中在 lastApplied 和 commitIndex 之间应用条目的函数在到达日志末尾时停止是不够的。这是因为在领导者发送给你的条目之后，你的日志中可能存在与领导者日志不同的条目（而领导者发送的条目与你日志中的条目是匹配的）。由于 #3 规定只有在存在冲突条目时才截断日志，这些不同的条目不会被删除，如果 leaderCommit 超出了领导者发送给你的条目，你可能会应用不正确的条目。</li>
+<li>按照 5.4 节中描述的那样准确实现 “最新日志” 检查非常重要。不要偷懒，只检查日志长度！</li>
+</ol>
+<h4 id="未遵循规则"><a href="#未遵循规则" class="headerlink" title="未遵循规则"></a>未遵循规则</h4><p>虽然 Raft 论文非常明确地说明了如何实现每个 RPC 处理程序，但它也没有具体说明一些规则和不变量的实现方式。这些内容列在图 2 右侧的 “服务器规则” 部分。虽然其中一些内容相当直观，但也有一些需要你非常仔细地设计应用程序，以确保不违反这些规则：</p>
+<ol>
+<li>如果在执行过程中的任何时候，commitIndex 大于 lastApplied，你应该应用特定的日志条目。不一定要立即执行（例如在 AppendEntries RPC 处理程序中），但重要的是要确保只由一个实体来执行这个应用操作。具体来说，你要么需要有一个专门的 “应用器”，要么在这些应用操作周围加锁，这样其他例程就不会也检测到需要应用条目并尝试应用。</li>
+<li>确保你定期检查 commitIndex 是否大于 lastApplied，或者在 commitIndex 更新后（即 matchIndex 更新后）进行检查。例如，如果你在向对等节点发送 AppendEntries 的同时检查 commitIndex，你可能需要等到下一个条目被追加到日志中，才能应用你刚刚发送并得到确认的条目。</li>
+<li>如果领导者发送一个 AppendEntries RPC，它被拒绝，但不是因为日志不一致（这种情况只可能在我们的任期已过时才会发生），那么你应该立即退位，并且不要更新 nextIndex。如果你更新了，当你立即重新当选时，可能会与 nextIndex 的重置发生竞争。</li>
+<li>领导者不允许将 commitIndex 更新到前一个任期（或者，就此而言，未来的任期）的某个位置。因此，正如规则所说，你特别需要检查 log [N].term == currentTerm。这是因为如果条目不是来自当前任期，Raft 领导者不能确定该条目实际上已被提交（并且将来不会被更改）。论文中的图 8 说明了这一点。</li>
+<li>一个常见的混淆来源是 nextIndex 和 matchIndex 之间的区别。特别是，你可能会观察到 matchIndex = nextIndex - 1，然后就干脆不实现 matchIndex。这是不安全的。虽然 nextIndex 和 matchIndex 通常会同时更新为相似的值（具体来说，nextIndex = matchIndex + 1），但它们的用途截然不同。nextIndex 是对领导者与某个给定追随者共享的前缀的猜测。它通常很乐观（我们共享所有内容），只有在收到否定响应时才会向后移动。例如，当一个领导者刚刚当选时，nextIndex 被设置为日志末尾的索引。从某种意义上说，nextIndex 用于提高性能，你只需要向这个对等节点发送这些内容。</li>
+</ol>
+<p>matchIndex 用于保证安全性。它是对领导者与某个给定追随者共享的日志前缀的保守测量。matchIndex 绝不能设置为过高的值，因为这可能会导致 commitIndex 向前移动得太远。这就是为什么 matchIndex 初始化为 -1（即我们认为没有共享前缀），并且只有在追随者对 AppendEntries RPC 做出肯定确认时才会更新。</p>
+<h4 id="任期混淆"><a href="#任期混淆" class="headerlink" title="任期混淆"></a>任期混淆</h4><p>任期混淆是指服务器被来自旧任期的 RPC 弄糊涂。一般来说，在接收 RPC 时，这不是一个问题，因为图 2 中的规则明确说明了当你看到旧任期时应该怎么做。然而，图 2 通常没有讨论当你收到旧的 RPC 回复时应该怎么做。根据经验，我们发现到目前为止最简单的做法是首先记录回复中的任期（它可能高于你当前的任期），然后将当前任期与你在原始 RPC 中发送的任期进行比较。如果两者不同，丢弃回复并返回。只有当两者任期相同时，你才应该继续处理回复。通过一些巧妙的协议推理，这里可能还有进一步的优化方法，但这种方法似乎效果很好。如果不这样做，就会陷入漫长、曲折的困境，充满心血、汗水、泪水和绝望。</p>
+<p>一个相关但不完全相同的问题是，假设从发送 RPC 到收到回复期间，你的状态没有改变。一个很好的例子是，当你收到 RPC 的响应时，设置 matchIndex = nextIndex - 1，或者 matchIndex = len (log)。这是不安全的，因为自从你发送 RPC 以来，这两个值都可能已经被更新了。相反，正确的做法是将 matchIndex 更新为你最初在 RPC 参数中发送的 prevLogIndex + len (entries [])。</p>
+<h4 id="关于优化的题外话"><a href="#关于优化的题外话" class="headerlink" title="关于优化的题外话"></a>关于优化的题外话</h4><p>Raft 论文包含了一些有趣的可选特性。在 6.824 课程中，我们要求学生实现其中两个：日志压缩（第 7 节）和加速日志回溯（第 8 页左上角）。前者对于避免日志无限制增长是必要的，后者对于快速使过时的追随者跟上进度很有用。</p>
+<p>这些特性不属于 “核心 Raft”，因此在论文中没有像主要的共识协议那样受到那么多关注。日志压缩在图 13 中有相当详细的介绍，但如果你读得太随意，可能会忽略一些设计细节：</p>
+<ol>
+<li>对应用状态进行快照时，你需要确保应用状态与 Raft 日志中某个已知索引之后的状态相对应。这意味着应用程序要么需要向 Raft 传达快照对应的索引，要么 Raft 需要在快照完成之前延迟应用额外的日志条目。</li>
+<li>文本没有讨论当服务器崩溃并重新启动且涉及快照时的恢复协议。特别是，如果 Raft 状态和快照是分别提交的，服务器可能会在持久化快照和持久化更新后的 Raft 状态之间崩溃。这是一个问题，因为图 13 中的步骤 7 规定，快照所涵盖的 Raft 日志必须被丢弃。</li>
+</ol>
+<p>如果服务器重新启动时，读取了更新后的快照，但日志是过时的，它可能最终会应用一些已经包含在快照中的日志条目。这是因为 commitIndex 和 lastApplied 没有被持久化，所以 Raft 不知道那些日志条目已经被应用过了。解决这个问题的方法是在 Raft 中引入一个持久状态，记录 Raft 持久化日志中第一个条目的 “实际” 索引对应的值。然后可以将其与加载的快照的 lastIncludedIndex 进行比较，以确定丢弃日志头部的哪些元素。</p>
+<p>加速日志回溯优化的说明非常不详细，可能是因为作者认为对于大多数部署来说它不是必需的。从文本中不清楚客户端返回的冲突索引和任期应该如何被领导者用来确定使用哪个 nextIndex。我们认为作者可能希望你遵循的协议是：</p>
+<ol>
+<li>如果追随者的日志中没有 prevLogIndex，它应该返回 conflictIndex = len (log) 和 conflictTerm = None。</li>
+<li>如果追随者的日志中有 prevLogIndex，但任期不匹配，它应该返回 conflictTerm = log [prevLogIndex].Term，然后在其日志中搜索第一个条目的任期等于 conflictTerm 的索引。</li>
+<li>领导者收到冲突响应后，应该首先在其日志中搜索 conflictTerm。如果它在日志中找到一个具有该任期的条目，它应该将 nextIndex 设置为该任期在其日志中最后一个条目的索引之后的那个索引。</li>
+<li>如果它没有找到具有该任期的条目，它应该将 nextIndex 设置为 conflictIndex。</li>
+</ol>
+<p>一个折中的解决方案是只使用 conflictIndex（忽略 conflictTerm），这简化了实现，但这样领导者有时会向追随者发送比使其跟上进度严格所需更多的日志条目。</p>
+<h3 id="在-Raft-之上构建应用（续）"><a href="#在-Raft-之上构建应用（续）" class="headerlink" title="在 Raft 之上构建应用（续）"></a>在 Raft 之上构建应用（续）</h3><p>在 Raft 之上构建服务（例如 6.824 课程 Raft 实验二中的键值存储）时，服务与 Raft 日志之间的交互可能很难处理得当。本节详细介绍开发过程中的一些方面，你在构建应用程序时可能会发现它们很有用。</p>
+<h4 id="应用客户端操作"><a href="#应用客户端操作" class="headerlink" title="应用客户端操作"></a>应用客户端操作</h4><p>你可能会对如何依据复制日志来实现应用程序感到困惑。一开始，你可能会让服务在每次收到客户端请求时，将该请求发送给领导者，等待 Raft 应用某些内容，执行客户端请求的操作，然后再返回给客户端。虽然这种方式在单客户端系统中可行，但对于并发客户端却不适用。</p>
+<p>相反，服务应该构建为一个状态机，客户端操作会使状态机从一种状态转换到另一种状态。你应该在某个地方设置一个循环，每次获取一个客户端操作（在所有服务器上顺序相同 —— 这就是 Raft 发挥作用的地方），并按顺序将每个操作应用到状态机上。这个循环应该是你代码中唯一接触应用程序状态（6.824 课程中的键值映射）的部分。这意味着面向客户端的 RPC 方法应该只是将客户端的操作提交给 Raft，然后等待这个 “应用循环” 应用该操作。只有当客户端的命令轮到时才执行它，并读取任何返回值。请注意，这也包括读取请求！</p>
+<p>这就引出了另一个问题：你如何知道客户端操作何时完成？在无故障的情况下，这很简单 —— 你只需等待放入日志中的内容返回（即被传递给 apply ()）。当这种情况发生时，你将结果返回给客户端。然而，如果出现故障会怎样呢？例如，客户端最初联系你时你可能是领导者，但此后其他人当选为领导者，而你放入日志中的客户端请求已被丢弃。显然你需要让客户端重试，但你如何知道何时告诉他们出错了呢？</p>
+<p>解决这个问题的一种简单方法是在插入客户端操作时，记录它在 Raft 日志中的位置。一旦该索引处的操作被发送到 apply ()，你就可以根据该索引处出现的操作是否实际上是你放入的操作，来判断客户端操作是否成功。如果不是，则发生了故障，可以向客户端返回错误。</p>
+<h4 id="重复检测"><a href="#重复检测" class="headerlink" title="重复检测"></a>重复检测</h4><p>一旦客户端在遇到错误时重试操作，你就需要某种重复检测机制。例如，如果客户端向你的服务器发送一个 APPEND 请求，没有收到回复，然后又将其重新发送到下一个服务器，你的 apply () 函数需要确保 APPEND 不会被执行两次。为此，你需要为每个客户端请求设置某种唯一标识符，以便你能够识别是否曾经见过，更重要的是，是否应用过某个特定操作。此外，这个状态需要成为你状态机的一部分，以便所有 Raft 服务器都能消除相同的重复操作。</p>
+<p>有很多方法可以分配这样的标识符。一种简单且相当高效的方法是为每个客户端分配一个唯一标识符，然后让它们为每个请求标记一个单调递增的序列号。如果客户端重新发送请求，它会重用相同的序列号。你的服务器跟踪每个客户端它所见过的最新序列号，并且简单地忽略任何它已经见过的操作。</p>
+<h4 id="棘手的边角情况"><a href="#棘手的边角情况" class="headerlink" title="棘手的边角情况"></a>棘手的边角情况</h4><p>如果你的实现遵循上述大致框架，那么至少有两个微妙的问题你很可能会遇到，而且如果不进行一些认真的调试可能很难发现。为你节省一些时间，以下是这两个问题：</p>
+<ol>
+<li><strong>重新出现的索引</strong>：假设你的 Raft 库有某个方法 Start ()，它接受一个命令，并返回该命令在日志中放置的索引（这样你就知道何时返回给客户端，如上文所述）。你可能会认为你永远不会看到 Start () 两次返回相同的索引，或者至少，如果你再次看到相同的索引，那么第一次返回该索引的命令一定失败了。事实证明，即使没有服务器崩溃，这两种情况都不是真的。</li>
+</ol>
+<p>考虑以下有五台服务器 S1 到 S5 的场景。最初，S1 是领导者，其日志为空。</p>
+<ul>
+<li>两个客户端操作（C1 和 C2）到达 S1。</li>
+<li>Start () 为 C1 返回 1，为 C2 返回 2。</li>
+<li>S1 向 S2 发送包含 C1 和 C2 的 AppendEntries，但它的所有其他消息都丢失了。</li>
+<li>S3 站出来成为候选者。</li>
+<li>S1 和 S2 不会投票给 S3，但 S3、S4 和 S5 都会投票，所以 S3 成为领导者。</li>
+<li>另一个客户端请求 C3 进入 S3。</li>
+<li>S3 调用 Start ()（返回 1）。</li>
+<li>S3 向 S1 发送 AppendEntries，S1 从其日志中丢弃 C1 和 C2，并添加 C3。</li>
+<li>S3 在向任何其他服务器发送 AppendEntries 之前失败。</li>
+<li>S1 站出来，由于其日志是最新的，它被选为领导者。</li>
+<li>另一个客户端请求 C4 到达 S1。</li>
+<li>S1 调用 Start ()，返回 2（这也是 Start (C2) 返回的值）。</li>
+<li>S1 的所有 AppendEntries 都被丢弃，S2 站出来。</li>
+<li>S1 和 S3 不会投票给 S2，但 S2、S4 和 S5 都会投票，所以 S2 成为领导者。</li>
+<li>一个客户端请求 C5 进入 S2。</li>
+<li>S2 调用 Start ()，返回 3。</li>
+<li>S2 成功地向所有服务器发送 AppendEntries，S2 通过在下一个心跳中包含更新后的 leaderCommit = 3 向服务器报告。</li>
+<li>由于 S2 的日志是 [C1 C2 C5]，这意味着在索引 2 处提交（并在所有服务器上应用，包括 S1）的条目是 C2。尽管 C4 是最后一个在 S1 返回索引 2 的客户端操作。</li>
+</ul>
+<ol>
+<li><strong>四路死锁</strong>：发现这个问题的功劳全归于 Steven Allen，他是 6.824 课程的另一位助教。他发现了以下这种在基于 Raft 构建应用程序时很容易陷入的棘手四路死锁。</li>
+</ol>
+<p>无论你的 Raft 代码如何构建，它可能都有一个类似 Start () 的函数，允许应用程序向 Raft 日志添加新命令。它可能还有一个循环，当 commitIndex 更新时，对日志中 lastApplied 和 commitIndex 之间的每个元素调用应用程序的 apply ()。这些例程可能都需要获取某个锁 a。在你基于 Raft 的应用程序中，你可能在 RPC 处理程序的某个地方调用 Raft 的 Start () 函数，并且在其他某个地方有一些代码，每当 Raft 应用一个新的日志条目时就会收到通知。由于这两者需要通信（即 RPC 方法需要知道它放入日志中的操作何时完成），它们可能都需要获取某个锁 b。</p>
+<p>在 Go 语言中，这四个代码段可能看起来像这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a *App)</span></span> RPC(args <span class="hljs-keyword">interface</span>&#123;&#125;, reply <span class="hljs-keyword">interface</span>&#123;&#125;) &#123;<br>    <span class="hljs-comment">//...</span><br>    a.mutex.Lock()<br>    i := a.raft.Start(args)<br>    <span class="hljs-comment">// 更新一些数据结构，以便apply知道稍后通知我们</span><br>    a.mutex.Unlock()<br>    <span class="hljs-comment">// 等待apply通知我们</span><br>    <span class="hljs-keyword">return</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Raft)</span></span> Start(cmd <span class="hljs-keyword">interface</span>&#123;&#125;) <span class="hljs-type">int</span> &#123;<br>    r.mutex.Lock()<br>    <span class="hljs-comment">// 执行操作以就这个新命令达成共识</span><br>    <span class="hljs-comment">// 在日志中存储cmd被放置的索引</span><br>    r.mutex.Unlock()<br>    <span class="hljs-keyword">return</span> index<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a *App)</span></span> apply(index <span class="hljs-type">int</span>, cmd <span class="hljs-keyword">interface</span>&#123;&#125;) &#123;<br>    a.mutex.Lock()<br>    <span class="hljs-keyword">switch</span> cmd := cmd.(<span class="hljs-keyword">type</span>) &#123;<br>    <span class="hljs-keyword">case</span> GetArgs:<br>        <span class="hljs-comment">// 执行get操作</span><br>        <span class="hljs-comment">// 查看谁在监听这个索引</span><br>        <span class="hljs-comment">// 用操作结果通知他们所有人</span><br>    <span class="hljs-comment">//...</span><br>    &#125;<br>    a.mutex.Unlock()<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Raft)</span></span> AppendEntries(...) &#123;<br>    <span class="hljs-comment">//...</span><br>    r.mutex.Lock()<br>    <span class="hljs-comment">//...</span><br>    <span class="hljs-keyword">for</span> r.lastApplied &lt; r.commitIndex &#123;<br>      r.lastApplied++<br>      r.app.apply(r.lastApplied, r.log[r.lastApplied])<br>    &#125;<br>    <span class="hljs-comment">//...</span><br>    r.mutex.Unlock()<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>现在考虑如果系统处于以下状态：</p>
+<ul>
+<li>App.RPC 刚刚获取了 a.mutex 并调用了 Raft.Start。</li>
+<li>Raft.Start 正在等待获取 r.mutex。</li>
+<li>Raft.AppendEntries 持有 r.mutex，并且刚刚调用了 App.apply。</li>
+</ul>
+<p>我们现在就出现了死锁，因为：</p>
+<ul>
+<li>Raft.AppendEntries 在 App.apply 返回之前不会释放锁。</li>
+<li>App.apply 在获取 a.mutex 之前无法返回。</li>
+<li>a.mutex 在 App.RPC 返回之前不会被释放。</li>
+<li>App.RPC 在 Raft.Start 返回之前不会返回。</li>
+<li>Raft.Start 在获取 r.mutex 之前无法返回。</li>
+<li>Raft.Start 必须等待 Raft.AppendEntries。</li>
+</ul>
+<p>有几种方法可以解决这个问题。最简单的方法是在 App.RPC 中调用 a.raft.Start 之后获取 a.mutex。然而，这意味着在 App.RPC 有机会记录它希望被通知之前，App.apply 可能会被调用处理 App.RPC 刚刚调用 Raft.Start 的操作。另一种可能产生更简洁设计的方案是，让一个单独的、专门的线程从 Raft 调用 r.app.apply。这个线程可以在每次 commitIndex 更新时收到通知，然后在应用时就不需要持有锁，从而打破死锁。</p>
+<h2 id="Raft-3A-实现-leader-选举"><a href="#Raft-3A-实现-leader-选举" class="headerlink" title="Raft 3A. 实现 leader 选举"></a>Raft 3A. 实现 leader 选举</h2><ul>
+<li>leader election</li>
+<li>heartbeats (<code>AppendEntries</code> RPCs with no log entries)</li>
+</ul>
+<h3 id="leader-election"><a href="#leader-election" class="headerlink" title="leader election"></a>leader election</h3><ul>
+<li>Reply false if term &lt; currentTerm</li>
+<li>If votedFor is null or candidateId, and candidate’s log is at least as up-to-date as receiver’s log, grant vote</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java">func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) &#123;<br>	<span class="hljs-comment">// Your code here (3A, 3B).</span><br>	rf.mu.Lock()<br>	Debug(dVote, <span class="hljs-string">&quot;S%d receive RequestVote &lt;- S%d at T%d&quot;</span>, rf.me, args.CandidateId, args.Term)<br>	term := args.Term<br>	<span class="hljs-keyword">if</span> term &lt; rf.currentTerm &#123;<br>		reply.Term = rf.currentTerm<br>		reply.VoteGranted = <span class="hljs-literal">false</span><br>		<span class="hljs-title function_">Debug</span><span class="hljs-params">(dVote, <span class="hljs-string">&quot;S%d reject RequestVote -&gt; S%d at T%d&quot;</span>, rf.me, args.CandidateId, args.Term)</span><br>		rf.mu.Unlock()<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-keyword">if</span> (rf.votedFor == -<span class="hljs-number">1</span> || rf.votedFor == args.CandidateId) &amp;&amp;<br>		args.LastLogTerm &gt;= rf.log[len(rf.log)-<span class="hljs-number">1</span>].Term &amp;&amp;<br>		args.LastLogIndex &gt;= rf.log[len(rf.log)-<span class="hljs-number">1</span>].Index &#123;<br>		reply.Term = rf.currentTerm<br>		reply.VoteGranted = <span class="hljs-literal">true</span><br>		rf.votedFor = args.CandidateId<br>		<span class="hljs-title function_">Debug</span><span class="hljs-params">(dVote, <span class="hljs-string">&quot;S%d grant RequestVote -&gt; S%d at T%d&quot;</span>, rf.me, args.CandidateId, args.Term)</span><br>		rf.mu.Unlock()<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	rf.mu.Unlock()<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="heartbeats"><a href="#heartbeats" class="headerlink" title="heartbeats"></a>heartbeats</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java">func (rf *Raft) broadcastHeartbeat() &#123;<br>	<span class="hljs-keyword">for</span> i := range rf.peers &#123;<br>		<span class="hljs-keyword">if</span> i == rf.me &#123;<br>			<span class="hljs-keyword">continue</span><br>		&#125;<br>		Debug(dLeader, <span class="hljs-string">&quot;S%d send heartbeat -&gt; S%d at T%d&quot;</span>, rf.me, i, rf.currentTerm)<br>		args := &amp;AppendEntriesArgs&#123;<br>			LeaderId:     rf.me,<br>			PrevLogIndex: rf.log[rf.nextIndex[i]-<span class="hljs-number">1</span>].Index,<br>			PrevLogTerm:  rf.log[rf.nextIndex[i]-<span class="hljs-number">1</span>].Term,<br>			LeaderCommit: rf.commitIndex,<br>			Term:         rf.currentTerm,<br>		&#125;<br>		go <span class="hljs-title function_">func</span><span class="hljs-params">(i <span class="hljs-type">int</span>)</span> &#123; <span class="hljs-comment">// rpc AppendEntries and handle reply</span><br>			reply := AppendEntriesReply&#123;&#125;<br>			<span class="hljs-keyword">if</span> ok := rf.sendAppendEntries(i, args, &amp;reply); ok &#123;<br>				rf.mu.Lock()<br>				Debug(dLeader, <span class="hljs-string">&quot;S%d send heartbeat -&gt; S%d&quot;</span>, rf.me, i)<br>				rf.mu.Unlock()<br>			&#125;<br>		&#125;(i)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java">func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) &#123;<br>	rf.mu.Lock()<br>	<span class="hljs-comment">// Debug(dLog, &quot;S%d receive AppendEntries(%+v) &lt;- S%d at T%d&quot;, rf.me, args, args.LeaderId, rf.currentTerm)</span><br>	<span class="hljs-keyword">if</span> args.Term &lt; rf.currentTerm &#123;<br>		Debug(dLog, <span class="hljs-string">&quot;S%d reject AppendEntries &lt;- S%d at T%d&quot;</span>, rf.me, args.LeaderId, rf.currentTerm)<br>		reply.Success = <span class="hljs-literal">false</span><br>		reply.Term = rf.currentTerm<br>		rf.mu.Unlock()<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-keyword">if</span> args.Term &gt; rf.currentTerm &#123;<br>		Debug(dLog, <span class="hljs-string">&quot;S%d update term to %d at T%d&quot;</span>, rf.me, args.Term, rf.currentTerm)<br>		rf.currentTerm = args.Term<br>		rf.votedFor = -<span class="hljs-number">1</span> <span class="hljs-comment">// reset the voting status in the new term</span><br>		rf.becomeFollower()<br>	&#125;<br>	Debug(dTimer, <span class="hljs-string">&quot;S%d reset election timeout at T%d &lt;- AppendEntries from S%d&quot;</span>, rf.me, rf.currentTerm, args.LeaderId)<br>	rf.resetElectionTime()<br>	<span class="hljs-comment">// log doesn’t contain an entry at prevLogIndex</span><br>	<span class="hljs-keyword">if</span> <span class="hljs-title function_">len</span><span class="hljs-params">(rf.log)</span>-<span class="hljs-number">1</span> &lt; args.PrevLogIndex &amp;&amp;<br>		rf.log[args.PrevLogIndex].Term != args.PrevLogTerm &#123;<br>		reply.Success = <span class="hljs-literal">false</span><br>		reply.Term = rf.currentTerm<br>	&#125;<br>	<span class="hljs-comment">// an existing entry conflict with a new one</span><br>	<span class="hljs-keyword">if</span> rf.log[args.PrevLogIndex].Term != args.PrevLogTerm &#123;<br>	&#125;<br><br>	rf.commitIndex = min(args.LeaderCommit, len(rf.log)-<span class="hljs-number">1</span>)<br>	rf.mu.Unlock()<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="TestInitialElection3A-过不去"><a href="#TestInitialElection3A-过不去" class="headerlink" title="TestInitialElection3A 过不去"></a>TestInitialElection3A 过不去</h3><p>TestInitialElection3A 要注意初始化的时候设置 voteFor = -1，为未投票状态</p>
+<h3 id="TestReElection3A-过不去"><a href="#TestReElection3A-过不去" class="headerlink" title="TestReElection3A 过不去"></a>TestReElection3A 过不去</h3><p>上面的写法能够过去 TestInitialElection3A，但是无法过去 TestReElection3A。</p>
+<p>TestReElection3A 在 3 个节点中选出一个 leader 之后，让 leader disconnected。</p>
+<p>这个时候剩余两个节点，一个节点在等待选举超时时，另外一个节点已经触发了超时，这个时候就能够选出一个新的 leader。</p>
+<p>这里就有一个问题，上一个 term 选出了 old leader，新 term 的候选者是否应该被投票。因为这个时候的 votedFor 还是 old leader。</p>
+<p>这里查看 voteFor 的定义是：candidateId that received vote in current term (or null if none)</p>
+<p><strong>更新了 term 之后，voteFor 也要相应地更新。</strong></p>
+<p><strong>If RPC request or response contains term T &gt; currentTerm: set currentTerm = T, convert to follower</strong></p>
+<p>所以不管是 AppendEntries 还是 RequestVote，只要有更大的 term 就 update。</p>
+<p>更新了上面这条之后整个 3A （leader 选举）就完成了。</p>
+<p>主要包括：</p>
+<ul>
+<li>初始化都是 follower 的情况下的 leader 选举。</li>
+<li>掉线的重新选举。</li>
+<li>7 个节点任意掉线 3 个的选举。</li>
+</ul>
+<h2 id="Raft-3B-实现日志添加"><a href="#Raft-3B-实现日志添加" class="headerlink" title="Raft 3B. 实现日志添加"></a>Raft 3B. 实现日志添加</h2><p><img    class="lazyload" data-original="image-20250216151609443.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">AE RPC</span></p>
+<p><img    class="lazyload" data-original="image-20250216151411190.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">follower 可能出现的日志情况</span></p>
+<h3 id="TestBasicAgree3B"><a href="#TestBasicAgree3B" class="headerlink" title="TestBasicAgree3B"></a>TestBasicAgree3B</h3><p>在网络不可靠的情况下实现最基础的共识算法，为了保证日志匹配属性（如果两个日志包含相同任期和相同index的日志，那么在给定 index 之前的所有 log 都是相同的），需要实现以下两个内容：</p>
+<ul>
+<li>如果不同日志两条目有相同的 index 和 term，那么他们存储相同的命令。</li>
+<li>如果不同日志两条目有相同的 index 和 term，那么所有先前的条目都相同。</li>
+</ul>
+<p>正常运行时，这样就保证了 leader 的日志和 follower 的日志完全一致。但是因为 leader 可能会宕机，这就导致了日志不一致的情况。于是 follower 可能存在以下情况：</p>
+<ul>
+<li>缺少条目</li>
+<li>额外的未提交条目</li>
+<li>上面两者都有</li>
+</ul>
+<p>在 Raft 中，leader 强制 follower 复制自己的日志来保持一致性，于是 follower 的冲突条目将被 leader 给覆盖。</p>
+<p>为了实现安全覆盖，leader 需要知道两个日志中一致的最新一条条目，并删除该条目之后的所有条目，并给 follower 发送所有该条目之后的条目。</p>
+<p>leader 为每个 follower 维护一个 nextIndex 数组，记录要发给 follower 的下一条的条目的 index。</p>
+<p><strong>当首次当选 leader 时，将 nextIndex 初始化为 leader 日志最后一个条目的下一个的 index（也就是假设所有 follower 与 leader 的日志一致，图 7 中就是都是 11）。</strong></p>
+<p>如果 follower 和 leader 的日志不一样，那么下一个 AppendEntries RPC 的一致性检查就会失败（AE RPC 图中的 2、3），在拒绝之后 leader 减少 nextIndex 并重新发送 AE RPC，直到 leader 和 follower 的日志匹配。这种情况下，AE RPC 会成功，并且会删除 follower 中任何冲突的条目，并添加新的条目（如果有的话）。一旦成功之后，leader 和 follower 的日志就会在剩下的 leader term 中都保持一致了。</p>
+<p><strong>一些优化：</strong></p>
+<p>现在 AE RPC 是每次递减 1，然而可以在冲突时，follower 包含冲突的 term 以及该 term 的第一个 index，这样就变成了每次回退一个 term 而不是一个 index。</p>
+<p>作者说这个优化其实是不必要的，因为故障发生的频率较低，不会有多个不一致的条目。</p>
+<p><strong>AppendEntries RPC 实现：</strong></p>
+<p>Reply false if log doesn’t contain an entry at prevLogIndex whose term matches prevLogTerm。</p>
+<p>如果日志中没有包含与 preLogTerm 条目匹配的 preLogIndex 条目，则应答 false。</p>
+<p>如果是 PrevLogTerm 匹配了，但是 PrevLogIndex 不匹配，这种情况 reply false，让 leader 的 nextIndex - 1 就好。这里也可以使用优化。</p>
+<p>If an existing entry conflicts with a new one (same index but different terms), delete the existing entry and all that follow it</p>
+<p>这里是 PrevLogIndex 匹配了，而且 PrevLogIndex 对应的 PrevLogTerm 匹配，但是后续的 term 不匹配，这种情况要删除已有的条目和后续条目。</p>
+<p>总之，要 PrevLogIndex 和 PrevLogTerm 都匹配才会开始在 follower 写日志，PrevLogIndex 和 PrevLogTerm 匹配代表着找到了相同的 log，于是之后的 log 就以 leader 的为准就好。</p>
+<p>PrevLogIndex 和 PrevLogTerm 任意一个不匹配就回退 nextIndex：</p>
+<ul>
+<li>PrevLogIndex 不匹配 nextIndex 就回退到 follower 存在的最大 PrevLogIndex </li>
+<li>PrevLogTerm 不匹配就回退到 follower 和 leader 在 <code>PrevLogTerm</code> 和 <code>PrevLogIndex</code> 都相同的 index。</li>
+</ul>
+<p><strong>handleAppendEntriesReply 实现：</strong></p>
+<p>这里要注意 matchIndex 的更新是 PrevLogIndex + len (Entries) 而不是 matchIndex = len (log) 这种，因为受到 reply 的时候，log 已经被改变了。</p>
+<p>然后要注意如果用了条件变量，要根据需要更新条件变量，否则不会启动日志复制。</p>
+<p>同时要注意 follower 以 leader 为准，只要 follower 收到 leader 的 AppendEntries 并 success 之后，就直接添加日志了。</p>
+<p>这样就可以过去了。</p>
+<h2 id="Raft-3B-TestRPCBytes3B"><a href="#Raft-3B-TestRPCBytes3B" class="headerlink" title="Raft 3B. TestRPCBytes3B"></a>Raft 3B. TestRPCBytes3B</h2><p>这个用例测试每个 command 只被发送到 peer 一次。</p>
+<p>把测试用例里面自己添加的 Debug 输出给注释掉就过了。</p>
+<p><code>Debug(dTest, &quot;nCommitted cfg.logs: %+v&quot;, cfg.logs)</code></p>
+<p>原因应该是  rpc 内容太长了，然后我 debug 输出的时候，耗时太久了，然后 follower 以为 leader 寄了，然后重新当选 leader 触发重传了。</p>
+<p>把 debug 的地方换成 <code>time.Sleep(50 * time.Millisecond)</code> 进行测试，发现延时越高，发送的字节数越多。</p>
+<p>很神奇的，添加延时之后，heartbeat rpc 就变成了 AppendEntries RPC。</p>
+<h3 id="Raft-3B-TestFailNoAgree3B"><a href="#Raft-3B-TestFailNoAgree3B" class="headerlink" title="Raft 3B. TestFailNoAgree3B"></a>Raft 3B. TestFailNoAgree3B</h3><h4 id="条件变量标准使用模式："><a href="#条件变量标准使用模式：" class="headerlink" title="条件变量标准使用模式："></a>条件变量标准使用模式：</h4><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">mu.<span class="hljs-constructor">Lock()</span><br><span class="hljs-keyword">for</span> condition_not_met &#123;  <span class="hljs-comment">// 必须用循环检查</span><br>	cond.<span class="hljs-constructor">Wait()</span><br>&#125;<br><span class="hljs-comment">// 操作共享数据</span><br>mu.<span class="hljs-constructor">Unlock()</span><br></code></pre></td></tr></table></figure>
+<h4 id="互斥锁与条件变量的协作："><a href="#互斥锁与条件变量的协作：" class="headerlink" title="互斥锁与条件变量的协作："></a>互斥锁与条件变量的协作：</h4><ol>
+<li><strong>进入临界区</strong>：先获取互斥锁</li>
+<li><strong>条件检查</strong>：在锁保护下检查条件</li>
+<li><strong>等待操作</strong>：<code>Wait()</code> 内部自动释放锁，允许其他协程进入临界区</li>
+<li><strong>被唤醒</strong>：重新自动获取锁，再次检查条件</li>
+<li><strong>退出临界区</strong>：显式释放锁</li>
+</ol>
+<p>Signal 之前也要先 lock。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://mit-public-courses-cn-translatio.gitbook.io/mit6-824">https://mit-public-courses-cn-translatio.gitbook.io/mit6-824</a></li>
 </ol>
@@ -616,7 +895,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Patterns-and-Hints-for-Concurrency-in-Go"><span class="toc-text">Patterns and Hints for Concurrency in Go</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concurrency-and-Parallelism"><span class="toc-text">Concurrency and Parallelism</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Goroutines-for-State"><span class="toc-text">Goroutines for State</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab1-MapReduce"><span class="toc-text">Lab1: MapReduce</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87"><span class="toc-text">论文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce-%E7%BB%93%E6%9E%84"><span class="toc-text">MapReduce 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E9%A1%BA%E5%BA%8F%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">单机顺序式实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">分布式实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-text">运行方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%A6%81%E6%B1%82"><span class="toc-text">一些要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%B8%AE%E5%8A%A9"><span class="toc-text">一些帮助</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第一个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第二个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第三个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第四个版本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GFS"><span class="toc-text">GFS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GFS-%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">GFS 一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#master"><span class="toc-text">master</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#client-%E8%AF%BB%E6%96%87%E4%BB%B6"><span class="toc-text">client 读文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Raft"><span class="toc-text">Raft</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%84%91%E8%A3%82%EF%BC%88Split-Brain%EF%BC%89"><span class="toc-text">1. 脑裂（Split Brain）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%84%91%E8%A3%82%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="toc-text">1. 脑裂的场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%84%91%E8%A3%82%E7%9A%84%E5%8F%91%E7%94%9F"><span class="toc-text">2. 脑裂的发生</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%84%91%E8%A3%82%E7%9A%84%E5%90%8E%E6%9E%9C"><span class="toc-text">3. 脑裂的后果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%81%BF%E5%85%8D%E8%84%91%E8%A3%82%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">4. 避免脑裂的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5. 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%87%E5%8D%8A%E7%A5%A8%E5%86%B3%EF%BC%88Majority-Vote%EF%BC%89"><span class="toc-text">2. 过半票决（Majority Vote）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Raft-%E5%88%9D%E6%8E%A2"><span class="toc-text">3. Raft 初探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Log-%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F"><span class="toc-text">4. Log 同步时序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%97%A5%E5%BF%97"><span class="toc-text">5. 日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%BA%94%E7%94%A8%E5%B1%82%E6%8E%A5%E5%8F%A3"><span class="toc-text">6. 应用层接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Leader%E9%80%89%E4%B8%BE%EF%BC%88Leader-Election%EF%BC%89"><span class="toc-text">7. Leader选举（Leader Election）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%80%89%E4%B8%BE%E5%AE%9A%E6%97%B6%E5%99%A8%EF%BC%88Election-Timer%EF%BC%89"><span class="toc-text">8. 选举定时器（Election Timer）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%8F%AF%E8%83%BD%E7%9A%84%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5"><span class="toc-text">9. 可能的异常情况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-2-Key-Value-Server"><span class="toc-text">Lab 2: Key&#x2F;Value Server</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#intro"><span class="toc-text">intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E5%8C%96"><span class="toc-text">线性化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Patterns-and-Hints-for-Concurrency-in-Go"><span class="toc-text">Patterns and Hints for Concurrency in Go</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concurrency-and-Parallelism"><span class="toc-text">Concurrency and Parallelism</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Goroutines-for-State"><span class="toc-text">Goroutines for State</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab1-MapReduce"><span class="toc-text">Lab1: MapReduce</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87"><span class="toc-text">论文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce-%E7%BB%93%E6%9E%84"><span class="toc-text">MapReduce 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E9%A1%BA%E5%BA%8F%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">单机顺序式实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">分布式实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-text">运行方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%A6%81%E6%B1%82"><span class="toc-text">一些要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%B8%AE%E5%8A%A9"><span class="toc-text">一些帮助</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第一个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第二个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第三个版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E4%B8%AA%E7%89%88%E6%9C%AC"><span class="toc-text">第四个版本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GFS"><span class="toc-text">GFS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GFS-%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">GFS 一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#master"><span class="toc-text">master</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#client-%E8%AF%BB%E6%96%87%E4%BB%B6"><span class="toc-text">client 读文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Raft"><span class="toc-text">Raft</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%84%91%E8%A3%82%EF%BC%88Split-Brain%EF%BC%89"><span class="toc-text">1. 脑裂（Split Brain）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%84%91%E8%A3%82%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="toc-text">1. 脑裂的场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%84%91%E8%A3%82%E7%9A%84%E5%8F%91%E7%94%9F"><span class="toc-text">2. 脑裂的发生</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%84%91%E8%A3%82%E7%9A%84%E5%90%8E%E6%9E%9C"><span class="toc-text">3. 脑裂的后果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%81%BF%E5%85%8D%E8%84%91%E8%A3%82%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">4. 避免脑裂的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5. 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%87%E5%8D%8A%E7%A5%A8%E5%86%B3%EF%BC%88Majority-Vote%EF%BC%89"><span class="toc-text">2. 过半票决（Majority Vote）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Raft-%E5%88%9D%E6%8E%A2"><span class="toc-text">3. Raft 初探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Log-%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F"><span class="toc-text">4. Log 同步时序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%97%A5%E5%BF%97"><span class="toc-text">5. 日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%BA%94%E7%94%A8%E5%B1%82%E6%8E%A5%E5%8F%A3"><span class="toc-text">6. 应用层接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Leader%E9%80%89%E4%B8%BE%EF%BC%88Leader-Election%EF%BC%89"><span class="toc-text">7. Leader选举（Leader Election）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%80%89%E4%B8%BE%E5%AE%9A%E6%97%B6%E5%99%A8%EF%BC%88Election-Timer%EF%BC%89"><span class="toc-text">8. 选举定时器（Election Timer）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%8F%AF%E8%83%BD%E7%9A%84%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5"><span class="toc-text">9. 可能的异常情况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-2-Key-Value-Server"><span class="toc-text">Lab 2: Key&#x2F;Value Server</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#intro"><span class="toc-text">intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E5%8C%96"><span class="toc-text">线性化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-3-Raft-%E5%8D%8F%E8%AE%AE"><span class="toc-text">Lab 3: Raft 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Raft-%E9%94%81%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-text">Raft 锁的使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Raft-%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%BB%BA%E8%AE%AE"><span class="toc-text">Raft 结构设计建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%99%E5%AD%A6%E7%94%9F%E7%9A%84%E5%8F%82%E8%80%83"><span class="toc-text">给学生的参考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E7%94%9F%E6%8C%87%E5%8D%97%EF%BC%9ARaft-%EF%BC%88%E9%98%85%E8%AF%BB%E9%9C%80-30-%E5%88%86%E9%92%9F%EF%BC%89"><span class="toc-text">学生指南：Raft （阅读需 30 分钟）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8-Raft-%E4%B9%8B%E4%B8%8A%E6%9E%84%E5%BB%BA%E5%BA%94%E7%94%A8%EF%BC%88%E7%BB%AD%EF%BC%89"><span class="toc-text">在 Raft 之上构建应用（续）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Raft-3A-%E5%AE%9E%E7%8E%B0-leader-%E9%80%89%E4%B8%BE"><span class="toc-text">Raft 3A. 实现 leader 选举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#leader-election"><span class="toc-text">leader election</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#heartbeats"><span class="toc-text">heartbeats</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TestInitialElection3A-%E8%BF%87%E4%B8%8D%E5%8E%BB"><span class="toc-text">TestInitialElection3A 过不去</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TestReElection3A-%E8%BF%87%E4%B8%8D%E5%8E%BB"><span class="toc-text">TestReElection3A 过不去</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Raft-3B-%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E6%B7%BB%E5%8A%A0"><span class="toc-text">Raft 3B. 实现日志添加</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TestBasicAgree3B"><span class="toc-text">TestBasicAgree3B</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Raft-3B-TestRPCBytes3B"><span class="toc-text">Raft 3B. TestRPCBytes3B</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Raft-3B-TestFailNoAgree3B"><span class="toc-text">Raft 3B. TestFailNoAgree3B</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
   </aside>
 
         
