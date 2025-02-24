@@ -305,7 +305,78 @@ class Solution {
 
 Arrays.equals 可以判断两个数组相等。
 
+# 区间
+
+## 合并区间
+
+先排序，排序之后放入第一个元素，然后判断后续的开头是不是小于第一个元素的结尾，如果是的话就连起来，否则就形成新的区间。
+
+```java
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a1, a2) -> {
+            return a1[0] - a2[0];
+        });
+        List<int[]> ans = new ArrayList<>();
+        ans.add(intervals[0]);
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] > ans.get(ans.size() - 1)[1]) {
+                ans.add(intervals[i]);
+            } else {
+                int right = ans.get(ans.size() - 1)[1];
+                right = Math.max(right, intervals[i][1]);
+                ans.get(ans.size() - 1)[1] = right;
+            }
+        }
+        return ans.toArray(new int[ans.size()][]);
+    }
+}
+```
+
+## 区间列表的交集
+
+因为两个列表里都为不相交且已经排序好的区间，我们可以使用双指针逐个检查重合区域
+
+对于两个区间arr1=[left1,right1]，arr2=[left2,right2]
+判断重合：
+
+若两个区间arr1与arr2相交， 那么重合区域为[max(left1,left2),min(right1,right2)]
+若不相交，则right1<left2或right2<left1， 那么求得的重合区域max(left1,left2)的值会比min(right1,right2)大， 可以通过比较两个值来判断是否重合
+移动指针：
+
+假设right1<right2， 因为区间列表为不相交且已经排序好的， 则arr1不可能与secondList中arr2以后的任何区间相交。 所以每次优先移动当前区间尾段较小的指针 (right2<right1同理)
+若right1==right2， 因为列表各个区间不相交，arr1与arr2都不可能与之后的区间有交集， 可以移动任意一个
+
+```java
+class Solution {
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        List<int[]> ans = new ArrayList();
+        int i = 0, j = 0;
+        int n1 = firstList.length, n2 = secondList.length;
+
+        while (i < n1 && j < n2) {
+            int[] arr1 = firstList[i];
+            int[] arr2 = secondList[j];
+
+            int l = Math.max(arr1[0], arr2[0]);
+            int r = Math.min(arr1[1], arr2[1]);
+
+            if (l <= r) ans.add(new int[]{l, r});
+
+            if (arr1[1] < arr2[1]) i++;
+            else j++;
+
+        }
+
+        return ans.toArray(new int[ans.size()][]);
+    }
+}
+```
+
+
+
 # 链表
+
 链表对于有插入、交换或者删除的操作的时候，一般加一个**虚拟头节点**更好处理。
 
 203.移除链表元素
@@ -1763,13 +1834,118 @@ class Trie {
 }
 ```
 
+## 课程表
+
+- `1 <= numCourses <= 2000`
+- `0 <= prerequisites.length <= 5000`
+
+你这个学期必须选修 `numCourses` 门课程，记为 `0` 到 `numCourses - 1` 。
+
+在选修某些课程之前需要一些先修课程。 先修课程按数组 `prerequisites` 给出，其中 `prerequisites[i] = [ai, bi]` ，表示如果要学习课程 `ai` 则 **必须** 先学习课程 `bi` 。
+
+- 例如，先修课程对 `[0, 1]` 表示：想要学习课程 `0` ，你需要先完成课程 `1` 。
+
+请你判断是否可能完成所有课程的学习？如果可以，返回 `true` ；否则，返回 `false` 。
+
+像是要检测并完成图中是否有环？
+
+拓扑排序的经典题？
+
+我们将每一门课看成一个节点；
+
+如果想要学习课程A之前必须完成课程B，那么我们从B到A连接一条有向边。这样以来，在拓扑排序中，B一定出现在A的前面。
+
+求出该图是否存在拓扑排序，就可以判断是否有一种符合要求的课程学习顺序。事实上，由于求出一种拓扑排序方法的最优时间复杂度为O(n+m)，其中n和m分别是有向图G的节点数和边数，方法见210. 课程表 II 的官方题解。而判断图G是否存在拓扑排序，至少也要对其进行一次完整的遍历，时间复杂度也为O(n+m)。因此不可能存在一种仅判断图是否存在拓扑排序的方法，它的时间复杂度在渐进意义上严格优于O(n+m)。这样一来，我们使用和210. 课程表 II完全相同的方法，但无需使用数据结构记录实际的拓扑排序。为了叙述的完整性，下面的两种方法与210. 课程表 II 的官方题解完全相同，但在「算法」部分后的「优化」部分说明了如何省去对应的数据结构。
+
+代码与下面的 **课程表 II** 相同，如果存在拓扑排序就是 true。
+
+## 课程表 II
+
+### BFS
+
+拓扑排序，bfs 思路，找入度为 0 的节点，放到队列和 ans 里面，并把 uv 的 v 节点的入度减一，并检测有哪些节点的入度为 0，继续放入队列中。
+
+```java
+class Solution {
+    List<List<Integer>> edges; // 有向图
+    int[] indeg;
+    int[] ans;
+    int index = 0;
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        edges = new ArrayList<>();
+        ans = new int[numCourses];
+        indeg = new int[numCourses]; // 节点的入度
+        Queue<Integer> queue = new LinkedList<>();
+
+        for (int i = 0; i < numCourses; i++) {
+            edges.add(new ArrayList<Integer>());
+        }
+        for (int[] req : prerequisites) {
+            edges.get(req[1]).add(req[0]);
+            indeg[req[0]]++;
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (indeg[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int first = queue.poll();
+            ans[index++] = first;
+            List<Integer> v = edges.get(first);
+            for (int i = 0; i < v.size(); i++) {
+                indeg[v.get(i)]--;
+                if (indeg[v.get(i)] == 0) {
+                    queue.offer(v.get(i));
+                }
+            }
+        }
+        if (index < numCourses) return new int[0];
+        else return ans;
+    }
+}
+```
+
 
 
 # 回溯
 
+回溯法就是暴力搜索，并不是什么高效的算法，最多再剪枝一下。
+
+回溯算法能解决如下问题：
+
+- 组合问题：N个数里面按一定规则找出k个数的集合
+- 排列问题：N个数按一定规则全排列，有几种排列方式
+- 切割问题：一个字符串按一定规则有几种切割方式
+- 子集问题：一个N个数的集合里有多少符合条件的子集
+- 棋盘问题：N皇后，解数独等等
+
+模板框架：
+
+```java
+void backtracking(参数) {
+    if (终止条件) {
+        存放结果;
+        return;
+    }
+
+    for (选择：本层集合中元素（树中节点孩子的数量就是集合的大小）) {
+        处理节点;
+        backtracking(路径，选择列表); // 递归
+        回溯，撤销处理结果
+    }
+}
+```
+
+
+
 ## 全排列
 
 主要就是回溯前后的状态的更新和恢复
+
+还有要想清楚选定了某个元素之后，剩余的选择的范围是哪些。
+
+对于全排列来说是选定了元素之后，这个元素不能再选。
 
 ```java
 class Solution {
@@ -1805,9 +1981,319 @@ class Solution {
 }
 ```
 
+## 子集
 
+给你一个整数数组 `nums` ，数组中的元素 **互不相同** 。返回该数组所有可能的子集（幂集）。
 
+解集 **不能** 包含重复的子集。你可以按 **任意顺序** 返回解集。
 
+```
+输入：nums = [1,2,3]
+输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+```
+
+### DFS
+
+要点在于思考选择了第一个元素，比如 [1] 之后，后续的选择就不能再选 1 了。
+
+选了 [1, 2] 就不能有 [2, 1] 了。所以要点在于选元素的时候，候选项是下标大于自己的元素里面。
+
+所以注意 dfs 的第二个参数是 start + 1 而不是 i + 1。
+
+```java
+class Solution {
+    private List<List<Integer>> ans = new ArrayList<>();
+    private boolean[] visited;
+    List<Integer> tmp = new ArrayList<>();
+
+    public List<List<Integer>> subsets(int[] nums) {
+        int n = nums.length;
+        visited = new boolean[n];
+        dfs(nums, 0);
+        return ans;
+    }
+
+    // start 定义候选项的开始下标
+    private void dfs(int[] nums, int start) {
+        ans.add(new ArrayList<>(tmp));
+        for (int i = start; i < nums.length; i++) {
+            if (!visited[i]) {
+                tmp.add(nums[i]);
+                visited[i] = true;
+                dfs(nums, start + 1);
+                visited[i] = false;
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+    }
+
+}
+```
+
+### 位操作
+
+例如，n=3，a={5,2,9}时：
+
+0/1序列	子集	0/1序列对应的二进制数
+000	{}	0
+001	{9}	1
+010	{2}	2
+011	{2,9}	3
+100	{5}	4
+101	{5,9}	5
+110	{5,2}	6
+111	{5,2,9}	7
+
+```java
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        int n = nums.length;
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < (1 << n); i++) {
+            List<Integer> tmp = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                if ((i & (1 << j)) != 0) {
+                    tmp.add(nums[j]);
+                }
+            }
+            ans.add(tmp);
+        }
+        return ans;
+    }
+}
+```
+
+## 电话号码的数字组合
+
+### 迭代
+
+for 套 for，第一个 for 找上一层的号码，第二个 for 根据上一层加新的号码
+
+```java
+class Solution {
+    Map<Character, char[]> map = new HashMap<>();
+    List<List<String>> ans = new ArrayList<>();
+
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0) return new ArrayList<String>();
+        map.put('2', new char[]{'a', 'b', 'c'});
+        map.put('3', new char[]{'d', 'e', 'f'});
+        map.put('4', new char[]{'g', 'h', 'i'});
+        map.put('5', new char[]{'j', 'k', 'l'});
+        map.put('6', new char[]{'m', 'n', 'o'});
+        map.put('7', new char[]{'p', 'q', 'r', 's'});
+        map.put('8', new char[]{'t', 'u', 'v'});
+        map.put('9', new char[]{'w', 'x', 'y', 'z'});
+
+        for (int digitsIndex = 0; digitsIndex < digits.length(); digitsIndex++) {
+            char[] res = map.get(digits.charAt(digitsIndex));
+            List<String> tmp;
+            if (digitsIndex == 0) {
+                tmp = new ArrayList<>();
+                for (char c : res) {
+                    tmp.add(String.valueOf(c));
+                }
+                ans.add(tmp);
+            } else {
+                List<String> old = ans.get(digitsIndex - 1);
+                tmp = new ArrayList<>();
+                int size = old.size();
+                for (char c : res) {
+                    for (int i = 0 ; i < size; i++) {
+                        tmp.add(old.get(i) + c);
+                    }
+                }
+                ans.add(tmp);
+            }
+        }
+        return ans.get(ans.size() - 1);
+    }
+
+}
+```
+
+### 递归
+
+要点在于转换为子问题，只需要上一层的状态即可。要点在于 dfs(i) 表示第 i 个字母对应的答案。
+
+```java
+class Solution {
+    Map<Character, char[]> map = new HashMap<>();
+    List<List<String>> ans = new ArrayList<>();
+
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0) return new ArrayList<String>();
+        map.put('2', new char[]{'a', 'b', 'c'});
+        map.put('3', new char[]{'d', 'e', 'f'});
+        map.put('4', new char[]{'g', 'h', 'i'});
+        map.put('5', new char[]{'j', 'k', 'l'});
+        map.put('6', new char[]{'m', 'n', 'o'});
+        map.put('7', new char[]{'p', 'q', 'r', 's'});
+        map.put('8', new char[]{'t', 'u', 'v'});
+        map.put('9', new char[]{'w', 'x', 'y', 'z'});
+
+        return dfs(digits, new ArrayList<String>(), 0);
+    }
+
+    private List<String> dfs(String digits, List<String> lastAns, int times) {
+        if (times < digits.length()) {
+            List<String> ans = new ArrayList<>();
+            char[] chars = map.get(digits.charAt(times));
+            if (lastAns.size() != 0) {
+                for (int i = 0; i < lastAns.size(); i++) {
+                    for (char ch : chars) {
+                        ans.add(lastAns.get(i) + ch);
+                    }
+                }
+            } else {
+                for (char ch : chars) {
+                    ans.add("" + ch);
+                }
+            }
+
+            return dfs(digits, ans, times + 1);
+        } else {
+            return lastAns;
+        }
+    }
+
+}
+```
+
+## 组合总数
+
+要点：
+
+1. `ans.add(new ArrayList<>(tmp));` 添加的是 tmp 的 clone。
+2. `dfs(candidates, target - num, i);` 第三个参数是 `i` ，而不是 `start + 1`，既可以保证选到相同的数字，又保证没有同一种的不同组合。比如 [3, 5] 和 [5, 3]。
+
+```java
+class Solution {
+    private List<List<Integer>> ans = new ArrayList<>();
+    private List<Integer> tmp = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        dfs(candidates, target, 0);
+        return ans;
+    }
+
+    private void dfs(int[] candidates, int target, int start) {
+        if (target < 0) return;
+        if (target == 0) {
+            ans.add(new ArrayList<>(tmp));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            int num = candidates[i];
+            tmp.add(num);
+            dfs(candidates, target - num, i);
+            tmp.remove(tmp.size() - 1);
+        }
+    }
+}
+```
+
+## 括号生成
+
+要点：
+
+1. 候选为 `(` 和 `)`，候选的个数为 n。每次应该可以从候选中任意选择。
+2. 选择之后添加到 tmp，然后继续递归，之后要删除 tmp 中添加的内容。
+3. right 要在 left 之后才能被选择，所以放  right 的时候要确认可以选的 right > left。
+
+```java
+class Solution {
+    private List<String> ans = new ArrayList<>();
+    private StringBuilder sb = new StringBuilder();
+
+    public List<String> generateParenthesis(int n) {
+        dfs(n, n);
+        return ans;
+    }
+
+    // 候选者有 n 个左括号，n 个右括号
+    private void dfs(int left, int right) {
+        if (left == 0 && right == 0) {
+            ans.add(sb.toString());
+            return;
+        }
+
+        if (left > 0) {
+            sb.append('(');
+            dfs(left - 1, right);
+            sb.delete(sb.length() - 1, sb.length());
+        }
+
+        if (right > 0 && right > left) {
+            sb.append(')');
+            dfs(left, right - 1);
+            sb.delete(sb.length() - 1, sb.length());
+        }
+    }
+}
+```
+
+## 单词搜索
+
+要点：
+
+1. 不允许重复使用，所以要使用 visited 数组。
+2. 回溯记得设置 visited 为 false。
+
+```java
+class Solution {
+    private int m, n;
+    private boolean[][] visited;
+    private int[][] dirs = new int[][]{
+        {-1, 0},
+        {1, 0},
+        {0, 1},
+        {0, -1}
+    };
+    public boolean exist(char[][] board, String word) {
+        m = board.length;
+        n = board[0].length;
+        visited = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    if (1 == word.length()) return true;
+                    visited[i][j] = true;
+                    if (dfs(board, word, 1, i, j)) return true;
+                    visited[i][j] = false;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean dfs(char[][] board, String word, int start, int row, int col) {
+        for (int i = 0; i < 4; i++) {
+            int[] dir = dirs[i];
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+            if (check(board, newRow, newCol, word.charAt(start))) { // 继续搜索可能找到的情况
+                if (start == word.length() - 1) return true; // 找到了最后一个字母
+                visited[newRow][newCol] = true;
+                boolean res = dfs(board, word, start + 1, newRow, newCol);
+                visited[newRow][newCol] = false;
+                if (res) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean check(char[][] board, int row, int col, char need) {
+        return row >= 0 && row < m && col >= 0 && col < n && !visited[row][col] && need == board[row][col];
+    }
+}
+```
+
+## 分割回文串
+
+要点：
+
+1. 
 
 # 子串
 
@@ -1817,7 +2303,7 @@ class Solution {
 
 ### 前缀和
 
-```
+```java
 class Solution {
     public int subarraySum(int[] nums, int k) {
         int left = 0, n = nums.length, right = n - 1, ans = 0;;
@@ -2706,7 +3192,7 @@ class Solution {
 
 要点在于 dp 为以第 i 个数字结尾的最长上升子序列长度，也就是 dp[i] 是 i 被选择的情况下的最长上升子序列长度。
 
-这题要求的是子序列，而不是子数组，也就是可以跳过一些数字，所以动态转移方程就是对于 dp[i] 可以从任意的 dp[i - j] 调过来。
+这题要求的是子序列，而不是子数组，也就是可以跳过一些数字，所以动态转移方程就是对于 dp[i] 可以从任意的 dp[i - j] 跳过来。
 
 ```java
 class Solution {
