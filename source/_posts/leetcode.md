@@ -168,13 +168,15 @@ class Solution {
 解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 
 ```
 
-**key：**某一处的雨水 = 左右最高柱子的最小值 - 当前处的高度
+**key：**某一处的雨水 = 全局左右最高柱子的最小值 - 当前处的高度
 
 剩下的点就在求左右最高柱子处进行优化。
 
 ### 动态规划
 
 将左右最高柱子的高度分别记为 leftMax，rightMax，并 O(n) 计算出这个数组的。
+
+可以用动态规划求 left 和 right 的原因是这里的 left 和 right 表示的是全局最高，而**柱状图中最大的矩形**这道题中不是全局最低的。
 
 需要注意的点是 **初始值** 和 **边界**。
 
@@ -2293,7 +2295,884 @@ class Solution {
 
 要点：
 
-1. 
+1. 不管是递归还是 dp，重要的都是划分子问题，用 dp\[i][j] 表示。
+2. 这里是枚举所有的分割方法，然后判断是不是回文字符串。枚举可以用回溯法，判断可以使用 dp 等方法进行优化。
+3. 枚举要有条理的枚举，比如从 i 开始，一直枚举到结尾，然后下次从 i + 1 再到结尾。
+
+数据很弱，直接回溯都能过。
+
+### 直接回溯
+
+```java
+class Solution {
+    List<List<String>> ans = new ArrayList<>();
+    List<String> tmp = new ArrayList<>();
+    int n;
+
+    public List<List<String>> partition(String s) {
+        n = s.length();
+        dfs(s, 0);
+        return ans;
+    }
+
+    private void dfs(String s, int start) {
+        if (start == n) {
+            ans.add(new ArrayList<>(tmp));
+            return;
+        }
+
+        for (int i = start + 1; i <= n; i++) {
+            String sub = s.substring(start, i);
+            if (check(sub)) { // 当前分割方法是回文串
+                tmp.add(sub);
+                dfs(s, i); // 左闭右开，继续进行分割
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+    }
+
+    private boolean check(String s) {
+        int left = 0, right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+```
+
+### 回溯 + dp
+
+其实就是用 dp 记录一下哪些情况是回文字符串，这样就不用重复判断了。
+
+```java
+class Solution {
+    List<List<String>> ans = new ArrayList<>();
+    List<String> tmp = new ArrayList<>();
+    boolean[][] dp;
+    int n;
+
+    public List<List<String>> partition(String s) {
+        n = s.length();
+        initDp(s);
+        dfs(s, 0);
+        return ans;
+    }
+
+    private void initDp(String s) {
+        dp = new boolean[n + 1][n + 1]; // 左闭右闭
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true; // 单字符为回文串
+        }
+        for (int i = 0; i < n - 1; i++) {
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                dp[i][i + 1] = true; // 双字符为回文串
+            }
+        }
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = i + 1; j < n; j++) {
+                if (dp[i + 1][j - 1] && s.charAt(i) == s.charAt(j))
+                dp[i][j] = true;
+            }
+        }
+    }
+
+    private void dfs(String s, int start) {
+        if (start == n) {
+            ans.add(new ArrayList<>(tmp));
+            return;
+        }
+
+        for (int i = start + 1; i <= n; i++) {
+            String sub = s.substring(start, i);
+            if (dpCheck(start, i - 1)) { // 当前分割方法是回文串
+                tmp.add(sub);
+                dfs(s, i); // 左闭右开，继续进行分割
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+    }
+
+    private boolean dpCheck(int start, int end) {
+        return dp[start][end];
+    }
+
+    private boolean check(String s) {
+        int left = 0, right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+```
+
+### 记忆化递归
+
+```java
+class Solution {
+    List<List<String>> ans = new ArrayList<>();
+    List<String> tmp = new ArrayList<>();
+    int[][] dp;
+    int n;
+
+    public List<List<String>> partition(String s) {
+        n = s.length();
+        dp = new int[n][n];
+        dfs(s, 0);
+        return ans;
+    }
+
+    private void dfs(String s, int start) {
+        if (start == n) {
+            ans.add(new ArrayList<>(tmp));
+            return;
+        }
+
+        for (int i = start + 1; i <= n; i++) {
+            String sub = s.substring(start, i);
+            if (memoryCheck(s, start, i - 1) == 1) { // 当前分割方法是回文串
+                tmp.add(sub);
+                dfs(s, i); // 左闭右开，继续进行分割
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+    }
+
+    private int memoryCheck(String s, int i, int j) {
+        if (dp[i][j] != 0) return dp[i][j]; // 记忆命中
+        if (i >= j) dp[i][j] = 1;
+        else if (s.charAt(i) == s.charAt(j)) {
+            dp[i][j] = memoryCheck(s, i + 1, j - 1);
+        } else {
+            dp[i][j] = -1;
+        }
+        return dp[i][j];
+    }
+
+    private boolean check(String s) {
+        int left = 0, right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+```
+
+# 二分查找
+
+## 搜索插入位置
+
+### 左闭右闭
+
+```java
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        int mid = 0;
+        while (left <= right) {
+            mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            else if (nums[mid] > target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+}
+```
+
+### 左闭右开
+
+```java
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length;
+        int mid = 0;
+        while (left < right) {
+            mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            else if (nums[mid] > target) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+}
+```
+
+## 搜索二维矩阵
+
+先在所有行中二分搜索第一个元素，然后在确定的某一行中搜索。
+
+```java
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int left = 0;
+        int right = matrix.length;
+        int mid = 0;
+
+        // 先二分行
+        while (left < right) {
+            mid = left + (right - left) / 2;
+            if (matrix[mid][0] == target) {
+                return true;
+            } else if (matrix[mid][0] > target) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        int row = 0;
+        if (left > 0) row = left - 1;
+        else row = left;
+        left = 0;
+        right = matrix[0].length;
+        // 再二分列
+        while (left < right) {
+            mid = left + (right - left) / 2;
+            if (matrix[row][mid] == target) return true;
+            else if (matrix[row][mid] > target) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return false;
+    }
+
+}
+```
+
+## 在排序数组中查找元素的第一个和最后一个位置
+
+一个搜索 lower bound，另一个 upper bound，搜索 lower bound 是等于 target 的时候设置 ans[0] = mid 并且 right = mid；upper bound 是等于 target 的时候设置ans[1] = mid 并且 left = mid + 1。
+
+```java
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length;
+        int mid;
+        int[] ans = new int[]{-1, -1};
+
+        // lower bound
+        while (left < right) {
+            mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                ans[0] = mid;
+                right = mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        // upper bound
+        left = 0;
+        right = nums.length;
+        while (left < right) {
+            mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                ans[1] = mid;
+                left = mid + 1;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+## 搜索旋转排序数组
+
+对一个旋转后的数组进行切分，总会切分成两部分，两部分中必定有一部分是顺序的，另一部分是乱序的，对于顺序的进行二分搜索，对于乱序的继续切分。
+
+然后还要注意，判断在顺序部分的时候，nums[left] 和 target 的比较得是 `<=` ，否则无法处理 `nums = [1, 3], target = 1` 的情况。
+
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length;
+        int mid;
+        while (left < right) {
+            mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            if (nums[left] < nums[mid]) { // 左边顺序，右边乱序
+                if (nums[left] <= target && target < nums[mid]) { // target 在左面顺序部分
+                    right = mid;
+                } else { // target 在乱序部分
+                    left = mid + 1;
+                }
+            } else { // 右边顺序，左边乱序
+                if (nums[mid] < target && target <= nums[right - 1]) { // target 在右面顺序部分
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+        }
+        return -1;
+    }
+}
+```
+
+## 寻找旋转排序数组中的最小值
+
+搜索旋转排序数组的简化版本，无论在哪里分隔，都是有序和无序部分，有序部分取最小值，然后继续去无序部分继续搜索。
+
+```java
+class Solution {
+    public int findMin(int[] nums) {
+        int left = 0;
+        int right = nums.length;
+        int mid;
+        int min = nums[0];
+        while (left < right) {
+            mid = left + (right - left) / 2;
+            // nums[left] ... mid ... nums[right]
+            if (nums[left] < nums[mid]) { // 左边有序
+                min = Math.min(min, nums[left]);
+                left = mid + 1;
+            } else { // 右边有序
+                min = Math.min(min, nums[mid]);
+                right = mid;
+            }
+        }
+        return min;
+    }
+}
+```
+
+## 寻找两个正序数组的中位数
+
+这道题的关键在于对中位数的理解，一个数组的中位数是能够将数组分为两部分的数，且左边部分的最大值小于右边部分最小值。
+
+对于两个数组的情况：
+
+<img src="/image-20250227154454826.png" alt="image-20250227154454826" style="zoom: 67%;" />
+
+### 第一个条件：左边元素个数和右边相等或左边多一个
+
+然后分割线左边元素个数和右边元素个数是可以被计算的，假设长度为 m 和 n，当 m + n 为偶数时，左边元素个数 = 右边元素个数 = (m + n) / 2。
+
+当 m + n 为奇数时，假设中位数在左边，于是 左边元素个数 = (m + n + 1) / 2。
+
+又偶数的时候，(m + n + 1) / 2  = (m + n) / 2，因为默认是向下取整。所以统一成了  左边元素个数 = (m + n + 1) / 2。
+
+### 第二个条件：分割线左边最大元素 <= 分割线右边最大元素
+
+对于两个数组的情况下：
+
+1. 第一个数组的分割线左边最大值 <= 第二个数组的分割线右边最小值
+2. 第二个数组的分割线左边最大值 <= 第一个数组的分割线右边最小值
+
+如果不满足上面的情况，就要进行调整。
+
+```java
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) return findMedianSortedArrays(nums2, nums1);
+        int m = nums1.length, n = nums2.length;
+        int left = 0, right = m;
+        // median1: 前一部分最大值
+        // median2: 后一部分最小值
+        int median1 = 0, median2 = 0;
+        while (left <= right) {
+            // 分割线在第 1 个数组右边的第 1 个元素的下标 i = 分割线在第 1 个数组左边的元素个数
+            int i = left + (right - left) / 2;
+            // 分割线在第 2 个数组右边的第 1 个元素的小标 j = 分割线在第 2 个数组左边的元素的个数
+            // 也就是左边的部分还需要的元素的个数，根据 i 的位置，j 的位置根据数量就唯一确定了。
+            int j = (m + n + 1) / 2 - i;
+
+            int nums_i_minus_1 = (i == 0 ? Integer.MIN_VALUE : nums1[i - 1]);
+            int nums_i_add_1 = (i == m ? Integer.MAX_VALUE : nums1[i]); // 分割线右边第一个元素
+            int nums_j_minus_1 = (j == 0 ? Integer.MIN_VALUE : nums2[j - 1]);
+            int nums_j_add_1 = (j == n ? Integer.MAX_VALUE : nums2[j]); // 分割线右边第一个元素
+
+            // if (median1 > median2) {
+            if (nums_i_minus_1 > nums_j_add_1) {
+                right = i - 1;
+            } else {
+                median1 = Math.max(nums_i_minus_1, nums_j_minus_1);
+                median2 = Math.min(nums_i_add_1, nums_j_add_1);
+                left = i + 1;
+            }
+        }
+
+        return (m + n) % 2 == 0 ? (median1 + median2) / 2.0 : median1;
+    }
+}
+```
+
+# 栈
+
+## 有效的括号
+
+判断右括号的时候栈顶能不能匹配就好。
+
+```java
+class Solution {
+    public boolean isValid(String s) {
+        Deque<Character> stack = new LinkedList<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push('(');
+            } else if (s.charAt(i) == '{') {
+                stack.push('{');
+            } else if (s.charAt(i) == '[') {
+                stack.push('[');
+            } else if (s.charAt(i) == ')' && (stack.size() == 0 || stack.pop() != '(')) {
+                return false;
+            } else if (s.charAt(i) == '}' && (stack.size() == 0 || stack.pop() != '{')) {
+                return false;
+            } else if (s.charAt(i) == ']' && (stack.size() == 0 || stack.pop() != '[')) {
+                return false;
+            }
+        }
+        return stack.size() == 0;
+    }
+}
+```
+
+## 最小栈
+
+设计一个支持 `push` ，`pop` ，`top` 操作，并能在常数时间内检索到最小元素的栈。
+
+要点在于增加一个栈，和用的栈同步 push 和 pop 数据，只不过 push 的时候 push 进去当前的最小值，pop 的时候同步 pop。
+
+```java
+class MinStack {
+    Deque<Integer> stack;
+    Deque<Integer> minStack;
+
+    public MinStack() {
+        stack = new LinkedList<>();
+        minStack = new LinkedList<>();
+    }
+    
+    public void push(int val) {
+        stack.push(val);
+        // 与 stack 同步放入最小值
+        if (minStack.size() == 0) {
+            minStack.push(val);
+        } else {
+            minStack.push(Math.min(minStack.peek(), val));
+        }
+    }
+    
+    public void pop() {
+        stack.pop();
+        minStack.pop();
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int getMin() {
+        return minStack.peek();
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(val);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+```
+
+## 字符串解码
+
+给定一个经过编码的字符串，返回它解码后的字符串。
+
+编码规则为: `k[encoded_string]`，表示其中方括号内部的 `encoded_string` 正好重复 `k` 次。注意 `k` 保证为正整数。
+
+你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
+
+此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 `k` ，例如不会出现像 `3a` 或 `2[4]` 的输入。
+
+```
+输入：s = "3[a]2[bc]"
+输出："aaabcbc"
+```
+
+要点：
+
+- 括号的处理，看到左括号右括号，要想到用栈来解决。
+- 括号前是数字就解析为数字
+- 括号前为字母就加进来
+- 括号中的内容要用解析的数字进行一个重复
+- 记得清空 sb
+
+```java
+class Solution {
+    public String decodeString(String s) {
+        Deque<Integer> numStack = new LinkedList<>();
+        Deque<String> strStack = new LinkedList<>();
+        int multi = 0;
+        StringBuilder sb = new StringBuilder();
+        for (char ch : s.toCharArray()) {
+            if (ch == '[') {
+                numStack.push(multi);
+                strStack.push(sb.toString());
+                multi = 0;
+                sb = new StringBuilder();
+            } else if (ch == ']') {
+                int times = numStack.pop();
+                StringBuilder tmp = new StringBuilder();
+                for (int i = 0; i < times; i++) {
+                    tmp.append(sb);
+                }
+                sb = new StringBuilder();
+                sb.append(strStack.pop()).append(tmp);
+            } else if ('0' <= ch && ch <= '9') {
+                multi = multi * 10 + (ch - '0');
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+}
+```
+
+
+
+## 每日温度
+
+给定一个整数数组 `temperatures` ，表示每天的温度，返回一个数组 `answer` ，其中 `answer[i]` 是指对于第 `i` 天，下一个更高温度出现在几天后。如果气温在这之后都不会升高，请在该位置用 `0` 来代替。
+
+### 从右向左
+
+要点：单调栈
+
+栈里面存的是当前 index，当新放进来的温度比栈中已有的温度低的时候，新放进来的温度就有答案了。
+
+否则就更新栈。
+
+<img src="/image-20250301225057849.png" alt="image-20250301225057849" style="zoom:50%;" />
+
+```java
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int[] ans = new int[temperatures.length];
+        Deque<Integer> tempStack = new LinkedList<>();
+        for (int i = temperatures.length - 1; i >= 0; i--) {
+            int temp = temperatures[i];
+            while (!tempStack.isEmpty() && temp >= temperatures[tempStack.peek()]) {
+                tempStack.pop();
+            }
+            if (!tempStack.isEmpty()) {
+                ans[i] = tempStack.peek() - i;
+            }
+            tempStack.push(i);
+        }
+        
+        return ans;
+    }
+}
+```
+
+### 从左向右
+
+单调栈内存放的是 index，然后都是新放进去的 index 大，同时只放进去没有更高温度的 index。
+
+当新给的温度比栈顶的温度高的时候，那些温度就都有救了。
+
+```java
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] ans = new int[n];
+        Deque<Integer> st = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            int temp = temperatures[i];
+            while (!st.isEmpty() && temp > temperatures[st.peek()]) { // 单调栈内比当前小的温度都有救了
+                int j = st.pop();
+                ans[j] = i - j;
+            }
+            st.push(i);
+        }
+        
+        return ans;
+    }
+}
+```
+
+## 柱状图中最大的矩形
+
+![image.png](/b4125f95419bc2306c7f16d1679c32e538b0b087bd9d0f70658c1a8528afca6b-image.png)
+
+所以这题的关键在于给定一个柱子，找到左边和右边第一个高度小于给定柱子的下标。
+
+暴力做法就是硬找，给定一个柱子，遍历所有的柱子找到高度更小的。找柱子复杂度为 O（n）。
+
+优化做法就是优化如何得到 left[i] 和 right[i]。
+
+left[i] 表示给定第 i 个柱子，左边第一个比他矮的柱子的下标。
+
+right[i] 表示给定第 i 个柱子，右边第一个比他矮的柱子的下标。
+
+
+
+求 left[i] 的方法：从左向右，要求的是比当前柱子高度低的柱子，所以用单调栈使得：**单调栈内只留下比当前柱子高度更矮的柱子**。然后剩下的这个柱子就是答案。另一种理解方法是：**单调栈内比当前柱子高的柱子（更左面更高的柱子）都用不到了**
+
+
+
+求 right[i] 的方法也是同理：从右向左，要求的是比当前柱子高度低的柱子，所以用单调栈使得：**单调栈内只留下比当前柱子高度更矮的柱子**。然后剩下的这个柱子就是答案了。另一种理解方法是：**单调栈内比当前柱子高的柱子（更右面更高的柱子）都用不到了**
+
+```java
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        Deque<Integer> st = new LinkedList<>();
+        // 形成 left[i]
+        for (int i = 0; i < n; i++) {
+            int h = heights[i];
+            while (!st.isEmpty() && h <= heights[st.peek()]) { // 左边比当前柱子高的柱子后面用不到了
+                st.pop();
+            }
+            // 栈中剩下的是高度比当前柱子低的柱子的下标
+            // 用于后续找更低的柱子
+            left[i] = st.isEmpty() ? -1 : st.peek();
+            st.push(i);
+        }
+
+        // 形成 right[i]
+        st.clear();
+        for (int i = n - 1; i >= 0; i--) {
+            int h = heights[i];
+            while (!st.isEmpty() && h <= heights[st.peek()]) { // 右边元素中比当前柱子高的后面也用不到了
+                st.pop();
+            }
+            // 栈中剩下的是高度比当前柱子低的柱子的下标
+            // 用于后续找更低的柱子
+            right[i] = st.isEmpty() ? n : st.peek();
+            st.push(i);
+        }
+
+        // 计算最大面积
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans = Math.max(ans, heights[i] * (right[i] - left[i] - 1));
+        }
+        return ans;
+    }
+}
+```
+
+# 堆
+
+## 数组中的第 K 个最大元素
+
+### 快速选择 O(n)
+
+和快排的思路一致：对于一组数据，选择一个基准元素（base），通常选择第一个或最后一个元素，通过第一轮扫描，比base小的元素都在base左边，比base大的元素都在base右边，再有同样的方法递归排序这两部分，直到序列中所有数据均有序为止。
+
+如果有大量相似的元素，那么要二路快排。否则时间复杂度会退化到 O(n^2)。
+
+
+
+```java
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length;
+        return quickSelect(nums, 0, n - 1, n - k);
+    }
+
+    private int quickSelect(int[] nums, int left, int right, int k) {
+        if (left == right) return nums[left];
+        int pivotIndex = partition(nums, left, right);
+        if (k == pivotIndex) {
+            return nums[k];
+        } else if (k < pivotIndex) {
+            return quickSelect(nums, left, pivotIndex - 1, k);
+        } else {
+            return quickSelect(nums, pivotIndex + 1, right, k);
+        }
+    }
+    
+    private int partition(int[] nums, int left, int right) {
+        int pivot = nums[right];
+        int l = left;
+        int r = right - 1;
+        while (l <= r) { // 用 l <= r 代替无限循环
+            while (l <= r && nums[l] < pivot) l++;
+            while (l <= r && pivot < nums[r]) r--;
+            if (l <= r) {
+                swap(nums, l, r);
+                l++; // 交换后必须移动指针
+                r--; // 避免死循环
+            }
+        }
+        swap(nums, l, right); // 将基准放到正确位置
+        return l; // 返回基准的最终位置
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}
+```
+
+### 堆
+
+
+
+## 前 k 个高频元素
+
+遍历一遍并统计频率，并且放到堆里面。
+
+```java
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        int n = nums.length;
+        if (n == k) return nums;
+        Arrays.sort(nums);
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> {
+            return b[0] - a[0];
+        });
+        int count = 1;
+        for (int i = 0; i < n; i++) {
+            if (i + 1 < n && nums[i] == nums[i + 1]) { // 对边界情况的处理
+                count++;
+            } else {
+                queue.offer(new int[]{count, nums[i]});
+                count = 1;
+            }
+        }
+        int[] ans = new int[k];
+        for (int i = 0; i < k; i++) {
+            ans[i] = queue.poll()[1];
+        }
+        return ans;
+    }
+}
+```
+
+# 技巧
+
+## 买卖股票的最佳时机
+
+给定一个数组 `prices` ，它的第 `i` 个元素 `prices[i]` 表示一支给定股票第 `i` 天的价格。
+
+你只能选择 **某一天** 买入这只股票，并选择在 **未来的某一个不同的日子** 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+
+返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 `0` 。
+
+要点：
+
+在每天都卖，买的价格是已出现的最小值。
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int ans = 0;
+        int n = prices.length;
+        int lowest = prices[0];
+        for (int i = 1; i < n; i++) {
+            int x = prices[i];
+            if (x < lowest) {
+                lowest = x;
+            } else {
+                ans = Math.max(ans, x - lowest);
+            }
+        }
+        return ans;
+    }
+}
+```
+
+
+
+## 跳跃游戏
+
+```java
+class Solution {
+    public boolean canJump(int[] nums) {
+        int n = nums.length;
+        List<Integer> list = new ArrayList<>();
+
+        // 总体思路：是否存在跳不过去的 0
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0 && i != n - 1) { // 最后的一个 0 不用判断
+                list.add(i);
+            }
+        }
+
+        int lastStart = 0;
+        for (int i = 0; i < list.size(); i++) {
+            // 看 0 的前面
+            boolean ok = false;
+            for (int j = list.get(i) - 1; j >= lastStart; j--) {
+                if (nums[j] > list.get(i) - j) {
+                    ok = true;
+                }
+            }
+            if (!ok) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+官解：判断能跳过去的最大长度是否超过结尾
+
+```java
+public class Solution {
+    public boolean canJump(int[] nums) {
+        int n = nums.length;
+        int rightmost = 0;
+        for (int i = 0; i < n; ++i) {
+            if (i <= rightmost) {
+                rightmost = Math.max(rightmost, i + nums[i]);
+                if (rightmost >= n - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+```
+
+
 
 # 子串
 
@@ -2537,6 +3416,8 @@ class Solution {
 10^4 O(n)
 
 一个哈希表
+
+
 
 ## 三数之和
 
