@@ -27,7 +27,7 @@
     "hexo-theme-landscape": "^1.0.0"
   },
   "optionalDependencies": {
-    "fsevents": "^2.0.7"
+    "fsevents": "^2.3.3"
   },
   "devDependencies": {
     "patch-package": "^8.0.0"
