@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>小米创业思考 - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="整本书主要是雷军口述的记录。
+小米创业历程小米方法论小...">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">小米创业思考</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">小米创业思考</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>March 05, 2025</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>5453</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>整本书主要是雷军口述的记录。</p>
+<h1 id="小米创业历程"><a href="#小米创业历程" class="headerlink" title="小米创业历程"></a>小米创业历程</h1><h1 id="小米方法论"><a href="#小米方法论" class="headerlink" title="小米方法论"></a>小米方法论</h1><h1 id="小米方法论的实践"><a href="#小米方法论的实践" class="headerlink" title="小米方法论的实践"></a>小米方法论的实践</h1><h2 id="对互联网思维的理解"><a href="#对互联网思维的理解" class="headerlink" title="对互联网思维的理解"></a>对互联网思维的理解</h2><h2 id="互联网七字诀"><a href="#互联网七字诀" class="headerlink" title="互联网七字诀"></a>互联网七字诀</h2><p><strong>专注、极致、口碑、快</strong>，这就是雷军总结的互联网七字诀，也是雷军对互联网思维的高度概括。</p>
+<p>从商业角度看，专注就是要“把鸡蛋尽量放在一个篮子里”。这听起来似乎有些不合理，大家的第一反应可能是“风险会不会太大？”，但事实上，这往往才是正确的选择。在任何时候，任何商业实体的资源都是有限的，将有限的资源投入足够聚焦的业务线中，才可能形成最大化的竞争力，拿出足够好的产品与服务。</p>
+<p>早在30多年前，我就亲身经历过这样的教训。上大学时，我经历了第一次创业，我跟几个同学合伙创办了一家公司，取名“三色公司”。我们看起来并不是完全没有基础，我和我的合伙人们拥有在当时的武汉算起来还不错的技术能力，我自己也有软件开发的经验，并且在当地拥有一些IT行业圈子的人脉，似乎也有些“客户资源”。但是，在这场“过家家”式的创业尝试中，从第一天起，我们就没想明白我们要做什么。<strong>“看似什么都能做”，其实就是“做什么都不知道”。</strong>我们做过装机、软件开发、倒手电子元器件，甚至连打印这样的活儿也接，但很快就陷入困局。当然，“三色公司”的问题很多，可以说几乎把零经验草根创业能犯的错都犯了个遍，但“不专注”是根本问题，毕竟只有想清楚做什么，才知道要怎么做，以什么样的组织形式、争取什么样的资源去做。</p>
+<p>最困难时，我们只能靠派出合伙人去跟食堂大师傅打牌赢饭票度日。经历了一段时间的“惨淡经营”，“三色公司”以失败告终。</p>
+<p>这是我的商业生涯经历的第一次挫折。从那时起我就明白了，对一家公司的生存与发展而言，没有“专注”，就没有一切。</p>
+<p>那么，当我们谈论“专注”时，我们究竟在谈什么？我总结了专注的四个核心命题：</p>
+<ul>
+<li>清晰的使命、愿景。</li>
+<li>深刻的洞察力，了解行业，了解用户需求，找到机会。</li>
+<li>明确而坚定的目标及与之匹配的能力。</li>
+<li>克制贪婪，少就是多。</li>
+</ul>
+<h3 id="边界在哪儿：清晰的使命、愿景"><a href="#边界在哪儿：清晰的使命、愿景" class="headerlink" title="边界在哪儿：清晰的使命、愿景"></a>边界在哪儿：清晰的使命、愿景</h3><p>几年前，小米内部有过一些讨论，讨论的主题是：我们的业务到底有没有边界？有人说，我们没有边界，理由是小米的方法论具有普适性，小米用户群的各种消费需求也越来越宽泛，似乎只要有用户基础，我们就什么都能做。</p>
+<p>这样的认识是绝对错误的。一家公司怎么可能没有边界？没有边界的组织必将走向盲目和混乱。</p>
+<p>有一句古训，叫作“有所为，有所不为”。要达成真正的专注，搞清楚哪些要为，哪些不该为，在具体事项的讨论决策之上，需要一个组织内的终极判断依据，那就是非常明确的使命、愿景，它是一家企业/机构最本源、最核心的行动指南，是观念层面的专注，是专注领域的大边界线。</p>
+<p>我们如何定义使命和愿景？在跟不少企业家朋友的沟通中，我发现大家对使命和愿景的理解五花八门。最常见的，比如“争取卓越”“用户第一”“以用户为中心”是不是使命，是不是愿景？以我的观点看，这些都不是。</p>
+<p><strong>使命，是企业/机构存在的目的和意义，是企业/机构努力为社会、大众提供的价值；而愿景，则是基于这样的使命，企业/机构最终希望成为的样子。</strong></p>
+<p>使命和愿景的总结是一项非常严肃的工作，是塑造企业灵魂的过程。使命和愿景只有经过长期实践、思考和总结才会变得清晰可见，而随着公司的成长和思考的深入，使命和愿景还可能需要再修正和完善。使命和愿景并非大型公司所独有，再小的机构/商业实体都有自己的使命和愿景。比如，一家街边小超市也期望为社区的邻里提供方便的购物；一家小饭馆也会秉承“真材实料、童叟无欺”，用心给大家做一顿好饭。</p>
+<p>暂时没有在形式上总结出确定、成文的使命和愿景的企业/机构，但凡能够获得成功，就说明它对自身的价值和远景已经有了明确的认知与共识。小米从诞生第一天起，就有用互联网思维和方法改变制造业、推动效率革命的梦想，已经有了朴素而明确的奋斗方向。在公司发展的第五年，2014年7月，小米第一次明确、清晰地总结了自身的使命和愿景。当时提出的使命是“让每个人都能享受科技带来的乐趣”，愿景则是“做用户心中最酷的公司”。</p>
+<h3 id="克制贪婪，少就是多"><a href="#克制贪婪，少就是多" class="headerlink" title="克制贪婪，少就是多"></a>克制贪婪，少就是多</h3><p>资源总是有限的，切口越小，压强越大，突破越有力。</p>
+<p>所以，大到布局公司业务，小到定义一款产品，对于一个具体的业务目标，基于洞察和我们所掌握的基本能力，我们要做的就是不断收敛，专注于必要的“最小切口”。这也是我们一再强调“克制贪婪”，尽量追求“单点切入”的原因。</p>
+<h3 id="一次解决一个最迫切的需求"><a href="#一次解决一个最迫切的需求" class="headerlink" title="一次解决一个最迫切的需求"></a>一次解决一个最迫切的需求</h3><p>在业务选择上如此，在具体产品上也是如此。不要试图用一款产品解决太多问题，能最大化满足一项迫切需求，就是巨大的成功。</p>
+<p>很多人问过我，产品的切口怎么选？小米内部在讨论产品时常说“单点突破，逐步放大”，一开始尽量聚焦到只解决用户一个迫切的需求，这样验证起来也非常简单。解决的问题要一句话就可以说清楚，比如小米充电宝解决的问题就是“怎样获得大容量、质量可靠又便宜的充电宝”。</p>
+<p>我对此做了一个总结：</p>
+<p>第一，一个明确而且用户迫切需要的产品，更容易找到明确的用户群。这样，产品研发出来后不容易走偏。</p>
+<p>第二，选择的用户需求要有一定的普遍性，这决定了产品的未来市场前景。</p>
+<p>第三，解决的问题少，开发速度快，容易控制初期的研发成本和风险。</p>
+<p>第四，解决明确问题的产品，容易跟用户说清楚，推广也会相对简单。</p>
+<p>以我们在2014年推出的一款爆款产品——空气净化器为例。2013年年初，北京的雾霾非常严重，最夸张的是当年3月，整整一个月北京的天空都是黄褐色的。当时空气净化器的价格普遍较高，进口品牌价格更是高达5000元甚至近万元，作为耗材的滤芯价格也要几千元；国产品牌但凡是正规厂家出产的，都要2000~3000元起，而且由于大多数产品是小厂出产的，所以供给能力有限。当人们受困于雾霾，对空气净化器有着迫切需求时，市场供给却严重不足。</p>
+<p>在这种情况下，我们快速孵化了一家生态链公司，做出了设计、性能媲美5000元以上进口品牌的产品，仅售899元。因为我们的空气净化器解决的问题特别聚焦、特别迫切，也没有其他品牌如“离子香氛”等花里胡哨的功能，市场客群广泛，而且开发迅速、上市供给充足，性能、价格几乎无可挑剔，所以一上市即大获成功，小米一举成为中国空气净化器领域的第一，一直保持至今。</p>
+<p>反过来看，试图用一款产品来解决很多需求，除了产品开发、推广难度大，未必能够凭借功能的数量优势赢得竞争优势，有时候甚至会误导开发者。消费电子业一个比较典型的例子就是索尼出品的掌上游戏机PSP，在游戏机的定义之外，它还有巨大的野心，想打造成21世纪的多媒体娱乐终端，但结果却未达预期。尤其是在智能手机崛起之后，除了严守游戏机定位、专注游戏的任天堂，其他所有的掌机都失去了生存空间。</p>
+<h3 id="决定不做什么跟决定做什么一样重要"><a href="#决定不做什么跟决定做什么一样重要" class="headerlink" title="决定不做什么跟决定做什么一样重要"></a>决定不做什么跟决定做什么一样重要</h3><p>“少就是多”最典型的案例就是苹果。众所周知，苹果的产品线极为精简，iPhone每年只出一代，虽然现在也有不同的细分型号，有mini、Pro、Pro Max等不同版本，但本质上还是同一款产品，依然保持着极少的SKU数量。</p>
+<p>这种精简产品线哲学来自苹果起死回生的历练。1997年，苹果几近破产，就把乔布斯请了回去。一回到苹果，乔布斯就传达了一个理念：决定不做什么跟决定做什么一样重要。乔布斯跟几十个产品团队开会，对所有产品进行评估，结果显示苹果的产品线十分分散，光是麦金塔电脑就有无数个版本，每个版本还有一堆让人困惑的编号，从1400到9600都有。花样繁多的产品，在乔布斯眼里大部分都是垃圾。</p>
+<p>“我应该让我的朋友们买哪些？”乔布斯问了个简单的问题，却得不到简单的答案。他开始大刀阔斧地砍掉不同型号的产品，很快就砍掉了70%。</p>
+<p>几周过后，乔布斯还是无法忍受那么多的产品，在一次产品战略会上发飙了。他在白板上画了一条横线和一条竖线，画了一个方形四格图，在两列顶端写上“消费级”“专业级”，在两行标题写上“台式”和“便携”，然后说：“我们的工作就是做四个伟大的产品，每格一个。”说服董事会后，苹果高度集中研发了iMac G3、Powerbook G3、Power Macintosh、iBook四款产品。</p>
+<p>当时苹果距离破产也就还有不到90天的时间。在此危难时刻，乔布斯只用了一招撒手锏——“专注”，就力挽狂澜，让苹果从1997年亏损10.5亿美元，变成1998年赢利3.09亿美元，起死回生。</p>
+<p>用尽量少的产品满足用户最关注的需求，是一种超凡的能力。少就是多，背后是极为精准的行业发展与用户需求洞察、极为清晰的产品/战略思路，以及基于强大产品力的超凡自信。</p>
+<p><img    class="lazyload" data-original="./image-20250305214814435.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20250305214814435</span></p>
+<h3 id="全局“对表”，实时校验"><a href="#全局“对表”，实时校验" class="headerlink" title="全局“对表”，实时校验"></a>全局“对表”，实时校验</h3><p>“克制贪婪，少就是多”，听起来是特别显而易见的道理，但在进入业务扩张期的公司的实际运营中，想要一直做到这一点极不容易。</p>
+<p>当我们聊专注时，通常会集中在一家公司的创业阶段或一个产品品类的开拓阶段。但专注只针对初创企业吗？显然不是。</p>
+<p>那么，业务扩张与保持专注矛盾吗？并不一定矛盾，关键看四个判断标准：</p>
+<p>1.是否符合公司的使命、愿景和战略。</p>
+<ol>
+<li>能否与公司核心业务形成显著的强协同并形成闭环。</li>
+<li>能否为用户提供一致性的价值与体验。</li>
+<li>公司的资源是否支持。</li>
+</ol>
+<p>我们曾经看到，很多强有力的企业在推进业务多元化，看起来有用户、有资金、有推广/渠道资源，但往往不甚成功。比如曾有房地产巨头进军饮用水行业，但因无法形成协同闭环，最终失败，这并不意外。</p>
+<p>曾经有很多人问，小米一开始只做手机，后来做的领域越来越多，以至有一种声音说小米不再专注了，做成“杂货铺”了，这是不是真的呢？</p>
+<p>从根本上看，这种说法是错误的。小米始终坚定地坚持着专注目标：从终极使命看，坚持做“感动人心、价格厚道”的好产品，让全球每个人都能享受科技带来的美好生活；从运营模型和产业抱负看，始终坚持探索、追求在更多产业环境下更高的生产、流通效率，推动整个商业领域持续推进效率革命；从业务布局看，始终坚持围绕用户关于科技应用的消费需求，构建全场景的智能生态。最关键的是，小米的主业一直足够聚焦，更多的品类是帮助、支持生态链兄弟公司来做（关于生态链模式，后文将有详细介绍）。</p>
+<p>只有贯穿长期目标、始终围绕用户真实需求出发、与核心业务构成强协同的业务拓展，才能真正驱动企业发展的飞轮。而且，每一项新业务的拓展都以之前业务坚实的发展模型和预期为基础，这样才能保证每一个发展阶段都能集中精力，专注地开拓一项业务。</p>
+<p>小米正是这么做的。生态链业务的崛起，是在手机业务一度站到世界前三、中国第一的基础上，而IoT业务的爆发则是站在生态链快速推进的肩膀上。</p>
+<p>但在具体执行中，过去几年，小米的确在专注方面出现了问题。在一些业务中缺乏克制、业务失焦，既浪费了公司资源，也无端消耗了公司品牌资产，拖累了公司战略的聚焦推进，同时也对用户体验形成了伤害。</p>
+<p>解决这个问题的关键就是“对表”，从上到下统一思路，既要有统一的专注目标，还要进行“校验”，时时检查保证不走偏。</p>
+<h3 id="时时反问自己三个问题"><a href="#时时反问自己三个问题" class="headerlink" title="时时反问自己三个问题"></a>时时反问自己三个问题</h3><p>管理领域有一条公理，即组织一旦成立，就有无可抑制的自我成长的冲动和诉求。对一家公司而言是这样，对这家公司内部的任何一支团队而言也是如此。组织的成长，通常都源于设立的各类项目，还有与项目相匹配的人力、资金等各类资源的要求，以及最为关键的一点：营业额或利润的增长。营业额、利润一涨，往往马上会带动组织成长欲望的“局部正循环”。</p>
+<p>但是，任由这样的“局部正循环”“野蛮生长”，往往并不能带来“全局正循环”，而是会指向一种近乎失控的状态。这里的关键问题就是，局部组织的行动方向与公司整体方向是否严格对齐？如果放任偏差，哪怕只是失之毫厘，最终也一定是谬以千里。</p>
+<p>下面有两种公司核心战略的表达，你如何看待它们之间的区别？</p>
+<p>第一种是2019年年初，我们内部提出的一项新的战略总结：“手机+AIoT双引擎”。它非常直观地表现出公司的两大价值集群，并体现了两者共同推进公司成长的战略表述。但是，在宣布实施一年半后，我们发现这项战略是错误的，甚至对公司业务产生了比较严重的误导。</p>
+<p>错误的本质在于，用加号连接并列的“二元业务核心结构”使得公司的战略执行出现了失焦。手机业务的增长和AIoT的增长似乎成了两件事，让AIoT相关业务群更加倾向于独立的用户数和连接数的提升，以及网站成交金额的增加，迷失了“手机”和“AIoT”共同构成的“智能生活”体验的核心目标。</p>
+<p>比如大家电业务，一开始从1999元的10kg智能滚筒一体机切入，凭借领先的智能体验、精美的设计、扎实的做工和性能，取得了成功。但在团队内部制定目标时，由于急于实现规模增长，很快做出了诸如售价799元的非智能波轮洗衣机等一批传统产品。</p>
+<p>799元的传统波轮产品好不好？当然好。但是，这样的产品是我们需要的吗？相比其他同行，这款产品在性能、体验上差不多，只是价格稍微厚道一些，用料品质好一点，但这对增进用户使用体验、为用户提供独特价值，以及建设科技生态有帮助吗？甚至，这是不是对公司品牌资产的一种稀释与浪费？</p>
+<p>一款产品的上市不只是可能多一份销售额，每增加一个存货单位，开发成本、市场成本、客服/售后成本、仓储物流成本、销售运营管理成本等一系列成本都有增加。在公司总资源有限的情况下，我们的团队把力气花在这样“用户价值增益”不明显的产品上，显然是不值得的。</p>
+<p>这就是部门增长目标与集团整体目标发生了背离。分开看，每个团队各自都挺专注，但合起来一看，离专注就十万八千里了。</p>
+<h1 id="小米方法论与产业生态"><a href="#小米方法论与产业生态" class="headerlink" title="小米方法论与产业生态"></a>小米方法论与产业生态</h1><h1 id="小米方法论的演进思考"><a href="#小米方法论的演进思考" class="headerlink" title="小米方法论的演进思考"></a>小米方法论的演进思考</h1><h1 id="对小米影响最为深远的5篇文章"><a href="#对小米影响最为深远的5篇文章" class="headerlink" title="对小米影响最为深远的5篇文章"></a>对小米影响最为深远的5篇文章</h1>
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/uncategorized/xiaomi/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;xiaomi&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;xiaomi&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E4%B8%9A/" rel="tag">创业</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/higress/higress/"><i class="iconfont iconleft"></i>Higress AI Wasm 插件开发记录</a>
+    <a href="/uncategorized/%E9%9D%A2%E7%BB%8F%E6%95%B4%E7%90%86/">面经整理<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%B1%B3%E5%88%9B%E4%B8%9A%E5%8E%86%E7%A8%8B"><span class="toc-text">小米创业历程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%B1%B3%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="toc-text">小米方法论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%B1%B3%E6%96%B9%E6%B3%95%E8%AE%BA%E7%9A%84%E5%AE%9E%E8%B7%B5"><span class="toc-text">小米方法论的实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E4%BA%92%E8%81%94%E7%BD%91%E6%80%9D%E7%BB%B4%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">对互联网思维的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%83%E5%AD%97%E8%AF%80"><span class="toc-text">互联网七字诀</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%B9%E7%95%8C%E5%9C%A8%E5%93%AA%E5%84%BF%EF%BC%9A%E6%B8%85%E6%99%B0%E7%9A%84%E4%BD%BF%E5%91%BD%E3%80%81%E6%84%BF%E6%99%AF"><span class="toc-text">边界在哪儿：清晰的使命、愿景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%8B%E5%88%B6%E8%B4%AA%E5%A9%AA%EF%BC%8C%E5%B0%91%E5%B0%B1%E6%98%AF%E5%A4%9A"><span class="toc-text">克制贪婪，少就是多</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E4%B8%80%E4%B8%AA%E6%9C%80%E8%BF%AB%E5%88%87%E7%9A%84%E9%9C%80%E6%B1%82"><span class="toc-text">一次解决一个最迫切的需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B3%E5%AE%9A%E4%B8%8D%E5%81%9A%E4%BB%80%E4%B9%88%E8%B7%9F%E5%86%B3%E5%AE%9A%E5%81%9A%E4%BB%80%E4%B9%88%E4%B8%80%E6%A0%B7%E9%87%8D%E8%A6%81"><span class="toc-text">决定不做什么跟决定做什么一样重要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E2%80%9C%E5%AF%B9%E8%A1%A8%E2%80%9D%EF%BC%8C%E5%AE%9E%E6%97%B6%E6%A0%A1%E9%AA%8C"><span class="toc-text">全局“对表”，实时校验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E6%97%B6%E5%8F%8D%E9%97%AE%E8%87%AA%E5%B7%B1%E4%B8%89%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-text">时时反问自己三个问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%B1%B3%E6%96%B9%E6%B3%95%E8%AE%BA%E4%B8%8E%E4%BA%A7%E4%B8%9A%E7%94%9F%E6%80%81"><span class="toc-text">小米方法论与产业生态</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%B1%B3%E6%96%B9%E6%B3%95%E8%AE%BA%E7%9A%84%E6%BC%94%E8%BF%9B%E6%80%9D%E8%80%83"><span class="toc-text">小米方法论的演进思考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E5%B0%8F%E7%B1%B3%E5%BD%B1%E5%93%8D%E6%9C%80%E4%B8%BA%E6%B7%B1%E8%BF%9C%E7%9A%845%E7%AF%87%E6%96%87%E7%AB%A0"><span class="toc-text">对小米影响最为深远的5篇文章</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
