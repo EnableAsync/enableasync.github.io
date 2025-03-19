@@ -4589,6 +4589,201 @@ impl Solution {
 }
 ```
 
+# 多维 dp
+
+## 不同路径
+
+一个机器人位于一个 `m x n` 网格的左上角 （起始点在下图中标记为 “Start” ）。
+
+机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish” ）。
+
+问总共有多少条不同的路径？
+
+二维爬楼梯，对于每个位置能从上面和左边过来。
+
+```java
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int[m][n];
+
+        for (int i = 0; i < n; i++) {
+            dp[0][i] = 1;
+        }
+
+        for (int i = 0; i < m; i++) {
+            dp[i][0] = 1;
+        }
+
+        // 对于一个位置，能从左边或者上面过来
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
+            }
+        }
+
+        return dp[m - 1][n - 1];
+    }
+}
+```
+
+## 最小路径和
+
+还是和不同路径一样，不同的是从左上到右下的时候需要记录最小路径和。还有初始化状态的时候，要记得加上走过来的时候的最小值。
+
+```java
+class Solution {
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n]; // 记录到 i, j 的最小数字和
+
+        dp[0][0] = grid[0][0];
+
+        for (int i = 1; i < n; i++) {
+            dp[0][i] = grid[0][i] + dp[0][i - 1];
+        }
+
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = grid[i][0] + dp[i - 1][0];
+        }
+
+        // 对于 dp[i][j] 只能从上面或者左边过来，记录最小和就好
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+}
+```
+
+## 最长回文子串
+
+要点在于：
+
+1. 初始状态所有字符都和自己回文。
+2. dp\[i][j] 表示子串 i...j 是否是回文串。
+3. 为了便于考虑边界情况，外层循环枚举 j，内层循环枚举 i。
+4. dp\[i][j] 如果是回文字符串，要求 dp\[i + 1][j - 1] 是回文字符串，并且 s[i] == s[j]。
+
+```java
+class Solution {
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        // dp[i][j] 表示子串 i...j 是否是回文串 
+        boolean dp[][] = new boolean[n][n];
+        int maxLen = 0;
+        int start = 0, end = 0;
+        
+        // 状态初始化，自己和自己回文
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true;
+        }
+
+        for (int j = 0; j < n; j++) {
+            for (int i = 0; i < j; i++) {
+                if ((j - i <= 1 || dp[i + 1][j - 1]) && s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = true;
+                    if (j - i + 1 > maxLen) {
+                        maxLen = j - i + 1;
+                        start = i;
+                        end = j;
+                    }
+                }
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+}
+```
+
+## 最长公共子序列
+
+要点：
+
+1. dp\[i][j] 表示字符串 s1[0...i) 和 s2[0...j) 的最长公共子序列长度，注意这里是左闭右开。
+2. 对于 dp\[i][j] 能从 dp\[i - 1][j - 1] + 1 得到，此时 s1[i] == s2[j]
+3. 不相等时 dp\[i][j] 是 Math.max(dp\[i - 1][j], dp\[i][j - 1])， 也就是跳过当前字符
+4. 这里的 i 从 1...len1，然后 i-1 是 0...len1-1，所以 i-1 遍历了整个字符串。如果不使用这种处理方式，会导致最后一位字符未被处理。
+
+```java
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        int len1 = text1.length();
+        int len2 = text2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1]; // 字符串 s1[0...i] 和 s2[0...j] 的最长公共子序列长度
+        
+        // 对于 dp[i][j] 能从 dp[i - 1][j - 1] + 1 得到，此时 s1[i] == s2[j]
+        // 不相等时 dp[i][j] 是 Math.max(dp[i - 1][j], dp[i][j - 1])， 也就是跳过当前字符
+        // 注意！！！
+        // 这里的 i 从 1...len1，然后 i-1 是 0...len1-1，所以 i-1 遍历了整个字符串
+        // 如果不使用这种处理方式，会导致最后一位字符未被处理
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        return dp[len1][len2];
+    }
+}
+```
+
+## 编辑距离
+
+要点：
+
+1. dp\[i][j] 表示 word1 前 i 个字符变成 word2 前 j 个字符需要的最少操作数
+2. 边界条件是 0 字符和有 i 个字符的情况。
+3. 状态转移
+
+```
+从 dp[i - 1][j - 1] 过来是替换掉 word1 中的字符，因为 dp[i - 1][j - 1] 已经匹配
+从 dp[i - 1][j] 过来是删除掉 word1 中的字符，因为 dp[i - 1][j] 已经匹配
+从 dp[i][j - 1] 过来是删除掉 word2 中的字符（等价于 word1 增加字符），因为 dp[i][j - 1] 已经匹配
+```
+
+
+
+```java
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1]; // word1 前 i 个字符变成 word2 前 j 个字符需要的最少操作数
+
+        for (int i = 1; i <= len1; i++) {
+            dp[i][0] = i;
+        }
+
+        for (int i = 1; i <= len2; i++) {
+            dp[0][i] = i;
+        }
+
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) { // 不用编辑
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else { // 编辑 word1 使其变成 word2
+                    // 从 dp[i - 1][j - 1] 过来是替换掉 word1 中的字符，因为 dp[i - 1][j - 1] 已经匹配
+                    // 从 dp[i - 1][j] 过来是删除掉 word1 中的字符，因为 dp[i - 1][j] 已经匹配
+                    // 从 dp[i][j - 1] 过来是删除掉 word2 中的字符（等价于 word1 增加字符），因为 dp[i][j - 1] 已经匹配
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1])) + 1;
+                }
+            }
+        }
+        return dp[len1][len2];
+    }
+}
+```
+
+
+
 # 数据结构
 
 ## 合并K个升序链表
