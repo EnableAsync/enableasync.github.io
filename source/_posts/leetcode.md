@@ -117,6 +117,196 @@ class Solution {
 }
 ```
 
+## 最大子数组和
+
+dp\[i] 代表以第 i 个元素结尾的最大子数组的和：
+
+```java
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n + 1];
+        int ans = nums[0];
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            dp[i] = Math.max(dp[i - 1] + nums[i - 1], nums[i - 1]);
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans;
+    }
+}
+
+```
+
+
+
+## 合并区间
+
+要点在于判断什么时候可以合并，什么时候不能合并：
+
+- 先根据开头位置排序
+- 下一个区间的开头大于当前末尾的时候不能合并
+- 其他情况可以合并
+
+```java
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> { return a[0] - b[0]; });
+        List<int[]> ans = new ArrayList<>();
+        ans.add(intervals[0]);
+        for (int i = 1; i < intervals.length; i++) {
+            int right = ans.get(ans.size() - 1)[1];
+            if (intervals[i][0] > right) { // 下一个的头部大于当前最后一个，不合并
+                ans.add(intervals[i]);
+            } else { // 可以合并
+                right = Math.max(right, intervals[i][1]);
+                ans.get(ans.size() - 1)[1] = right;
+            }
+        }
+        return ans.toArray(new int[ans.size()][]);
+    }
+}
+```
+
+
+
+## 轮转数组
+
+反转三次数组。
+
+```java
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int n = nums.length;
+        reverse(nums, 0, n - 1);
+        reverse(nums, 0, (k % n) - 1);
+        reverse(nums, k % n, n - 1);
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int tmp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = tmp;
+            start++;
+            end--;
+        }
+    }
+}
+```
+
+## 除自身以外数组的乘积
+
+要求不使用除法，并且当前元素如果为 0 的时候，总和除以当前元素也用不了。
+
+### 没有优化
+
+要点在于将当前以外的乘积分为左边和右边部分，这样就可以划分并逐步计算得到答案。
+
+```java
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] l = new int[n + 1], r = new int[n + 1];
+        l[0] = 1;
+        r[n] = 1;
+        for (int i = 1; i <= n; i++) {
+            l[i] = l[i - 1] * nums[i - 1];
+        }
+
+        for (int j = n - 1; j >= 1; j--) {
+            r[j] = r[j + 1] * nums[j];
+        }
+
+        int[] ans = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            ans[i] = l[i] * r[i + 1];
+        }
+
+        return ans;
+    }
+}
+```
+
+### 优化空间
+
+- 用 ans 数组记录右边数组的乘积，然后用一个变量记录左边数组的乘积。
+
+```java
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        ans[0] = 1;
+        ans[n - 1] = nums[n - 1];
+
+        for (int i = n - 2; i >= 0; i--) {
+            ans[i] = ans[i + 1] * nums[i];
+        }
+
+        int l = 1;
+        for (int i = 0; i < n; i++) {
+            int r = 1;
+            if (i < n - 1) r = ans[i + 1];
+            ans[i] = l * r;
+            l = l * nums[i];
+        }
+
+        return ans;
+    }
+}
+```
+
+
+
+## 缺失的第一个正数
+
+要点在于
+
+- 原地哈希，`f(nums[i]) = nums[i] - 1`
+- 其他的在于防止死循环和保证所有数字都被 hash 过
+
+
+
+```java
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            boolean isSwap = true;
+            while (isSwap) {
+                int hash = nums[i] - 1;
+                if (0 <= hash && hash < n && i != hash && nums[hash] != nums[i]) {
+                    swap(nums, i, hash);
+                } else {
+                    isSwap = false;
+                }
+            }
+
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (i + 1 != nums[i]) {
+                return i + 1;
+            }
+        }
+
+        return n + 1;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}
+```
+
+
+
+
+
 # 矩阵
 
 ## 矩阵置零
