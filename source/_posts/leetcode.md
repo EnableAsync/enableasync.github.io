@@ -277,7 +277,7 @@ class Solution {
             boolean isSwap = true;
             while (isSwap) {
                 int hash = nums[i] - 1;
-                if (0 <= hash && hash < n && i != hash && nums[hash] != nums[i]) {
+                if (0 <= hash && hash < n && i != hash && nums[hash] != nums[i]) { // 第3个和第4个条件防止死循环
                     swap(nums, i, hash);
                 } else {
                     isSwap = false;
@@ -314,6 +314,115 @@ class Solution {
 给定一个 **`m x n`** 的矩阵，如果一个元素为 **0** ，则将其所在行和列的所有元素都设为 **0** 。请使用 **[原地](http://baike.baidu.com/item/原地算法)** 算法。
 
 难点在于原地算法，否则很简单，模拟就好，模拟的时候注意不要跳过本来为 0 的元素。
+
+
+
+## 旋转图像
+
+要点在于：
+
+- 做不到一步直接交换到位
+- 先副对角线对称，然后上下对称
+
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        // 沿着副对角线对称，然后上下交换
+        // 9 6 3
+        // 8 5 2
+        // 7 4 1
+
+        // 找到每个元素的 swap 位置
+        int n = matrix.length;
+        // 沿着副对角线对称
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= n - 1 - i; j++) {
+                // 关于副对角线对称有 (i, j) <-> (n-1-i, n-1-j)
+                swap(matrix, i, j, n - 1 - j, n - 1 - i);
+            }
+        }
+        // 沿着 x 轴对称
+        for (int i = 0; i < n / 2; i++) {
+            for (int j = 0; j < n; j++) {
+                // 关于 x 轴对称有 (i, j) <-> (n-1-i, j)
+                swap(matrix, i, j, n - 1 - i, j);
+            }
+        }
+    }
+
+    public void swap(int[][] matrix, int i, int j, int x, int y) {
+        int tmp = matrix[i][j];
+        matrix[i][j] = matrix[x][y];
+        matrix[x][y] = tmp;
+    }
+}
+
+// 副对角线对称
+// 0,0 -> n-1,n-1
+// 0,1 -> n-2,n-1
+// 0,n-1 -> 0,n-1
+// 1,0 -> n-1,n-2
+```
+
+
+
+## 搜索二维矩阵 II
+
+![img](/searchgrid2.jpg)
+
+
+
+### 二分
+
+每一行二分搜索
+
+```java
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        for (int[] nums : matrix) {
+            if (Arrays.binarySearch(nums, target) >= 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+```
+
+总时间复杂度 O(m logn)
+
+### Z 字搜索
+
+要点在于：
+
+- 看矩阵右上角，左边严格小于，下面严格大于
+- 所以每次可以排除掉一行或者一列，总时间复杂度 O(m + n)
+
+```java
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        // 看矩阵右上角，左边严格小于，下面严格大于
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int row = 0, col = n - 1;
+        while (row < m && col >= 0) {
+            if (target == matrix[row][col]) {
+                return true;
+            } else if (target > matrix[row][col]) {
+                row++;
+            } else { // target < matrix[row][col]
+                col--;
+            }
+        }
+        return false;
+    }
+}
+
+```
+
+
 
 
 
@@ -3370,6 +3479,10 @@ public class Solution {
 
 2 * 10^4 O(n^2) 或者 O(n)
 
+给你一个整数数组 `nums` 和一个整数 `k` ，请你统计并返回 *该数组中和为 `k` 的子数组的个数* 。
+
+子数组是数组中元素的连续非空序列。
+
 ### 前缀和
 
 ```java
@@ -3519,6 +3632,8 @@ class Solution {
 
 ### 单调队列
 
+O(n)
+
 ```java
 class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
@@ -3591,13 +3706,114 @@ class Solution {
 
 
 
-## 双指针
+## 最小覆盖子串
+
+要点：
+
+- 滑动窗口走过所有的子串
+- 用哈希表判断是否涵盖所有字符
+
+```java
+class Solution {
+    Map<Character, Integer> tMap = new HashMap<>();
+    Map<Character, Integer> windowMap = new HashMap<>();
+
+    public String minWindow(String s, String t) {
+        // 滑动窗口，用哈希表判断是否涵盖所有字符
+        int n = s.length();
+        int l = 0;
+        int ansL = 0, ansR = -1, ansLen = Integer.MAX_VALUE;
+
+        for (char ch : t.toCharArray()) {
+            tMap.put(ch, tMap.getOrDefault(ch, 0) + 1);
+        }
+
+        for (int r = 0; r < n; r++) {
+            windowMap.put(s.charAt(r), windowMap.getOrDefault(s.charAt(r), 0) + 1);
+            while (l <= r && check()) {
+                if (r - l + 1 < ansLen) {
+                    ansL = l;
+                    ansR = r;
+                    ansLen = r - l + 1;
+                }
+                windowMap.put(s.charAt(l), windowMap.getOrDefault(s.charAt(l), 1) - 1);
+                l++;
+            }
+        }
+        return ansR == -1 ? "" : s.substring(ansL, ansR + 1);
+    }
+
+    private boolean check() {
+        for (Map.Entry<Character, Integer> entry : tMap.entrySet()) {
+            if (windowMap.getOrDefault(entry.getKey(), 0) < entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+
+
+
+
+# 双指针
 **前后指针：**经典的一个 pre 指针，一个 cur 指针：可以解决反转链表、交换节点等问题。
 **快慢指针：**还有一个 fast 指针，一个 slow 指针：可以解决删除第 n 个元素的问题。
 
-19.删除链表的倒数第 N 个结点
+## 19.删除链表的倒数第 N 个结点
 
-142.环形链表
+两个间隔 n 个节点的指针，快指针到末尾的时候，慢指针就是倒数第 n 个节点。
+
+## 142.环形链表 II
+
+判断链表是否有环，如果有返回入环的第一个节点
+
+根据题意，任意时刻，fast 指针走过的距离都为 slow 指针的 2 倍。因此，我们有
+
+a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)
+有了 a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n−1 圈的环长，恰好等于从链表头部到入环点的距离。
+
+因此，当发现 slow 与 fast 相遇时，我们再额外使用一个指针 ptr。起始，它指向链表头部；随后，它和 slow 每次向后移动一个位置。最终，它们会在入环点相遇。
+
+
+
+```java
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        while (slow != null && fast != null && slow.next != null && fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) { // 有环
+                ListNode index1 = fast;
+                ListNode index2 = head;
+                while (index1 != index2) {
+                    index1 = index1.next;
+                    index2 = index2.next;
+                }
+                return index1;
+            }
+        }
+        return null;
+    }
+}
+```
+
+
 
 # 哈希表
 
