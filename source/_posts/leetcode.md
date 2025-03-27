@@ -3322,20 +3322,21 @@ class Solution {
         }
     }
     
+    // 分割点位置
     private int partition(int[] nums, int left, int right) {
         int pivot = nums[right];
         int l = left;
         int r = right - 1;
         while (l <= r) { // 用 l <= r 代替无限循环
-            while (l <= r && nums[l] < pivot) l++;
-            while (l <= r && pivot < nums[r]) r--;
+            while (l <= r && nums[l] < pivot) l++; // 左指针 l 的行为：当 nums[l] 小于枢轴时，l 会继续向右移动。
+            while (l <= r && pivot < nums[r]) r--; // 右指针 r 的行为：当 nums[r] 大于枢纽时，r 会继续向左移动。
             if (l <= r) {
                 swap(nums, l, r);
                 l++; // 交换后必须移动指针
                 r--; // 避免死循环
             }
         }
-        swap(nums, l, right); // 将基准放到正确位置
+        swap(nums, l, right); // 将基准放到正确位置，l 指向第一个大于等于 privot 的值
         return l; // 返回基准的最终位置
     }
 
@@ -3348,6 +3349,49 @@ class Solution {
 ```
 
 ### 堆
+
+```java
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int heapSize = nums.length;
+        buildMaxHeap(nums, heapSize);
+        for (int i = nums.length - 1; i >= nums.length - k + 1; --i) {
+            swap(nums, 0, i);
+            --heapSize;
+            maxHeapify(nums, 0, heapSize);
+        }
+        return nums[0];
+    }
+
+    public void buildMaxHeap(int[] a, int heapSize) {
+        for (int i = heapSize / 2 - 1; i >= 0; --i) {
+            maxHeapify(a, i, heapSize);
+        } 
+    }
+
+    public void maxHeapify(int[] a, int i, int heapSize) {
+        int l = i * 2 + 1, r = i * 2 + 2, largest = i;
+        if (l < heapSize && a[l] > a[largest]) {
+            largest = l;
+        } 
+        if (r < heapSize && a[r] > a[largest]) {
+            largest = r;
+        }
+        if (largest != i) {
+            swap(a, i, largest);
+            maxHeapify(a, largest, heapSize);
+        }
+    }
+
+    public void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+}
+```
+
+
 
 
 
