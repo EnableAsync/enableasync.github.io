@@ -3382,6 +3382,54 @@ class Solution {
 }
 ```
 
+
+
+## 数据流的中位数
+
+要点在于：
+
+- 用两个堆，一个升序保存比中位数大的数，一个降序保存比中位数小的数
+- 这样中位数就是比中位数大的数中最小的和比中位数小的数中最大的两个数的一半
+
+```java
+class MedianFinder {
+    PriorityQueue<Integer> gtQueue;
+    PriorityQueue<Integer> ltQueue;
+
+    public MedianFinder() {
+        gtQueue = new PriorityQueue<>((a, b) -> (a - b)); // 升序
+        ltQueue = new PriorityQueue<>((a, b) -> (b - a)); // 降序
+    }
+    
+    public void addNum(int num) {
+        if (ltQueue.isEmpty() || num <= ltQueue.peek()) {
+            ltQueue.offer(num);
+            if (ltQueue.size() > gtQueue.size() + 1) {
+                gtQueue.offer(ltQueue.poll());
+            }
+        } else {
+            gtQueue.offer(num);
+            if (gtQueue.size() > ltQueue.size()) {
+                ltQueue.offer(gtQueue.poll());
+            }
+        }
+    }
+    
+    public double findMedian() {
+        if (ltQueue.size() - gtQueue.size() == 1) {
+            return ltQueue.peek();
+        }
+        return (gtQueue.peek() + ltQueue.peek()) / 2.0;
+    }
+}
+```
+
+
+
+
+
+
+
 # 技巧
 
 ## 买卖股票的最佳时机
