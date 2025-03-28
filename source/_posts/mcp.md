@@ -100,3 +100,138 @@ mcp install server.py
 执行加法：
 
 <img src="/image-20250328113721120.png" alt="image-20250328113721120" style="zoom:67%;" />
+
+
+
+# 自己编写一个操作数据库的 MCP Server
+
+## server.py 代码
+
+```python
+import MySQLdb
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("MySQL Explorer")
+
+conn = MySQLdb.connect(
+    host="127.0.0.1",
+    port=3306,
+    user="root",
+    password="root",
+    database="link"
+)
+
+@mcp.resource("schema://main")
+def get_schema() -> str:
+    """Provide the database schema as a resource"""
+    cursor = conn.cursor()
+    cursor.execute("SHOW TABLES")  # Get a list of all tables
+
+    tables = cursor.fetchall()
+    schema = []
+
+    for table in tables:
+        table_name = table[0]
+        cursor.execute(f"SHOW CREATE TABLE `{table_name}`")  # Get the create statement for each table
+        create_table_sql = cursor.fetchone()[1]
+        schema.append(create_table_sql)
+    return "\n".join(schema)
+
+
+
+@mcp.tool()
+def query_data(sql: str) -> str:
+    """Execute SQL queries safely"""
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        return "\n".join(str(row) for row in result)
+    except Exception as e:
+        return f"Error: {str(e)}"
+    
+
+```
+
+
+
+## 然后 MCP Inspector 获取 resource
+
+```bash
+curl 'http://localhost:3000/message?sessionId=c73d174d-8772-441a-bfa1-1771ad358aa1' \
+  -H 'Accept: */*' \
+  -H 'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6' \
+  -H 'Connection: keep-alive' \
+  -H 'Origin: http://localhost:5173' \
+  -H 'Referer: http://localhost:5173/' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-site' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0' \
+  -H 'content-type: application/json' \
+  -H 'sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Microsoft Edge";v="134"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw '{"method":"resources/list","params":{},"jsonrpc":"2.0","id":1}'
+```
+
+
+
+## 在网页上得到了 schema
+
+![image-20250328151443784](/image-20250328151443784.png)
+
+
+
+## 安装到 Claude
+
+```bash
+mcp install .\mysql_server.py --with mysqlclient
+```
+
+
+
+Claude 配置文件
+
+```json
+{
+  "mcpServers": {
+    "Demo": {
+      "command": "mcp",
+      "args": [
+        "run",
+        "D:\\sjj\\script\\mcp_test\\server.py"
+      ]
+    },
+    "MySQL Explorer": {
+      "command": "mcp",
+      "args": [
+        "run",
+        "--with",
+        "mysqlclient",
+        "D:\\sjj\\script\\mcp_test\\mysql_server.py"
+      ]
+    }
+  }
+}
+```
+
+
+
+## 开始测试
+
+<img src="/image-20250328153747577.png" alt="image-20250328153747577"  />
+
+![image-20250328153758113](/image-20250328153758113.png)
+
+![image-20250328153822340](/image-20250328153822340.png)
+
+![image-20250328153835288](/image-20250328153835288.png)
+
+![image-20250328153845382](/image-20250328153845382.png)
+
+![image-20250328153857103](/image-20250328153857103.png)
+
+![image-20250328153916122](/image-20250328153916122.png)
+
+![image-20250328153926680](/image-20250328153926680.png)
