@@ -118,7 +118,6 @@ conn = MySQLdb.connect(
     port=3306,
     user="root",
     password="root",
-    database="link"
 )
 
 @mcp.resource("schema://main")
