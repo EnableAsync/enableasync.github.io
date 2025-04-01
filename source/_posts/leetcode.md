@@ -3565,6 +3565,54 @@ public class Solution {
 
 
 
+## x 的平方根
+
+### 二分
+
+```java
+class Solution {
+    public int mySqrt(int x) {
+        int l = 0, r = x, ans = -1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if ((long) mid * mid <= x) {
+                ans = mid;
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+
+
+## 转换为对数
+
+对于平方根有以下运算：
+
+$\sqrt{x} = x^{1/2} = \left(e^{\ln x}\right)^{1/2} = e^{\frac{1}{2} \ln x}$
+
+
+
+```java
+class Solution {
+    public int mySqrt(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        int ans = (int) Math.exp(0.5 * Math.log(x));
+        return (long) (ans + 1) * (ans + 1) <= x ? ans + 1 : ans;
+    }
+}
+```
+
+
+
+
+
 # 子串
 
 ## 和为 K 的子数组
