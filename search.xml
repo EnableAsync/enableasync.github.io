@@ -3043,6 +3043,10 @@
 <h2 id="跳跃游戏"><a href="#跳跃游戏" class="headerlink" title="跳跃游戏"></a>跳跃游戏</h2><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">canJump</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        List&lt;Integer&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>        <span class="hljs-comment">// 总体思路：是否存在跳不过去的 0</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] == <span class="hljs-number">0</span> &amp;&amp; i != n - <span class="hljs-number">1</span>) &#123; <span class="hljs-comment">// 最后的一个 0 不用判断</span><br>                list.add(i);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">lastStart</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; list.size(); i++) &#123;<br>            <span class="hljs-comment">// 看 0 的前面</span><br>            <span class="hljs-type">boolean</span> <span class="hljs-variable">ok</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> list.get(i) - <span class="hljs-number">1</span>; j &gt;= lastStart; j--) &#123;<br>                <span class="hljs-keyword">if</span> (nums[j] &gt; list.get(i) - j) &#123;<br>                    ok = <span class="hljs-literal">true</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (!ok) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>官解：判断能跳过去的最大长度是否超过结尾</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">canJump</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">rightmost</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>            <span class="hljs-keyword">if</span> (i &lt;= rightmost) &#123;<br>                rightmost = Math.max(rightmost, i + nums[i]);<br>                <span class="hljs-keyword">if</span> (rightmost &gt;= n - <span class="hljs-number">1</span>) &#123;<br>                    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h2 id="x-的平方根"><a href="#x-的平方根" class="headerlink" title="x 的平方根"></a>x 的平方根</h2><h3 id="二分-1"><a href="#二分-1" class="headerlink" title="二分"></a>二分</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">mySqrt</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">l</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, r = x, ans = -<span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span> (l &lt;= r) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">mid</span> <span class="hljs-operator">=</span> l + (r - l) / <span class="hljs-number">2</span>;<br>            <span class="hljs-keyword">if</span> ((<span class="hljs-type">long</span>) mid * mid &lt;= x) &#123;<br>                ans = mid;<br>                l = mid + <span class="hljs-number">1</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                r = mid - <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="转换为对数"><a href="#转换为对数" class="headerlink" title="转换为对数"></a>转换为对数</h2><p>对于平方根有以下运算：</p>
+<p>$\sqrt{x} = x^{1/2} = \left(e^{\ln x}\right)^{1/2} = e^{\frac{1}{2} \ln x}$</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">mySqrt</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> &#123;<br>        <span class="hljs-keyword">if</span> (x == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) Math.exp(<span class="hljs-number">0.5</span> * Math.log(x));<br>        <span class="hljs-keyword">return</span> (<span class="hljs-type">long</span>) (ans + <span class="hljs-number">1</span>) * (ans + <span class="hljs-number">1</span>) &lt;= x ? ans + <span class="hljs-number">1</span> : ans;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h1 id="子串"><a href="#子串" class="headerlink" title="子串"></a>子串</h1><h2 id="和为-K-的子数组"><a href="#和为-K-的子数组" class="headerlink" title="和为 K 的子数组"></a>和为 K 的子数组</h2><p>2 * 10^4 O(n^2) 或者 O(n)</p>
 <p>给你一个整数数组 <code>nums</code> 和一个整数 <code>k</code> ，请你统计并返回 <em>该数组中和为 <code>k</code> 的子数组的个数</em> 。</p>
 <p>子数组是数组中元素的连续非空序列。</p>
@@ -5871,6 +5875,7 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <h3 id="如何解决热key问题？"><a href="#如何解决热key问题？" class="headerlink" title="如何解决热key问题？"></a>如何解决热key问题？</h3><ul>
 <li>在Redis集群架构中对热Key进行复制。在Redis集群架构中，由于热Key的迁移粒度问题，无法将请求分散至其他数据分片，导致单个数据分片的压力无法下降。此时，可以将对应热Key进行复制并迁移至其他数据分片，例如将热Key foo复制出3个内容完全一样的Key并名为foo2、foo3、foo4，将这三个Key迁移到其他数据分片来解决单个数据分片的热Key压力。</li>
 <li>使用读写分离架构。如果热Key的产生来自于读请求，您可以将实例改造成读写分离架构来降低每个数据分片的读请求压力，甚至可以不断地增加从节点。但是读写分离架构在增加业务代码复杂度的同时，也会增加Redis集群架构复杂度。不仅要为多个从节点提供转发层（如Proxy，LVS等）来实现负载均衡，还要考虑从节点数量显著增加后带来故障率增加的问题。Redis集群架构变更会为监控、运维、故障处理带来了更大的挑战。</li>
+<li>拆分为多个 key，用本地缓存兜底</li>
 </ul>
 <h1 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h1><h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><h3 id="JDK-动态代理（需要实现接口）"><a href="#JDK-动态代理（需要实现接口）" class="headerlink" title="JDK 动态代理（需要实现接口）"></a>JDK 动态代理（需要实现接口）</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.lang.reflect.InvocationHandler;<br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><span class="hljs-keyword">import</span> java.lang.reflect.Proxy;<br><br><span class="hljs-comment">// 1. 定义接口（抽象主题）</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">UserService</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">login</span><span class="hljs-params">(String username)</span>;<br>    String <span class="hljs-title function_">getUserInfo</span><span class="hljs-params">(<span class="hljs-type">int</span> userId)</span>;<br>&#125;<br><br><span class="hljs-comment">// 2. 实现类（真实主题）</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">UserService</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">login</span><span class="hljs-params">(String username)</span> &#123;<br>        System.out.println(username + <span class="hljs-string">&quot; 登录成功&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getUserInfo</span><span class="hljs-params">(<span class="hljs-type">int</span> userId)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;用户ID：&quot;</span> + userId + <span class="hljs-string">&quot;，姓名：张三&quot;</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 3. 调用处理器（实现方法增强）</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">LogHandler</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InvocationHandler</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Object target;  <span class="hljs-comment">// 被代理对象</span><br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">LogHandler</span><span class="hljs-params">(Object target)</span> &#123;<br>        <span class="hljs-built_in">this</span>.target = target;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(Object proxy, Method method, Object[] args)</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>        System.out.println(<span class="hljs-string">&quot;【日志】开始执行方法：&quot;</span> + method.getName());<br>        <span class="hljs-type">long</span> <span class="hljs-variable">start</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <br>        <span class="hljs-comment">// 调用原始方法</span><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> method.invoke(target, args);<br>        <br>        System.out.println(<span class="hljs-string">&quot;【日志】方法耗时：&quot;</span> + (System.currentTimeMillis() - start) + <span class="hljs-string">&quot;ms&quot;</span>);<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 4. 客户端使用动态代理</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DynamicProxyDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">// 创建目标对象</span><br>        <span class="hljs-type">UserService</span> <span class="hljs-variable">realService</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserServiceImpl</span>();<br>        <br>        <span class="hljs-comment">// 创建代理对象</span><br>        <span class="hljs-type">UserService</span> <span class="hljs-variable">proxy</span> <span class="hljs-operator">=</span> (UserService) Proxy.newProxyInstance(<br>            realService.getClass().getClassLoader(),<br>            realService.getClass().getInterfaces(),<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">LogHandler</span>(realService)<br>        );<br><br>        <span class="hljs-comment">// 通过代理对象调用方法</span><br>        proxy.login(<span class="hljs-string">&quot;admin&quot;</span>);<br>        System.out.println(proxy.getUserInfo(<span class="hljs-number">1001</span>));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>运行结果</p>
@@ -6167,6 +6172,165 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <li>string 不可变、[]byte 可变</li>
 <li>string 底层是只读字符序列，[]byte 是动态字节数组</li>
 </ul>
+<h1 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h1><h2 id="如何保证幂等写？"><a href="#如何保证幂等写？" class="headerlink" title="如何保证幂等写？"></a>如何保证幂等写？</h2><p>幂等性是指 <strong>同一操作的多次执行对系统状态的影响与一次执行结果一致</strong>。例如，支付接口若因网络重试被多次调用，最终应确保仅扣款一次。实现幂等写的核心方案：</p>
+<ul>
+<li><p><strong>唯一标识（幂等键）</strong>：客户端为每个请求生成全局唯一ID（如 UUID、业务主键），服务端校验该ID是否已处理，适用场景接口调用、消息消费等。</p>
+<ul>
+<li><p>所谓请求序列号，其实就是每次向服务端请求时候附带一个短时间内唯一不重复的序列号，该序列号可以是一个有序 ID，也可以是一个订单号，一般由下游生成，在调用上游服务端接口时附加该序列号和用于认证的 ID。</p>
+<p>当上游服务器收到请求信息后拿取该 序列号 和下游 认证ID 进行组合，形成用于操作 Redis 的 Key，然后到 Redis 中查询是否存在对应的 Key 的键值对，根据其结果：</p>
+<ul>
+<li>如果存在，就说明已经对该下游的该序列号的请求进行了业务处理，这时可以直接响应重复请求的错误信息。</li>
+<li>如果不存在，就以该 Key 作为 Redis 的键，以下游关键信息作为存储的值（例如下游商传递的一些业务逻辑信息），将该键值对存储到 Redis 中 ，然后再正常执行对应的业务逻辑即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img  src="6376434288b6f4198640ad8bd6d28668.png"   style="zoom: 80%;" /><span class="image-caption">img</span></p>
+<ul>
+<li><strong>数据库事务 + 乐观锁</strong>：通过版本号或状态字段控制并发更新，确保多次更新等同于单次操作，适用场景数据库记录更新（如余额扣减、订单状态变更）。<ul>
+<li>数据库乐观锁方案一般只能适用于执行“更新操作”的过程，我们可以提前在对应的数据表中多添加一个字段，充当当前数据的版本标识。这样每次对该数据库该表的这条数据执行更新时，都会将该版本标识作为一个条件，值为上次待更新数据中的版本标识的值。</li>
+</ul>
+</li>
+</ul>
+<p><img  src="1fb6403097c9e0103051a7d7582ad10d.png"   style="zoom:67%;" /><span class="image-caption">img</span></p>
+<ul>
+<li><p><strong>数据库唯一约束</strong>：利用数据库唯一索引防止重复数据写入，适用场景数据插入场景（如订单创建）。</p>
+<ul>
+<li><p>数据库唯一主键的实现主要是利用数据库中主键唯一约束的特性，一般来说唯一主键比较适用于“插入”时的幂等性，其能保证一张表中只能存在一条带该唯一主键的记录。</p>
+<p>使用数据库唯一主键完成幂等性时需要注意的是，该主键一般来说并不是使用数据库中自增主键，而是使用分布式 ID 充当主键（可以参考 Java 中分布式 ID 的设计方案），这样才能能保证在分布式环境下 ID 的全局唯一性。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img  src="31362183369a11e7f38403e45eeb1463.png"   style="zoom:80%;" /><span class="image-caption">img</span></p>
+<ul>
+<li><strong>分布式锁</strong>：通过锁机制保证同一时刻仅有一个请求执行关键操作，适用场景高并发下的资源抢夺（如秒杀）。</li>
+<li><strong>消息去重</strong>：消息队列生产者为每条消息生成唯一的消息 ID，消费者在处理消息前，先检查该消息 ID 是否已经处理过，如果已经处理过则丢弃该消息。</li>
+</ul>
+<h1 id="数据结构-1"><a href="#数据结构-1" class="headerlink" title="数据结构"></a>数据结构</h1><h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><h3 id="JDK1-8-之前"><a href="#JDK1-8-之前" class="headerlink" title="JDK1.8 之前"></a>JDK1.8 之前</h3><p>JDK1.8 之前 HashMap 底层是 数组和链表 结合在一起使用也就是 链表散列。</p>
+<p>HashMap 通过 key 的 hashCode 经过扰动函数处理过后得到 hash 值，然后通过 <code>(n - 1) &amp; hash</code> 判断当前元素存放的位置（这里的 n 指的是数组的长度），如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</p>
+<p>所谓扰动函数指的就是 HashMap 的 hash 方法。使用 hash 方法也就是扰动函数是为了防止一些实现比较差的 hashCode() 方法 换句话说使用扰动函数之后可以减少碰撞。</p>
+<p><img  src="jdk1.7_hashmap.png"  ><span class="image-caption">jdk1.8 之前的内部结构-HashMap</span></p>
+<h3 id="JDK1-8-之后"><a href="#JDK1-8-之后" class="headerlink" title="JDK1.8 之后"></a>JDK1.8 之后</h3><p>相比于之前的版本，JDK1.8 以后在解决哈希冲突时有了较大的变化。</p>
+<p>当链表长度大于阈值（默认为 8）时，会首先调用 <code>treeifyBin()</code>方法。这个方法会根据 HashMap 数组来决定是否转换为红黑树。只有当数组长度大于或者等于 64 的情况下，才会执行转换红黑树操作，以减少搜索时间。否则，就是只是执行 <code>resize()</code> 方法对数组扩容。相关源码这里就不贴了，重点关注 <code>treeifyBin()</code>方法即可。</p>
+<p><img  src="jdk1.8_hashmap.png"  ><span class="image-caption">jdk1.8之后的内部结构-HashMap</span></p>
+<p><strong>loadFactor 负载因子</strong></p>
+<p>loadFactor 负载因子是控制数组存放数据的疏密程度，loadFactor 越趋近于 1，那么 数组中存放的数据(entry)也就越多，也就越密，也就是会让链表的长度增加，loadFactor 越小，也就是趋近于 0，数组中存放的数据(entry)也就越少，也就越稀疏。</p>
+<p><strong>loadFactor 太大导致查找元素效率低，太小导致数组的利用率低，存放的数据会很分散。loadFactor 的默认值为 0.75f 是官方给出的一个比较好的临界值</strong>。</p>
+<p>给定的默认容量为 16，负载因子为 0.75。Map 在使用过程中不断的往里面存放数据，当数量超过了 16 * 0.75 = 12 就需要将当前 16 的容量进行扩容，而扩容这个过程涉及到 rehash、复制数据等操作，所以非常消耗性能。</p>
+<p><strong>threshold</strong></p>
+<p><strong>threshold = capacity * loadFactor</strong>，<strong>当 Size&gt;threshold</strong>的时候，那么就要考虑对数组的扩增了，也就是说，这个的意思就是 <strong>衡量数组是否需要扩增的一个标准</strong>。</p>
+<p>进行扩容，会伴随着一次重新 hash 分配，并且会遍历 hash 表中所有的元素，是非常耗时的。在编写程序中，要尽量避免 resize。resize 方法实际上是将 table 初始化和 table 扩容 进行了整合，底层的行为都是给 table 赋值一个新的数组。</p>
+<h2 id="双端队列，栈和队列"><a href="#双端队列，栈和队列" class="headerlink" title="双端队列，栈和队列"></a>双端队列，栈和队列</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>操作类型</strong></th>
+<th style="text-align:center"><strong>ArrayDeque</strong></th>
+<th style="text-align:center"><strong>LinkedList</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>头尾插入/删除</strong></td>
+<td style="text-align:center">O(1)，内存连续，缓存友好，循环数组实现</td>
+<td style="text-align:center">O(1)，但需频繁创建节点对象，实际性能略低</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>中间插入/删除</strong></td>
+<td style="text-align:center">不支持（仅限两端操作）</td>
+<td style="text-align:center">O(n)，需遍历链表找到位置</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>随机访问</strong></td>
+<td style="text-align:center">O(1)（通过索引直接访问）</td>
+<td style="text-align:center">O(n)，需从头或尾遍历链表</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>扩容开销</strong></td>
+<td style="text-align:center">扩容时需复制数组，O(n)开销</td>
+<td style="text-align:center">无固定容量限制，动态扩展无额外开销</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h2><ul>
+<li>完全二叉树：若二叉树的深度为 h，则除第 h 层外，其他层的结点全部达到最大值，且第 h 层的所有结点都集中在左子树。</li>
+<li>满二叉树：满二叉树是一种特殊的的完全二叉树，所有层的结点都是最大值。</li>
+</ul>
+<p>堆通常是一个可以被看做一棵树的数组对象。堆总是满足下列性质：</p>
+<ul>
+<li>堆中某个节点的值总是不大于或不小于其父节点的值；</li>
+<li>堆总是一棵完全二叉树。</li>
+</ul>
+<p><img  src="e4ecb1a8ef4456d88da12d8d472dcb81.png"   style="zoom:67%;" /><span class="image-caption">img</span></p>
+<p><img  src="5ef19d242f141a1218580547e52f404d.png"   style="zoom:67%;" /><span class="image-caption">img</span></p>
+<p>堆的定义如下：n个元素的序列{k1,k2,ki,…,kn}当且仅当满足下关系时，称之为堆。</p>
+<p>(ki &lt;= k2i,ki &lt;= k2i+1)或者(ki &gt;= k2i,ki &gt;= k2i+1), (i = 1,2,3,4…n/2)</p>
+<p><strong>注意： 在二叉树中，若当前节点的下标为 i， 则其父节点的下标为 i/2，其左子节点的下标为 i*2，其右子节点的下标为i*2+1；</strong></p>
+<h3 id="堆的插入"><a href="#堆的插入" class="headerlink" title="堆的插入"></a>堆的插入</h3><p>每次插入都是将先将新数据放在数组最后，由于从这个新数据的父结点到根结点必然为一个有序的序列，现在的任务是将这个新数据插入到这个有序序列中——这就类似于直接插入排序中将一个数据并入到有序区间中。</p>
+<p>我们通过一个插入例子来看看插入操作的细节。我们将数字 16 插入到这个堆中：</p>
+<p><img  src="f5e2bd8c5cd23174ea4733b3de9bed13.png"  ><span class="image-caption">img</span></p>
+<p>堆的数组是： [ 10, 7, 2, 5, 1 ]。</p>
+<p>第一步是将新的元素插入到数组的尾部，数组变成：[ 10, 7, 2, 5, 1, 16 ]；</p>
+<p>相应的树变成了：</p>
+<p><img  src="476b7bea162959303bc60f29887f7d88.png"  ><span class="image-caption">img</span></p>
+<p>16 被添加最后一行的第一个空位。</p>
+<p>不行的是，现在堆属性不满足，因为 2 在 16 的上面，我们需要将大的数字在上面（这是一个最大堆）</p>
+<p>为了恢复堆属性，我们需要交换 16 和 2。</p>
+<p><img  src="b01e2fe15b0746e37648947e3dc52efe.png"  ><span class="image-caption">img</span></p>
+<p>现在还没有完成，因为 10 也比 16 小。我们继续交换我们的插入元素和它的父节点，直到它的父节点比它大或者我们到达树的顶部。这就是所谓的 shift-up，每一次插入操作后都需要进行。它将一个太大或者太小的数字“浮起”到树的顶部。</p>
+<p>最后我们得到的堆：</p>
+<p><img  src="c4f062e9f353b77e73fa694bab67aac9.png"  ><span class="image-caption">img</span></p>
+<p>现在每一个父节点都比它的子节点大。</p>
+<h3 id="堆的删除"><a href="#堆的删除" class="headerlink" title="堆的删除"></a>堆的删除</h3><p>堆中每次都只能删除堆顶元素。为了便于重建堆，实际的操作是将最后一个数据的值赋给根结点，然后再从根结点开始进行一次从上向下的调整。调整时先在左右子结点中找最小的，如果父结点比这个最小的子结点还小说明不需要调整了，反之将父结点和它交换后再考虑后面的结点。相当于根结点数据的“下沉”过程。</p>
+<p>我们将这个树中的 (10) 删除：</p>
+<p><img  src="3b1843281df1093f2f51e695a6a22134.png"  ><span class="image-caption">img</span></p>
+<p>现在顶部有一个空的节点，怎么处理？</p>
+<p><img  src="a73d1b9388cf6190e3965df91c93e314.png"  ><span class="image-caption">img</span></p>
+<p>当插入节点的时候，我们将新的值返给数组的尾部。现在我们来做相反的事情：我们取出数组中的最后一个元素，将它放到树的顶部，然后再修复堆属性。</p>
+<p><img  src="48773339bf25b99d8c17a14c3a9655fc.png"  ><span class="image-caption">img</span></p>
+<p>现在来看怎么 shift-down (1)。为了保持最大堆的堆属性，我们需要树的顶部是最大的数据。现在有两个数字可用于交换 7 和 2。我们选择这两者中的较大者称为最大值放在树的顶部，所以交换 7 和 1，现在树变成了：</p>
+<p><img  src="7de49e3f8841aa1d9d7f6c865e316f86.png"  ><span class="image-caption">img</span></p>
+<p>继续堆化直到该节点没有任何子节点或者它比两个子节点都要大为止。对于我们的堆，我们只需要再有一次交换就恢复了堆属性：</p>
+<p><img  src="b8d775a60047391847a4be533697c7d0.png"  ><span class="image-caption">img</span></p>
+<h3 id="从数组构造一个堆"><a href="#从数组构造一个堆" class="headerlink" title="从数组构造一个堆"></a>从数组构造一个堆</h3><p>原始数据为a[] = {4, 1, 3, 2, 16, 9, 10, 14, 8, 7}，采用顺序存储方式，对应的完全二叉树如下图所示：</p>
+<p><img  src="bd6125df0507026075d897a710a5acd0.png"  ><span class="image-caption">img</span></p>
+<p>基本思想：<br>首先将每个叶子节点视为一个堆，再将每个叶子节点与其父节点一起构造成一个包含更多节点的对。所以，在构造堆的时候，首先需要找到最后一个节点的父节点，从这个节点开始构造最大堆；直到该节点前面所有分支节点都处理完毕，这样最大堆就构造完毕了。<br>假设树的节点个数为n，以1为下标开始编号，直到n结束。对于节点i，其父节点为i/2；左孩子节点为i<em>2，右孩子节点为i</em>2+1。最后一个节点的下标为n，其父节点的下标为n/2。<br>我们边针对上边数组操作如下图所示，最后一个节点为7，其父节点为16，从16这个节点开始构造最大堆；构造完毕之后，转移到下一个父节点2，直到所有父节点都构造完毕。</p>
+<p><img  src="038ba2c57f8352ffb48937a4a1cc010e.png"  ><span class="image-caption">img</span></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br>strcut MaxHeap<br>&#123;<br>	Etype *heap; <span class="hljs-comment">//数据元素存放的空间，下标从1开始存数数据，下标为0的作为工作空间，存储临时数据</span><br>	<span class="hljs-type">int</span> HeapSize;<span class="hljs-comment">//数据元素的个数</span><br>	<span class="hljs-type">int</span> MaxSize; <span class="hljs-comment">//存放数据元素空间的大小</span><br>&#125;;<br>MaxHeap H;<br> <br><span class="hljs-type">void</span> <span class="hljs-title function_">MaxHeapInit</span> <span class="hljs-params">(MaxHeap &amp;H)</span><br>&#123;<br>	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = H.HeapSize/<span class="hljs-number">2</span>; i&gt;=<span class="hljs-number">1</span>; i--)<br>	&#123;<br>		H.heap[<span class="hljs-number">0</span>] = H.heap[i];<br>		<span class="hljs-type">int</span> son = i*<span class="hljs-number">2</span>;<br>		<span class="hljs-keyword">while</span>(son &lt;= H.HeapSize)<br>		&#123;<br>			<span class="hljs-keyword">if</span>(son &lt; H.HeapSize &amp;&amp; H.heap[son] &lt; H.heap[son+<span class="hljs-number">1</span>])<br>				son++;<br>			<span class="hljs-keyword">if</span>(H.heap[<span class="hljs-number">0</span>] &gt;= H.heap[son])<br>				<span class="hljs-keyword">break</span>;<br>			<span class="hljs-keyword">else</span><br>			&#123;<br>				H.heap[son/<span class="hljs-number">2</span>] = H.heap[son];<br>				son *= <span class="hljs-number">2</span>;<br>			&#125;<br>		&#125;<br>		H.heap[son/<span class="hljs-number">2</span>] = H.heap[<span class="hljs-number">0</span>];<br>	&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><h3 id="线程崩溃了，进程也会崩溃吗？"><a href="#线程崩溃了，进程也会崩溃吗？" class="headerlink" title="线程崩溃了，进程也会崩溃吗？"></a>线程崩溃了，进程也会崩溃吗？</h3><p>一般来说如果线程是因为非法访问内存引起的崩溃，那么进程肯定会崩溃，为什么系统要让进程崩溃呢，这主要是因为在进程中，<strong>各个线程的地址空间是共享的</strong>，既然是共享，那么某个线程对地址的非法访问就会导致内存的不确定性，进而可能会影响到其他线程，这种操作是危险的，操作系统会认为这很可能导致一系列严重的后果，于是干脆让整个进程崩溃。</p>
+<h3 id="进程是如何崩溃的"><a href="#进程是如何崩溃的" class="headerlink" title="进程是如何崩溃的"></a>进程是如何崩溃的</h3><p>那么线程崩溃后，进程是如何崩溃的呢，这背后的机制到底是怎样的，答案是<strong>信号</strong>。</p>
+<p>大家想想要干掉一个正在运行的进程是不是经常用 kill -9 pid 这样的命令，这里的 kill 其实就是给指定 pid 发送终止信号的意思，其中的 9 就是信号。</p>
+<p>其实信号有很多类型的，在 Linux 中可以通过 <code>kill -l</code>查看所有可用的信号：</p>
+<p>那么发个信号进程怎么就崩溃了呢，这背后的原理到底是怎样的？</p>
+<p>其背后的机制如下：</p>
+<ol>
+<li>CPU 执行正常的进程指令</li>
+<li>调用 kill 系统调用向进程发送信号（假设为 11，即 SIGSEGV，一般非法访问内存报的都是这个错误）</li>
+<li>进程收到操作系统发的信号，CPU 暂停当前程序运行，并将控制权转交给操作系统</li>
+<li><strong>操作系统根据情况执行相应的信号处理程序（函数），一般执行完信号处理程序逻辑后会让进程退出</strong></li>
+</ol>
+<p>注意上面的第五步，如果进程没有注册自己的信号处理函数，那么操作系统会执行默认的信号处理程序（一般最后会让进程退出），但如果注册了，则会执行自己的信号处理函数，这样的话就给了进程一个垂死挣扎的机会，它收到 kill 信号后，可以调用 exit() 来退出，<strong>但也可以使用 sigsetjmp，siglongjmp 这两个函数来恢复进程的执行</strong></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 自定义信号处理函数示例</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-comment">// 自定义信号处理函数，处理自定义逻辑后再调用 exit 退出</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">sigHandler</span><span class="hljs-params">(<span class="hljs-type">int</span> sig)</span> &#123;<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Signal %d catched!\n&quot;</span>, sig);<br>  <span class="hljs-built_in">exit</span>(sig);<br>&#125;<br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> &#123;<br>  signal(SIGSEGV, sigHandler);<br>  <span class="hljs-type">int</span> *p = (<span class="hljs-type">int</span> *)<span class="hljs-number">0xC0000fff</span>;<br>  *p = <span class="hljs-number">10</span>; <span class="hljs-comment">// 针对不属于进程的内核空间写入数据，崩溃</span><br>&#125;<br><br><span class="hljs-comment">// 以上结果输出: Signal 11 catched!</span><br></code></pre></td></tr></table></figure>
+<p><strong>如代码所示</strong>：注册信号处理函数后，当收到 SIGSEGV 信号后，先执行相关的逻辑再退出</p>
+<p>另外当进程接收信号之后也可以不定义自己的信号处理函数，而是选择忽略信号，如下</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> &#123;<br>  <span class="hljs-comment">// 忽略信号</span><br>  signal(SIGSEGV, SIG_IGN);<br><br>  <span class="hljs-comment">// 产生一个 SIGSEGV 信号</span><br>  raise(SIGSEGV);<br><br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;正常结束&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>也就是说虽然给进程发送了 kill 信号，但如果进程自己定义了信号处理函数或者无视信号就有机会逃出生天，当然了 kill -9 命令例外，不管进程是否定义了信号处理函数，都会马上被干掉。</p>
+<p>说到这大家是否想起了一道经典面试题：<strong>如何让正在运行的 Java 工程的优雅停机？</strong></p>
+<p>通过上面的介绍大家不难发现，其实是 JVM 自己定义了信号处理函数，这样当发送 kill pid 命令（默认会传 15 也就是 SIGTERM）后，JVM 就可以在信号处理函数中执行一些资源清理之后再调用 exit 退出。</p>
+<p>这种场景显然不能用 kill -9，不然一下把进程干掉了资源就来不及清除了。</p>
+<h3 id="为什么线程崩溃不会导致-JVM-进程崩溃"><a href="#为什么线程崩溃不会导致-JVM-进程崩溃" class="headerlink" title="为什么线程崩溃不会导致 JVM 进程崩溃"></a>为什么线程崩溃不会导致 JVM 进程崩溃</h3><p><strong>因为 JVM 自定义了自己的信号处理函数，拦截了 SIGSEGV 信号，针对这两者不让它们崩溃</strong>。</p>
+<h3 id="OpenJDK-源码"><a href="#OpenJDK-源码" class="headerlink" title="OpenJDK 源码"></a>OpenJDK 源码</h3><p><img  src="474ddf8657a0438da1822e0f6fa59af7.jpeg"   style="zoom:80%;" /><span class="image-caption">img</span></p>
+<p>可以看到，在启动 JVM 的时候，也设置了信号处理函数，收到 SIGSEGV，SIGPIPE 等信号后最终会调用 JVM_handle_linux_signal 这个自定义信号处理函数，再来看下这个函数的主要逻辑。</p>
+<ol>
+<li>发生 stackoverflow 还有空指针错误，确实都发送了 SIGSEGV，只是虚拟机不选择退出，而是自己内部作了额外的处理，其实是恢复了线程的执行，并抛出 StackoverflowError 和 NPE，这就是为什么 JVM 不会崩溃且我们能捕获这两个错误/异常的原因</li>
+<li>如果针对 SIGSEGV 等信号，在以上的函数中 JVM 没有做额外的处理，那么最终会走到 report_and_die 这个方法，这个方法主要做的事情是生成 hs_err_pid_xxx.log crash 文件（记录了一些堆栈信息或错误），然后退出</li>
+</ol>
+<p>至此我相信大家明白了为什么发生了 StackoverflowError 和 NPE 这两个非法访问内存的错误，JVM 却没有崩溃。</p>
+<p><strong>原因其实就是虚拟机内部定义了信号处理函数，而在信号处理函数中对这两者做了额外的处理以让 JVM 不崩溃，另一方面也可以看出如果 JVM 不对信号做额外的处理，最后会自己退出并产生 crash 文件 hs_err_pid_xxx.log（可以通过 -XX:ErrorFile=/var/*log*/hs_err.log 这样的方式指定），这个文件记录了虚拟机崩溃的重要原因</strong>。</p>
+<p>所以也可以说，虚拟机是否崩溃只要看它是否会产生此崩溃日志文件</p>
 <h1 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h1><h2 id="秒杀系统"><a href="#秒杀系统" class="headerlink" title="秒杀系统"></a>秒杀系统</h2><p>系统架构分层设计如下。</p>
 <p><strong>前端层：</strong></p>
 <ul>
@@ -6224,7 +6388,20 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <li>5、用户在客户端申请秒杀请求后，进行轮询，查看是否秒杀成功，秒杀成功则进入秒杀订单详情，否则秒杀失败</li>
 </ul>
 <p>这种方案的缺点：由于是通过异步队列写入数据库中，可能存在数据不一致，其次引用多个组件复杂度比较高</p>
-]]></content>
+<h1 id="AI"><a href="#AI" class="headerlink" title="AI"></a>AI</h1><h2 id="MCP"><a href="#MCP" class="headerlink" title="MCP"></a>MCP</h2><p>MCP 的核心定位是“被动服务”，仅响应调用请求，不参与决策或推理。</p>
+<p><strong>优势</strong>：模块化设计，便于独立开发和扩展。　</p>
+<p><strong>局限性</strong>：只能被动响应，无法主动解决问题。</p>
+<p>MCP Server采用被动服务模式，仅在接收到请求时返回数据。例如，当模型需要抓取网页内容时，会通过HTTP/SSE协议发送请求，MCP Server抓取数据后返回。　</p>
+<h2 id="Function-Call"><a href="#Function-Call" class="headerlink" title="Function Call"></a>Function Call</h2><p>Function Call是指大模型直接调用预定义函数的能力，允许模型生成请求参数并整合结果。例如，模型可以通过Function Call查询天气或执行简单的数学计算。它的本质是“代码级工具”，通常与模型绑定部署。　</p>
+<p><strong>优势</strong>：高效便捷，无需额外通信开销。　</p>
+<p><strong>局限性</strong>：受模型运行时资源限制，无法执行耗时任务。　</p>
+<p>Function Call由模型运行时环境直接执行，开发者需预先定义函数并将其打包到模型服务中。这种方式适用于高频轻量任务。　</p>
+<h2 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h2><p>Agent是一种具备自主决策能力的AI实体，能够感知环境、规划任务并调用工具（包括MCP Server和Function Call）完成目标。例如，一个Agent可以接到“撰写AI趋势报告”的任务后，自动抓取数据、分析内容并生成报告。　</p>
+<p><strong>优势</strong>：高自主性，支持复杂流程。　</p>
+<p><strong>局限性</strong>：开发复杂度较高，需要集成推理框架和状态管理。</p>
+<p>Agent具备高自主性，不仅可以主动调用工具，还能与用户进行双向交互。例如，当用户提出模糊需求时，Agent可以进一步确认细节后再执行任务。　</p>
+<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><h3 id="介绍一下-Transformer"><a href="#介绍一下-Transformer" class="headerlink" title="介绍一下 Transformer"></a>介绍一下 Transformer</h3><h3 id="介绍一下-QKV-的计算过程"><a href="#介绍一下-QKV-的计算过程" class="headerlink" title="介绍一下 QKV 的计算过程"></a>介绍一下 QKV 的计算过程</h3><h3 id="介绍一下-QKV-的过程中的计算量"><a href="#介绍一下-QKV-的过程中的计算量" class="headerlink" title="介绍一下 QKV 的过程中的计算量"></a>介绍一下 QKV 的过程中的计算量</h3><h3 id="介绍一下-Transformer-中的参数量"><a href="#介绍一下-Transformer-中的参数量" class="headerlink" title="介绍一下 Transformer 中的参数量"></a>介绍一下 Transformer 中的参数量</h3><h3 id="介绍一下位置编码的演变"><a href="#介绍一下位置编码的演变" class="headerlink" title="介绍一下位置编码的演变"></a>介绍一下位置编码的演变</h3><h3 id="位置编码"><a href="#位置编码" class="headerlink" title="位置编码"></a>位置编码</h3><p><a href="https://zhuanlan.zhihu.com/p/11885471610">https://zhuanlan.zhihu.com/p/11885471610</a></p>
+<h3 id="为什么-decoder-only-更有优势"><a href="#为什么-decoder-only-更有优势" class="headerlink" title="为什么 decoder-only 更有优势"></a>为什么 decoder-only 更有优势</h3><h3 id="为什么大模型的输入与输出-Token-的价格不一样贵"><a href="#为什么大模型的输入与输出-Token-的价格不一样贵" class="headerlink" title="为什么大模型的输入与输出 Token 的价格不一样贵"></a>为什么大模型的输入与输出 Token 的价格不一样贵</h3><h3 id="-1"><a href="#-1" class="headerlink" title=" "></a> </h3>]]></content>
       <tags>
         <tag>data structure, algorithm</tag>
       </tags>
