@@ -642,6 +642,17 @@
       </tags>
   </entry>
   <entry>
+    <title>tensorflow 中的一些坑</title>
+    <url>/uncategorized/tensorflow/</url>
+    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
+<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
+<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ai</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>远程服务器的 Git 使用本地的密钥——ssh-agent</title>
     <url>/linux/ssh-agent/</url>
     <content><![CDATA[<h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>有的时候我们在远程服务器上开发，但是远程服务器有多个人使用，我们并不想把自己的私钥放到服务器上，但是又想通过私钥连接到 Github 等远程仓库，那么该怎么做呢？</p>
@@ -664,17 +675,6 @@
       <categories>
         <category>linux</category>
       </categories>
-  </entry>
-  <entry>
-    <title>tensorflow 中的一些坑</title>
-    <url>/uncategorized/tensorflow/</url>
-    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
-<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
-<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>ai</tag>
-      </tags>
   </entry>
   <entry>
     <title>一些杂记</title>
@@ -4044,7 +4044,7 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <p>TCP 有 MSS （TCP 最大报文段长度）</p>
 <h4 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h4><p>实际的传输功能。</p>
 <p>网络层最常使用的是 IP 协议（Internet Protocol），IP 协议会将传输层的报文作为数据部分，再加上 IP 包头组装成 IP 报文，如果 IP 报文大小超过 MTU（以太网中一般为 1500 字节）就会<strong>再次进行分片</strong>，得到一个即将发送到网络的 IP 报文。</p>
-<p><img  src="/12.jpg"   style="zoom: 67%;" /><span class="image-caption">img</span></p>
+<p><img  src="12.jpg"   style="zoom: 67%;" /><span class="image-caption">img</span></p>
 <p>IP 和子网掩码与运算得到<strong>网络号</strong>，子网掩码取反后和 IP 与运算得到<strong>主机号</strong>。</p>
 <p>IP 协议的寻址作用是告诉我们去往下一个目的地该朝哪个方向走，路由则是根据「下一个目的地」选择路径。寻址更像在导航，路由更像在操作方向盘。</p>
 <h4 id="网络接口层"><a href="#网络接口层" class="headerlink" title="网络接口层"></a>网络接口层</h4><p>生成了 IP 头部之后，接下来要交给网络接口层，在 IP 头部的前面加上 MAC 头部，并封装成数据帧（Data frame）发送到网络上。</p>
@@ -4267,7 +4267,7 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <h2 id="HTTP-特性"><a href="#HTTP-特性" class="headerlink" title="HTTP 特性"></a>HTTP 特性</h2><h3 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h3><p>HTTP 最突出的优点是「简单、灵活和易于扩展、应用广泛和跨平台」。</p>
 <p>HTTP 协议里有优缺点一体的<strong>双刃剑</strong>，分别是「无状态、明文传输」，同时还有一大缺点「不安全」。</p>
 <p>HTTP 协议是基于 <strong>TCP/IP</strong>，并且使用了「<strong>请求 - 应答</strong>」的通信模式，所以性能的关键就在这<strong>两点</strong>里。</p>
-<p><img  src="/16-短连接与长连接.png"   style="zoom: 80%;" /><span class="image-caption">短连接与长连接</span></p>
+<p><img  src="16-短连接与长连接.png"    /><span class="image-caption">短连接与长连接</span></p>
 <ul>
 <li><p>长连接</p>
 <ul>
@@ -6300,7 +6300,111 @@ area = (right - left) * \min (height[left], height[right])</script><p>由上面�
 <p>基本思想：<br>首先将每个叶子节点视为一个堆，再将每个叶子节点与其父节点一起构造成一个包含更多节点的对。所以，在构造堆的时候，首先需要找到最后一个节点的父节点，从这个节点开始构造最大堆；直到该节点前面所有分支节点都处理完毕，这样最大堆就构造完毕了。<br>假设树的节点个数为n，以1为下标开始编号，直到n结束。对于节点i，其父节点为i/2；左孩子节点为i<em>2，右孩子节点为i</em>2+1。最后一个节点的下标为n，其父节点的下标为n/2。<br>我们边针对上边数组操作如下图所示，最后一个节点为7，其父节点为16，从16这个节点开始构造最大堆；构造完毕之后，转移到下一个父节点2，直到所有父节点都构造完毕。</p>
 <p><img  src="038ba2c57f8352ffb48937a4a1cc010e.png"  ><span class="image-caption">img</span></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br>strcut MaxHeap<br>&#123;<br>	Etype *heap; <span class="hljs-comment">//数据元素存放的空间，下标从1开始存数数据，下标为0的作为工作空间，存储临时数据</span><br>	<span class="hljs-type">int</span> HeapSize;<span class="hljs-comment">//数据元素的个数</span><br>	<span class="hljs-type">int</span> MaxSize; <span class="hljs-comment">//存放数据元素空间的大小</span><br>&#125;;<br>MaxHeap H;<br> <br><span class="hljs-type">void</span> <span class="hljs-title function_">MaxHeapInit</span> <span class="hljs-params">(MaxHeap &amp;H)</span><br>&#123;<br>	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = H.HeapSize/<span class="hljs-number">2</span>; i&gt;=<span class="hljs-number">1</span>; i--)<br>	&#123;<br>		H.heap[<span class="hljs-number">0</span>] = H.heap[i];<br>		<span class="hljs-type">int</span> son = i*<span class="hljs-number">2</span>;<br>		<span class="hljs-keyword">while</span>(son &lt;= H.HeapSize)<br>		&#123;<br>			<span class="hljs-keyword">if</span>(son &lt; H.HeapSize &amp;&amp; H.heap[son] &lt; H.heap[son+<span class="hljs-number">1</span>])<br>				son++;<br>			<span class="hljs-keyword">if</span>(H.heap[<span class="hljs-number">0</span>] &gt;= H.heap[son])<br>				<span class="hljs-keyword">break</span>;<br>			<span class="hljs-keyword">else</span><br>			&#123;<br>				H.heap[son/<span class="hljs-number">2</span>] = H.heap[son];<br>				son *= <span class="hljs-number">2</span>;<br>			&#125;<br>		&#125;<br>		H.heap[son/<span class="hljs-number">2</span>] = H.heap[<span class="hljs-number">0</span>];<br>	&#125;<br></code></pre></td></tr></table></figure>
-<h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><h3 id="线程崩溃了，进程也会崩溃吗？"><a href="#线程崩溃了，进程也会崩溃吗？" class="headerlink" title="线程崩溃了，进程也会崩溃吗？"></a>线程崩溃了，进程也会崩溃吗？</h3><p>一般来说如果线程是因为非法访问内存引起的崩溃，那么进程肯定会崩溃，为什么系统要让进程崩溃呢，这主要是因为在进程中，<strong>各个线程的地址空间是共享的</strong>，既然是共享，那么某个线程对地址的非法访问就会导致内存的不确定性，进而可能会影响到其他线程，这种操作是危险的，操作系统会认为这很可能导致一系列严重的后果，于是干脆让整个进程崩溃。</p>
+<h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p><strong>操作系统会提供一种机制，将不同进程的虚拟地址和不同内存的物理地址映射起来。</strong></p>
+<ul>
+<li>我们程序所使用的内存地址叫做<strong>虚拟内存地址</strong>（<em>Virtual Memory Address</em>）。</li>
+<li>实际存在硬件里面的空间地址叫<strong>物理内存地址</strong>（<em>Physical Memory Address</em>）。</li>
+</ul>
+<h3 id="内存分页"><a href="#内存分页" class="headerlink" title="内存分页"></a>内存分页</h3><p><strong>分页是把整个虚拟和物理内存空间切成一段段固定尺寸的大小</strong>。这样一个连续并且尺寸固定的内存空间，我们叫<strong>页</strong>（<em>Page</em>）。在 Linux 下，每一页的大小为 <code>4KB</code>。</p>
+<p>虚拟地址与物理地址之间通过<strong>页表</strong>来映射，如下图：</p>
+<p><img  src="08a8e315fedc4a858060db5cb4a654af.png"   style="zoom:67%;" /><span class="image-caption">img</span></p>
+<p>页表是存储在内存里的，<strong>内存管理单元</strong> （<em>MMU</em>）就做将虚拟内存地址转换成物理地址的工作。</p>
+<p>而当进程访问的虚拟地址在页表中查不到时，系统会产生一个<strong>缺页异常</strong>，进入系统内核空间分配物理内存、更新进程页表，最后再返回用户空间，恢复进程的运行。</p>
+<p>内存分页由于内存空间都是预先划分好的，也就不会像内存分段一样，在段与段之间会产生间隙非常小的内存，这正是分段会产生外部内存碎片的原因。而<strong>采用了分页，页与页之间是紧密排列的，所以不会有外部碎片。</strong></p>
+<p>但是，因为内存分页机制分配内存的最小单位是一页，即使程序不足一页大小，我们最少只能分配一个页，所以页内会出现内存浪费，所以针对<strong>内存分页机制会有内部内存碎片</strong>的现象。</p>
+<p>如果内存空间不够，操作系统会把其他正在运行的进程中的「最近没被使用」的内存页面给释放掉，也就是暂时写在硬盘上，称为<strong>换出</strong>（<em>Swap Out</em>）。一旦需要的时候，再加载进来，称为<strong>换入</strong>（<em>Swap In</em>）。所以，一次性写入磁盘的也只有少数的一个页或者几个页，不会花太多时间，<strong>内存交换的效率就相对比较高。</strong></p>
+<p>更进一步地，分页的方式使得我们在加载程序的时候，不再需要一次性都把程序加载到物理内存中。我们完全可以在进行虚拟内存和物理内存的页之间的映射之后，并不真的把页加载到物理内存里，而是<strong>只有在程序运行中，需要用到对应虚拟内存页里面的指令和数据时，再加载到物理内存里面去。</strong></p>
+<blockquote>
+<p>分页机制下，虚拟地址和物理地址是如何映射的？</p>
+</blockquote>
+<p>在分页机制下，虚拟地址分为两部分，<strong>页号</strong>和<strong>页内偏移</strong>。页号作为页表的索引，<strong>页表</strong>包含物理页每页所在<strong>物理内存的基地址</strong>，这个基地址与页内偏移的组合就形成了物理内存地址，见下图。</p>
+<p><img  src="7884f4d8db4949f7a5bb4bbd0f452609.png"   style="zoom:67%;" /><span class="image-caption">img</span></p>
+<blockquote>
+<p>简单的分页有什么缺陷吗？</p>
+</blockquote>
+<p>有空间上的缺陷。</p>
+<p>因为操作系统是可以同时运行非常多的进程的，那这不就意味着页表会非常的庞大。</p>
+<p>在 32 位的环境下，虚拟地址空间共有 4GB，假设一个页的大小是 4KB（2^12），那么就需要大约 100 万 （2^20） 个页，每个「页表项」需要 4 个字节大小来存储，那么整个 4GB 空间的映射就需要有 <code>4MB</code> 的内存来存储页表。</p>
+<p>这 4MB 大小的页表，看起来也不是很大。但是要知道每个进程都是有自己的虚拟地址空间的，也就说都有自己的页表。</p>
+<p>那么，<code>100</code> 个进程的话，就需要 <code>400MB</code> 的内存来存储页表，这是非常大的内存了，更别说 64 位的环境了。</p>
+<h3 id="多级页表"><a href="#多级页表" class="headerlink" title="多级页表"></a>多级页表</h3><p>在前面我们知道了，对于单页表的实现方式，在 32 位和页大小 <code>4KB</code> 的环境下，一个进程的页表需要装下 100 多万个「页表项」，并且每个页表项是占用 4 字节大小的，于是相当于每个页表需占用 4MB 大小的空间。</p>
+<p>我们把这个 100 多万个「页表项」的单级页表再分页，将页表（一级页表）分为 <code>1024</code> 个页表（二级页表），每个表（二级页表）中包含 <code>1024</code> 个「页表项」，形成<strong>二级分页</strong>。如下图所示：</p>
+<p><img  src="19296e249b2240c29f9c52be70f611d5.png"   style="zoom: 50%;" /><span class="image-caption">img</span></p>
+<blockquote>
+<p>你可能会问，分了二级表，映射 4GB 地址空间就需要 4KB（一级页表）+ 4MB（二级页表）的内存，这样占用空间不是更大了吗？</p>
+</blockquote>
+<p>当然如果 4GB 的虚拟地址全部都映射到了物理内存上的话，二级分页占用空间确实是更大了，但是，我们往往不会为一个进程分配那么多内存。</p>
+<p>其实我们应该换个角度来看问题，还记得计算机组成原理里面无处不在的<strong>局部性原理</strong>么？</p>
+<p>每个进程都有 4GB 的虚拟地址空间，而显然对于大多数程序来说，其使用到的空间远未达到 4GB，因为会存在部分对应的页表项都是空的，根本没有分配，对于已分配的页表项，如果存在最近一定时间未访问的页表，在物理内存紧张的情况下，操作系统会将页面换出到硬盘，也就是说不会占用物理内存。</p>
+<p>如果使用了二级分页，一级页表就可以覆盖整个 4GB 虚拟地址空间，但<strong>如果某个一级页表的页表项没有被用到，也就不需要创建这个页表项对应的二级页表了，即可以在需要时才创建二级页表</strong>。做个简单的计算，假设只有 20% 的一级页表项被用到了，那么页表占用的内存空间就只有 4KB（一级页表） + 20% * 4MB（二级页表）= <code>0.804MB</code>，这对比单级页表的 <code>4MB</code> 是不是一个巨大的节约？</p>
+<p>对于 64 位的系统，两级分页肯定不够了，就变成了四级目录，分别是：</p>
+<ul>
+<li>全局页目录项 PGD（<em>Page Global Directory</em>）；</li>
+<li>上层页目录项 PUD（<em>Page Upper Directory</em>）；</li>
+<li>中间页目录项 PMD（<em>Page Middle Directory</em>）；</li>
+<li>页表项 PTE（<em>Page Table Entry</em>）；</li>
+</ul>
+<p>我们就可以利用这一特性，把最常访问的几个页表项存储到访问速度更快的硬件，于是计算机科学家们，就在 CPU 芯片中，加入了一个专门存放程序最常访问的页表项的 Cache，这个 Cache 就是 TLB（<em>Translation Lookaside Buffer</em>） ，通常称为页表缓存、转址旁路缓存、快表等。</p>
+<p><img  src="a3cdf27646b24614a64cfc5d7ccffa35.png"   style="zoom: 67%;" /><span class="image-caption">img</span></p>
+<p>在 CPU 芯片里面，封装了内存管理单元（<em>Memory Management Unit</em>）芯片，它用来完成地址转换和 TLB 的访问与交互。</p>
+<p>有了 TLB 后，那么 CPU 在寻址时，会先查 TLB，如果没找到，才会继续查常规的页表。</p>
+<p>TLB 的命中率其实是很高的，因为程序最常访问的页就那么几个。</p>
+<h3 id="malloc-是如何分配内存的？"><a href="#malloc-是如何分配内存的？" class="headerlink" title="malloc 是如何分配内存的？"></a>malloc 是如何分配内存的？</h3><p>实际上，malloc() 并不是系统调用，而是 C 库里的函数，用于动态分配内存。</p>
+<p>malloc 申请内存的时候，会有两种方式向操作系统申请堆内存。</p>
+<ul>
+<li>方式一：通过 brk() 系统调用从堆分配内存</li>
+<li>方式二：通过 mmap() 系统调用在文件映射区域分配内存；</li>
+</ul>
+<p>方式一实现的方式很简单，就是通过 brk() 函数将「堆顶」指针向高地址移动，获得新的内存空间。如下图：</p>
+<p><img  src="/brk申请.png"   style="zoom:50%;" /><span class="image-caption">img</span></p>
+<p>方式二通过 mmap() 系统调用中「私有匿名映射」的方式，在文件映射区分配一块内存，也就是从文件映射区“偷”了一块内存。如下图：</p>
+<p><img  src="/mmap申请.png"   style="zoom:50%;" /><span class="image-caption">img</span></p>
+<blockquote>
+<p>什么场景下 malloc() 会通过 brk() 分配内存？又是什么场景下通过 mmap() 分配内存？</p>
+</blockquote>
+<p>malloc() 源码里默认定义了一个阈值：</p>
+<ul>
+<li>如果用户分配的内存小于 128 KB，则通过 brk() 申请内存；</li>
+<li>如果用户分配的内存大于 128 KB，则通过 mmap() 申请内存；</li>
+</ul>
+<p>注意，不同的 glibc 版本定义的阈值也是不同的。</p>
+<h3 id="malloc-分配的是物理内存吗？"><a href="#malloc-分配的是物理内存吗？" class="headerlink" title="malloc() 分配的是物理内存吗？"></a>malloc() 分配的是物理内存吗？</h3><p>不是的，<strong>malloc() 分配的是虚拟内存</strong>。</p>
+<p>如果分配后的虚拟内存没有被访问的话，虚拟内存是不会映射到物理内存的，这样就不会占用物理内存了。</p>
+<p>只有在访问已分配的虚拟地址空间的时候，操作系统通过查找页表，发现虚拟内存对应的页没有在物理内存中，就会触发缺页中断，然后操作系统会建立虚拟内存和物理内存之间的映射关系。</p>
+<h3 id="malloc-1-会分配多大的虚拟内存？"><a href="#malloc-1-会分配多大的虚拟内存？" class="headerlink" title="malloc(1) 会分配多大的虚拟内存？"></a>malloc(1) 会分配多大的虚拟内存？</h3><p>malloc() 在分配内存的时候，并不是老老实实按用户预期申请的字节数来分配内存空间大小，而是<strong>会预分配更大的空间作为内存池</strong>。</p>
+<p>具体会预分配多大的空间，跟 malloc 使用的内存管理器有关系，我们就以 malloc 默认的内存管理器（Ptmalloc2）来分析。</p>
+<p>接下里，我们做个实验，用下面这个代码，通过 malloc 申请 1 字节的内存时，看看操作系统实际分配了多大的内存空间。</p>
+<p>这个例子分配的内存小于 128 KB，所以是通过 brk() 系统调用向堆空间申请的内存，因此可以看到最右边有 [heap] 的标识。</p>
+<p>可以看到，堆空间的内存地址范围是 00d73000-00d94000，这个范围大小是 132KB，也就说明了 <strong>malloc(1) 实际上预分配 132K 字节的内存</strong>。</p>
+<p>可能有的同学注意到了，程序里打印的内存起始地址是 <code>d73010</code>，而 maps 文件显示堆内存空间的起始地址是 <code>d73000</code>，为什么会多出来 <code>0x10</code> （16字节）呢？这个问题，我们先放着，后面会说。</p>
+<h3 id="free-释放内存，会归还给操作系统吗？"><a href="#free-释放内存，会归还给操作系统吗？" class="headerlink" title="free 释放内存，会归还给操作系统吗？"></a>free 释放内存，会归还给操作系统吗？</h3><ul>
+<li>malloc 通过 <strong>brk()</strong> 方式申请的内存，free 释放内存的时候，<strong>并不会把内存归还给操作系统，而是缓存在 malloc 的内存池中，待下次使用</strong>；</li>
+<li>malloc 通过 <strong>mmap()</strong> 方式申请的内存，free 释放内存的时候，<strong>会把内存归还给操作系统，内存得到真正的释放</strong>。</li>
+</ul>
+<h3 id="为什么不全部使用-mmap-来分配内存？"><a href="#为什么不全部使用-mmap-来分配内存？" class="headerlink" title="为什么不全部使用 mmap 来分配内存？"></a>为什么不全部使用 mmap 来分配内存？</h3><ul>
+<li>mmap 要系统调用，因为 mmap 分配的内存释放的时候会归还给操作系统</li>
+<li>mmap 要运行态切换 + 缺页中断</li>
+</ul>
+<p>因为向操作系统申请内存，是要通过系统调用的，执行系统调用是要进入内核态的，然后在回到用户态，运行态的切换会耗费不少时间。</p>
+<p>所以，申请内存的操作应该避免频繁的系统调用，如果都用 mmap 来分配内存，等于每次都要执行系统调用。</p>
+<p>另外，因为 mmap 分配的内存每次释放的时候，都会归还给操作系统，于是每次 mmap 分配的虚拟地址都是缺页状态的，然后在第一次访问该虚拟地址的时候，就会触发缺页中断。</p>
+<p>也就是说，<strong>频繁通过 mmap 分配的内存话，不仅每次都会发生运行态的切换，还会发生缺页中断（在第一次访问虚拟地址后），这样会导致 CPU 消耗较大</strong>。</p>
+<p>为了改进这两个问题，malloc 通过 brk() 系统调用在堆空间申请内存的时候，由于堆空间是连续的，所以直接预分配更大的内存来作为内存池，当内存释放的时候，就缓存在内存池中。</p>
+<p><strong>等下次在申请内存的时候，就直接从内存池取出对应的内存块就行了，而且可能这个内存块的虚拟地址与物理地址的映射关系还存在，这样不仅减少了系统调用的次数，也减少了缺页中断的次数，这将大大降低 CPU 的消耗</strong>。</p>
+<h3 id="既然-brk-那么牛逼，为什么不全部使用-brk-来分配？"><a href="#既然-brk-那么牛逼，为什么不全部使用-brk-来分配？" class="headerlink" title="既然 brk 那么牛逼，为什么不全部使用 brk 来分配？"></a>既然 brk 那么牛逼，为什么不全部使用 brk 来分配？</h3><ul>
+<li>brk 会产生大量的内存碎片</li>
+</ul>
+<p>前面我们提到通过 brk 从堆空间分配的内存，并不会归还给操作系统，那么我们那考虑这样一个场景。</p>
+<p>如果我们连续申请了 10k，20k，30k 这三片内存，如果 10k 和 20k 这两片释放了，变为了空闲内存空间，如果下次申请的内存小于 30k，那么就可以重用这个空闲内存空间。</p>
+<p>但是如果下次申请的内存大于 30k，没有可用的空闲内存空间，必须向 OS 申请，实际使用内存继续增大。</p>
+<p>因此，随着系统频繁地 malloc 和 free ，尤其对于小块内存，堆内将产生越来越多不可用的碎片，导致“内存泄露”。而这种“泄露”现象使用 valgrind 是无法检测出来的。</p>
+<p>所以，malloc 实现中，充分考虑了 brk 和 mmap 行为上的差异及优缺点，默认分配大块内存 (128KB) 才使用 mmap 分配内存空间。</p>
+<h3 id="free-函数只传入一个内存地址，为什么能知道要释放多大的内存？"><a href="#free-函数只传入一个内存地址，为什么能知道要释放多大的内存？" class="headerlink" title="free() 函数只传入一个内存地址，为什么能知道要释放多大的内存？"></a>free() 函数只传入一个内存地址，为什么能知道要释放多大的内存？</h3><p>还记得，我前面提到， malloc 返回给用户态的内存起始地址比进程的堆空间起始地址多了 16 字节吗？</p>
+<p>这个多出来的 16 字节就是保存了该内存块的描述信息，比如有该内存块的大小。</p>
+<p><img  src="cb6e3ce4532ff0a6bfd60fe3e52a806e.png"  ><span class="image-caption">图片</span></p>
+<p>这样当执行 free() 函数时，free 会对传入进来的内存地址向左偏移 16 字节，然后从这个 16 字节的分析出当前的内存块的大小，自然就知道要释放多大的内存了。</p>
+<h3 id="malloc内存分配器是怎样实现的？"><a href="#malloc内存分配器是怎样实现的？" class="headerlink" title="malloc内存分配器是怎样实现的？"></a>malloc内存分配器是怎样实现的？</h3><p><a href="https://mp.weixin.qq.com/s/Flt85kKbDEn_XD83mtYxUA?token=1646973705&amp;lang=zh_CN">https://mp.weixin.qq.com/s/Flt85kKbDEn_XD83mtYxUA?token=1646973705&amp;lang=zh_CN</a></p>
+<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><h3 id="线程崩溃了，进程也会崩溃吗？"><a href="#线程崩溃了，进程也会崩溃吗？" class="headerlink" title="线程崩溃了，进程也会崩溃吗？"></a>线程崩溃了，进程也会崩溃吗？</h3><p>一般来说如果线程是因为非法访问内存引起的崩溃，那么进程肯定会崩溃，为什么系统要让进程崩溃呢，这主要是因为在进程中，<strong>各个线程的地址空间是共享的</strong>，既然是共享，那么某个线程对地址的非法访问就会导致内存的不确定性，进而可能会影响到其他线程，这种操作是危险的，操作系统会认为这很可能导致一系列严重的后果，于是干脆让整个进程崩溃。</p>
 <h3 id="进程是如何崩溃的"><a href="#进程是如何崩溃的" class="headerlink" title="进程是如何崩溃的"></a>进程是如何崩溃的</h3><p>那么线程崩溃后，进程是如何崩溃的呢，这背后的机制到底是怎样的，答案是<strong>信号</strong>。</p>
 <p>大家想想要干掉一个正在运行的进程是不是经常用 kill -9 pid 这样的命令，这里的 kill 其实就是给指定 pid 发送终止信号的意思，其中的 9 就是信号。</p>
 <p>其实信号有很多类型的，在 Linux 中可以通过 <code>kill -l</code>查看所有可用的信号：</p>
