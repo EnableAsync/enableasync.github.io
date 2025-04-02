@@ -4359,7 +4359,60 @@ impl Solution {
 
 # 动态规划
 
-对于动态规划，可以先初始化一个 dp 数组，然后手写出 dp[0] dp[1] dp[2] dp[3] 等等
+## 动态规划总结
+
+基本步骤：
+
+1. 确定dp数组（dp table）以及下标的含义
+2. 确定递推公式
+3. dp数组如何初始化
+4. 确定遍历顺序
+5. 举例推导dp数组
+
+
+
+对于动态规划，可以先初始化一个 dp 数组，然后手写出 dp[0] dp[1] dp[2] dp[3] 等等。这一步可以帮助思考 dp 数组和确定递推公式。
+
+
+
+## 使用最小花费爬楼梯
+
+给你一个整数数组 `cost` ，其中 `cost[i]` 是从楼梯第 `i` 个台阶向上爬需要支付的费用。一旦你支付此费用，即可选择向上爬一个或者两个台阶。
+
+你可以选择从下标为 `0` 或下标为 `1` 的台阶开始爬楼梯。
+
+请你计算并返回达到楼梯顶部的最低花费。
+
+
+
+要点：
+
+- dp\[i] 为到达第 n 层的最低花费
+- 可以选择从下标为 `0` 或下标为 `1` 的台阶开始爬楼梯，dp[0] = 0，dp[1] = 0
+- 第 i 层可以从 i - 1 和 i - 2 过来，从 i - 1 过来的花费是 cost[i - 1]，从 cost[i - 2] 过来的花费是 cost[i - 2]
+
+```java
+class Solution {
+    public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        int[] dp = new int[n + 1]; // 到达第 n 层的最低花费
+        dp[0] = 0;
+        dp[1] = 0;
+        for (int i = 2; i <= n; i++) {
+            dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
+        }
+        return dp[n];
+    }
+}
+```
+
+
+
+
+
+
+
+
 
 ## 杨辉三角
 
@@ -5359,6 +5412,124 @@ impl Solution {
     }
 }
 ```
+
+
+
+# 贪心
+
+## 有序三元组中的最大值 I
+
+- `3 <= nums.length <= 100`
+- `1 <= nums[i] <= 106`
+
+
+
+给你一个下标从 **0** 开始的整数数组 `nums` 。
+
+请你从所有满足 `i < j < k` 的下标三元组 `(i, j, k)` 中，找出并返回下标三元组的最大值。如果所有满足条件的三元组的值都是负数，则返回 `0` 。
+
+**下标三元组** `(i, j, k)` 的值等于 `(nums[i] - nums[j]) * nums[k]` 。
+
+
+
+数组长度 <= 100，也就是说 n^3 = 1e6，可以暴力：
+
+但是要注意 ans 是 long 的，所以存在超出 int 的情况。
+
+```java
+class Solution {
+    public long maximumTripletValue(int[] nums) {
+        long ans = 0;
+        int n = nums.length;
+        for (int i = 0; i < n - 2; i++) {
+            for (int k = n - 1; k >= i + 2; k--) {
+                for (int j = i + 1; j < k; j++) {
+                    ans = Math.max(ans, (long)nums[k] * (nums[i] - nums[j]));
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+
+
+优化为 O(n^2)，要点在于当固定 j, k 时，i 是 0...j 的最大值，所以 i 可以由 j 动态得到。
+
+```java
+class Solution {
+    public long maximumTripletValue(int[] nums) {
+        long ans = 0;
+        int n = nums.length;
+        for (int k = 2; k < n; k++) {
+            long i = nums[0];
+            for (int j = 1; j < k; j++) {
+                ans = Math.max(ans, nums[k] * (i - nums[j]));
+                i = Math.max(i, nums[j]);
+            }
+        }        
+
+        return ans;
+    }
+}
+```
+
+
+
+优化为 O(n)，要点在于可以提前维护 0...j 和 j...n 的最大值。
+
+```java
+class Solution {
+    public long maximumTripletValue(int[] nums) {
+        long ans = 0;
+        int n = nums.length;
+        int[] leftMax = new int[n + 1];
+        int[] rightMax = new int[n + 1];
+        for (int i = 1; i < n; i++) {
+            leftMax[i] = Math.max(leftMax[i - 1], nums[i - 1]);
+        }
+        for (int i = n - 2; i > 0; i--) {
+            rightMax[i] = Math.max(rightMax[i + 1], nums[i + 1]);
+        }
+        for (int i = 1; i < n - 1; i++) {
+            ans = Math.max(ans, (long)rightMax[i] * (leftMax[i] - nums[i]));
+        }
+
+        return ans;
+    }
+}
+```
+
+
+
+优化空间为 O(1)，要点在于对于 `(nums[i] - nums[j]) * nums[k]`，i 和 j 是小于 k 的，所以 i，j 要走的路，k 都走过了，所以可以枚举 k 的时候维护其他状态。
+
+然后维护其他状态的思路是考虑固定 k，如果要枚举 k，那么考虑 k 被固定的情况，其他的两个变量如何变化。
+
+维护 nums[i] - nums[j] 的最大值，维护 nums[i] 的最大值。
+
+```java
+class Solution {
+    public long maximumTripletValue(int[] nums) {
+        long ans = 0;
+        int n = nums.length;
+        int maxI = 0;
+        int maxISubJ = 0;
+        for (int k = 0; k < n; k++) {
+            ans = Math.max(ans, (long)maxISubJ * nums[k]);
+            maxISubJ = Math.max(maxISubJ, maxI - nums[k]);
+            maxI = Math.max(maxI, nums[k]);
+        }
+
+        return ans;
+    }
+}
+```
+
+
+
+
 
 
 
