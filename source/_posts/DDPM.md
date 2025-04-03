@@ -20,13 +20,13 @@ typora-root-url: ./DDPM
 $$
 P(x_{t - 1}|x_t) = \frac{P(x_{t - 1}, x_t)}{P(x_t)} = \frac{P(x_t|x_{t - 1})P(x_{t - 1})}{P(x_t)} \quad \text{(1)}
 $$
-这里的 $$P(x_t|x_{t - 1})$$ 是易知的，因为 $$x_t = \sqrt{\alpha_t}x_{t - 1} + \sqrt{\beta_t}\epsilon_t$$，其中 $$\epsilon_t \sim N(0, 1)$$，$$\sqrt{\beta_t} \sim N(0, \beta_t)$$，$$x_t \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)$$。
+这里的 $P(x_t|x_{t - 1})$ 是易知的，因为 $x_t = \sqrt{\alpha_t}x_{t - 1} + \sqrt{\beta_t}\epsilon_t$，其中 $\epsilon_t \sim N(0, 1)$，$\sqrt{\beta_t} \sim N(0, \beta_t)$，$x_t \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)$。
 
-$$P(x_t|x_{t - 1}) \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)$$ 不断推导有 $$P(x_t|x_0) \sim N(\sqrt{\bar{\alpha}_t}x_0, 1 - \bar{\alpha}_t)$$。
+$P(x_t|x_{t - 1}) \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)$ 不断推导有 $P(x_t|x_0) \sim N(\sqrt{\bar{\alpha}_t}x_0, 1 - \bar{\alpha}_t)$。
 
 
 
-- 原先的去噪过程中 $$P(x_{t - 1})$$ 和 $$P(x_t)$$ 无法求得，为去噪过程增加条件：
+- 原先的去噪过程中 $P(x_{t - 1})$ 和 $P(x_t)$ 无法求得，为去噪过程增加条件：
   $$
   P(x_{t - 1}|x_t, x_0) = \frac{P(x_t|x_{t - 1}, x_0)P(x_{t - 1}|x_0)}{P(x_t|x_0)} = \frac{P(x_t|x_{t - 1})P(x_{t - 1}|x_0)}{P(x_t|x_0)}
   $$
