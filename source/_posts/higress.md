@@ -1,5 +1,6 @@
 ---
 title: Higress AI Wasm 插件开发记录
+date: 2024-10-12 19:21:50
 categories: higress
 typora-root-url: ./higress
 ---

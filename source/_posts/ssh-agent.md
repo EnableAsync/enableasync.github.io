@@ -1,5 +1,6 @@
 ---
 title: 远程服务器的 Git 使用本地的密钥——ssh-agent
+date: 2025-02-12 19:21:50
 categories: linux
 ---
 
