@@ -180,7 +180,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 03, 2025</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1869</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>4789</span>
     </div>
   </div>
 </section>
@@ -188,8 +188,7 @@
       <section class="content">
         <h1 id="DDPM"><a href="#DDPM" class="headerlink" title="DDPM"></a>DDPM</h1><p><img    class="lazyload" data-original="image-20250403144618848.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">ddpm</span></p>
 <p>这里从 $x_t$ 到 $x_{t-1}$ 的时候，预测的是 $x_{t-1}$ 的概率分布，也就是说要得到的是 $p(x_{t-1}|x_t)$，所以去噪过程是具有一定的随机性的，从 $p(x_{t-1}|x_t)$ 分布中就可以抽样出 $x_{t-1}$ 了。</p>
-<p><img    class="lazyload" data-original="53dfabcb9844f43a33026fe042dff8c.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">笔记</span></p>
-<script type="math/tex; mode=display">
+<h2 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h2><script type="math/tex; mode=display">
 P(x_{t - 1}|x_t) = \frac{P(x_{t - 1}, x_t)}{P(x_t)} = \frac{P(x_t|x_{t - 1})P(x_{t - 1})}{P(x_t)} \quad \text{(1)}</script><p>这里的 $P(x_t|x_{t - 1})$ 是易知的，因为 $x_t = \sqrt{\alpha_t}x_{t - 1} + \sqrt{\beta_t}\epsilon_t$，其中 $\epsilon_t \sim N(0, 1)$，$\sqrt{\beta_t} \sim N(0, \beta_t)$，$x_t \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)$。</p>
 <p>$P(x_t|x_{t - 1}) \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)$ 不断推导有 $P(x_t|x_0) \sim N(\sqrt{\bar{\alpha}_t}x_0, 1 - \bar{\alpha}_t)$。</p>
 <ul>
@@ -207,6 +206,74 @@ P(x_{t - 1}|x_t, x_0) = \frac{P(x_t|x_{t - 1}, x_0)P(x_{t - 1}|x_0)}{P(x_t|x_0)}
 <li><p>总体脉络：从 $P(x_{t - 1}|x_t) \to P(x_{t - 1}|x_t, x_0) \to \tilde{\mu}_t(x_0, x_t) \to x_0 \to \epsilon$</p>
 </li>
 </ul>
+<p><img    class="lazyload" data-original="53dfabcb9844f43a33026fe042dff8c.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">笔记</span></p>
+<h2 id="参数选择"><a href="#参数选择" class="headerlink" title="参数选择"></a>参数选择</h2><ol>
+<li>$ T = 1000 $</li>
+<li>$ x_t=\sqrt{\alpha_t}x_{t - 1}+\sqrt{\beta_t}\epsilon $，$ \alpha_t<1 $，$ \beta_t>0 $，$ \alpha_t+\beta_t = 1 $<ul>
+<li>$ x_t\sim N(\sqrt{\alpha_t}x_{t - 1},\beta_t) $</li>
+<li>$ \alpha_t+\beta_t = 1 $ 的设置是为了最后易于得到 $ x_n=\sqrt{\overline{\alpha}_n}x_0+\sqrt{1 - \overline{\alpha}_n}\epsilon $ 的形式</li>
+</ul>
+</li>
+<li><strong>能否直接跳步？</strong><ul>
+<li>$ P(x_{t - 1}|x_t,x_0)=\frac{P(x_t|x_{t - 1})P(x_{t - 1}|x_0)}{P(x_t|x_0)} $ 是由贝叶斯定理得到的</li>
+<li>结论：不能跳步</li>
+</ul>
+</li>
+<li><strong>为什么不直接预测 $ x_{t - 1} $，而是预测 $ P(x_{t - 1}|x_t) $</strong><ul>
+<li>这样有更多的多样性</li>
+</ul>
+</li>
+<li><strong>论文中的变分下界分析</strong><ul>
+<li>是为了证明 $ E(-\log P(x_0)) $ 等价于求 $ P(x_{t - 1}|x_t) $ 和 $ P(x_{t - 1}|x_t,x_0) $ 的 KL 散度。</li>
+</ul>
+</li>
+</ol>
+<p><img    class="lazyload" data-original="34ff3b1a482f1445724b9f1683bbd71.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">参数选择</span></p>
+<h1 id="DDIM"><a href="#DDIM" class="headerlink" title="DDIM"></a>DDIM</h1><h2 id="去马尔可夫化"><a href="#去马尔可夫化" class="headerlink" title="去马尔可夫化"></a>去马尔可夫化</h2><script type="math/tex; mode=display">
+P(x_{t-1} | x_t) = \frac{P(x_t | x_{t-1})P(x_{t-1})}{P(x_t)}</script><p>在 DDPM 不好求，加入 $x_0$</p>
+<script type="math/tex; mode=display">
+P(x_{t-1} | x_t, x_0) = \frac{P(x_t | x_{t-1}, x_0)P(x_{t-1} | x_0)}{P(x_t | x_0)} \overset{\text{DDPM}}{\Longrightarrow} \frac{P(x_t | x_{t-1})P(x_{t-1} | x_0)}{P(x_t|x_0)}</script><script type="math/tex; mode=display">
+\overset{\text{DDIM}}{\Longrightarrow} P(x_s | x_k, x_0) = \frac{\text{①}P(x_k | x_s, x_0) \text{②}P(x_s | x_0)}{\text{③}P(x_k | x_0)} \quad (1)</script><ul>
+<li>① ② ③ 这三部分共同决定了 $P(x_s | x_k, x_0)$ 的解。</li>
+<li>3 个部分未知的越多，那么说明 $P(x_s | x_k, x_0)$ 的约束越少，解越多。</li>
+</ul>
+<p>但 DDPM 训练时，要满足 $P(x_t | x_0) = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon$。若不重新训练，那么这个假设仍然要保留，于是 ② ③ 是知道的。</p>
+<p>在 DDPM 中，① 并没有被用到，则 (1) 式的解可以设为：</p>
+<script type="math/tex; mode=display">
+P(x_s | x_k, x_0) \sim \mathcal{N}(kx_0 + mx_k, \sigma^2 I)</script><p>于是</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+x_s &= (kx_0 + mx_k) + \sigma \epsilon \\
+&= kx_0 + m(\sqrt{\bar\alpha_k}x_0 + \sqrt{1 - \bar\alpha_k}\epsilon') + \sigma \epsilon \\
+&= (k + m\sqrt{\bar\alpha_k})x_0 + (m\sqrt{1 - \bar\alpha_k}\epsilon' + \sigma \epsilon) \\
+&= (k + m\sqrt{\bar\alpha_k})x_0 + \sqrt{m^2(1 - \bar\alpha_k) + \sigma^2}\epsilon \quad \mathcal{N}(0, m^2(1 - \bar\alpha_k))\\
+&= \sqrt{\bar\alpha_s}x_0 + \sqrt{1 - \bar\alpha_s}\epsilon
+\end{align*}</script><p><strong>待定系数法求出 $m$ 和 $k$</strong></p>
+<script type="math/tex; mode=display">
+m = \frac{\sqrt{1 - \bar\alpha_s + \sigma^2}}{\sqrt{1 - \bar\alpha_k}}, \quad k = \sqrt{\bar\alpha_s} - \frac{\sqrt{1 - \bar\alpha_s - \sigma^2}}{\sqrt{1 - \bar\alpha_k}}\sqrt{\bar\alpha_k}</script><p>于是有</p>
+<script type="math/tex; mode=display">
+\mu = mx_k + kx_0 = \sqrt{\bar\alpha_s}x_0 + \frac{\sqrt{1 - \bar\alpha_s - \sigma^2}}{\sqrt{1 - \bar\alpha_k}}(x_k - \sqrt{\bar\alpha_k}x_0)</script><p>以及 $\sigma = \sigma$</p>
+<p>相比于 DDPM 的 $s = k - 1$，DDIM 的 $s \leq k - 1$，于是可以跳步了。 </p>
+<p><img    class="lazyload" data-original="9ec363832d7635f22955f09c2c27248.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">去马尔可夫化</span></p>
+<h2 id="参数选择-1"><a href="#参数选择-1" class="headerlink" title="参数选择"></a>参数选择</h2><ul>
+<li>$\sigma = 0$ 时为决定性采样方式，无随机性。</li>
+<li>$\sigma = \sqrt{\frac{1 - \overline{\alpha}_t}{1 - \overline{\alpha}_t} \beta_t}$ 时对应 DDPM 。</li>
+</ul>
+<script type="math/tex; mode=display">
+P(x_s | x_k, x_0) \sim \mathcal{N}(\sqrt{\alpha_s}x_0 + \sqrt{1 - \alpha_s - \sigma^2} \frac{x_k - \sqrt{\alpha_k}x_0}{\sqrt{1 - \alpha_k}}, \sigma^2 I)</script><p>当 $\sigma$ 取 $\sqrt{\frac{1 - \overline{\alpha}_t}{1 - \overline{\alpha}_t} \beta_t}$ 时，原式为 $\mathcal{N}(\frac{1}{\sqrt{\alpha_t}}(x_t - \frac{\beta_t}{\sqrt{1 - \overline{\alpha}_t}}\epsilon), \beta_t)$ 。</p>
+<h3 id="DDIM-实验设置"><a href="#DDIM-实验设置" class="headerlink" title="DDIM 实验设置"></a><strong>DDIM 实验设置</strong></h3><p><img    class="lazyload" data-original="image-20250403231724755.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">DDIM 实验结果</span></p>
+<p>$\sigma = \eta \sqrt{\frac{1 - \overline{\alpha}_t}{1 - \overline{\alpha}_t} \beta_t}$</p>
+<ul>
+<li>$\eta = 1$ 时即为可跳步的 DDPM 。</li>
+<li>$\eta = 0$ 时，为确定性 DDIM 。</li>
+<li>$\eta$ 越小，效果越好（FID 越低）。</li>
+</ul>
+<p><strong>总结</strong>：</p>
+<ul>
+<li>DDPM：高斯去噪过程，推理慢。</li>
+<li>DDIM：去噪，推理快，待定系数法求 $m$，$k$ 。以及 $\sigma = 0$ 时，对于每一个 $x_t$ 有唯一确定的 $x$ 。 </li>
+</ul>
+<p><img    class="lazyload" data-original="34ff3b1a482f1445724b9f1683bbd71.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">参数选择</span></p>
 
       </section>
       <section class="extra">
@@ -239,7 +306,7 @@ P(x_{t - 1}|x_t, x_0) = \frac{P(x_t|x_{t - 1}, x_0)P(x_{t - 1}|x_0)}{P(x_t|x_0)}
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DDPM"><span class="toc-text">DDPM</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DDPM"><span class="toc-text">DDPM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95"><span class="toc-text">基本方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9"><span class="toc-text">参数选择</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DDIM"><span class="toc-text">DDIM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%8C%96"><span class="toc-text">去马尔可夫化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9-1"><span class="toc-text">参数选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DDIM-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-text">DDIM 实验设置</span></a></li></ol></li></ol></li></ol>
   </aside>
 
         
