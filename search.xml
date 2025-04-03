@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>算法整理</title>
+    <title>Diffusion 学习</title>
     <url>/uncategorized/DDPM/</url>
     <content><![CDATA[<h1 id="DDPM"><a href="#DDPM" class="headerlink" title="DDPM"></a>DDPM</h1><p><img  src="image-20250403144618848.png"  ><span class="image-caption">ddpm</span></p>
 <p>这里从 $x_t$ 到 $x_{t-1}$ 的时候，预测的是 $x_{t-1}$ 的概率分布，也就是说要得到的是 $p(x_{t-1}|x_t)$，所以去噪过程是具有一定的随机性的，从 $p(x_{t-1}|x_t)$ 分布中就可以抽样出 $x_{t-1}$ 了。</p>
