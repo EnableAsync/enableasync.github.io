@@ -1,5 +1,6 @@
 ---
 title: Linux 的一些使用心得
+date: 2025-01-20 11:00:00
 categories: linux
 ---
 

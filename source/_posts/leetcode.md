@@ -1,7 +1,7 @@
 ---
 title: 算法整理
 tags: data structure, algorithm
-image: https://dingxuewen.com/leetcode-js-leviding/leetcode.png
+image: https://leetcode.com/static/images/LeetCode_logo_rvs.png
 mathjax: true
 typora-root-url: ./leetcode
 ---
