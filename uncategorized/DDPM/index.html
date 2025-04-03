@@ -180,7 +180,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 03, 2025</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1929</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1874</span>
     </div>
   </div>
 </section>
@@ -189,27 +189,26 @@
         <h1 id="DDPM"><a href="#DDPM" class="headerlink" title="DDPM"></a>DDPM</h1><p><img    class="lazyload" data-original="image-20250403144618848.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">ddpm</span></p>
 <p>这里从 $x_t$ 到 $x_{t-1}$ 的时候，预测的是 $x_{t-1}$ 的概率分布，也就是说要得到的是 $p(x_{t-1}|x_t)$，所以去噪过程是具有一定的随机性的，从 $p(x_{t-1}|x_t)$ 分布中就可以抽样出 $x_{t-1}$ 了。</p>
 <p><img    class="lazyload" data-original="53dfabcb9844f43a33026fe042dff8c.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">笔记</span></p>
-<h2 id="去噪过程"><a href="#去噪过程" class="headerlink" title="去噪过程"></a>去噪过程</h2><script type="math/tex; mode=display">
+<script type="math/tex; mode=display">
 P(x_{t - 1}|x_t) = \frac{P(x_{t - 1}, x_t)}{P(x_t)} = \frac{P(x_t|x_{t - 1})P(x_{t - 1})}{P(x_t)} \quad \text{(1)}</script><p>这里的 <script type="math/tex">P(x_t|x_{t - 1})</script> 是易知的，因为 <script type="math/tex">x_t = \sqrt{\alpha_t}x_{t - 1} + \sqrt{\beta_t}\epsilon_t</script>，其中 <script type="math/tex">\epsilon_t \sim N(0, 1)</script>，<script type="math/tex">\sqrt{\beta_t} \sim N(0, \beta_t)</script>，<script type="math/tex">x_t \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)</script>。</p>
 <script type="math/tex; mode=display">P(x_t|x_{t - 1}) \sim N(\sqrt{\alpha_t}x_{t - 1}, \beta_t)$$ 不断推导有 $$P(x_t|x_0) \sim N(\sqrt{\bar{\alpha}_t}x_0, 1 - \bar{\alpha}_t)$$。
 
+
+
 - 原先的去噪过程中 $$P(x_{t - 1})$$ 和 $$P(x_t)$$ 无法求得，为去噪过程增加条件：</script><p>  P(x_{t - 1}|x_t, x_0) = \frac{P(x_t|x_{t - 1}, x_0)P(x_{t - 1}|x_0)}{P(x_t|x_0)} = \frac{P(x_t|x_{t - 1})P(x_{t - 1}|x_0)}{P(x_t|x_0)}</p>
-<script type="math/tex; mode=display">
+<p>  $$</p>
+<p>（高斯特性）又 $P(x_t|x_0)$ 已知，则 $P(x_{t - 1}|x_0)$ 已知，得 $P(x_{t - 1}|x_t, x_0) \sim N(\tilde{\mu}_t(x_0, x_t), \tilde{\beta}_t)$。</p>
+<p>$x_{t - 1} = \tilde{\mu}_t(x_0, x_t) + \sqrt{\tilde{\beta}_t}\epsilon$，$\epsilon \sim N(0, 1)$，其中 $\tilde{\mu}_t(x_t, x_0)$ 为 $\frac{\sqrt{\alpha_{t - 1}}\beta_t}{1 - \bar{\alpha}_t}x_0 + \frac{\sqrt{\alpha_t}(1 - \bar{\alpha}_{t - 1})}{1 - \bar{\alpha}_t}x_t$  ，$\tilde{\beta}_t = \frac{1 - \bar{\alpha}_{t - 1}}{1 - \bar{\alpha}_t}\beta_t$ 。这里的 $x_0$ 未知。</p>
+<ul>
+<li><p>于是又有 $x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon$ ，则 $x_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}(x_t - \sqrt{1 - \bar{\alpha}_t}\epsilon)$ ，$x_0$ 可由 $x_t$ 得到了，它们之间差一个 $\epsilon$ 。</p>
+</li>
+<li><p>UNet 预测的就是 $x_0$ 和 $x_t$ 之间的这个噪声。那么能得到 $x_0$ ，是不是原因呢？否定的，因为 $x_0$ 的推导是借助了马尔可夫性质，所以还是要一步步推导。</p>
+<p>把 $x_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}(x_t - \sqrt{1 - \bar{\alpha}_t}\epsilon)$ 代入 $\tilde{\mu}_t(x_t, x_0)$ 式中，有 $\frac{1}{\sqrt{\alpha_t}}(x_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha}_t}}\epsilon)$ 。</p>
+</li>
+<li><p>总体脉络：从 $P(x_{t - 1}|x_t) \to P(x_{t - 1}|x_t, x_0) \to \tilde{\mu}_t(x_0, x_t) \to x_0 \to \epsilon$</p>
+</li>
+</ul>
 
-
-  （高斯特性）又 $$P(x_t|x_0)$$ 已知，则 $$P(x_{t - 1}|x_0)$$ 已知，得 $$P(x_{t - 1}|x_t, x_0) \sim N(\tilde{\mu}_t(x_0, x_t), \tilde{\beta}_t)$$。
-
-  $$x_{t - 1} = \tilde{\mu}_t(x_0, x_t) + \sqrt{\tilde{\beta}_t}\epsilon$$，$$\epsilon \sim N(0, 1)$$，其中 $$\tilde{\mu}_t(x_t, x_0)$$ 为 $$\frac{\sqrt{\alpha_{t - 1}}\beta_t}{1 - \bar{\alpha}_t}x_0 + \frac{\sqrt{\alpha_t}(1 - \bar{\alpha}_{t - 1})}{1 - \bar{\alpha}_t}x_t$$  ，$$\tilde{\beta}_t = \frac{1 - \bar{\alpha}_{t - 1}}{1 - \bar{\alpha}_t}\beta_t$$ 。这里的 $$x_0$$ 未知。
-
-
-
-- 于是又有 $$x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon$$ ，则 $$x_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}(x_t - \sqrt{1 - \bar{\alpha}_t}\epsilon)$$ ，$$x_0$$ 可由 $$x_t$$ 得到了，它们之间差一个 $$\epsilon$$ 。
-
-- UNet 预测的就是 $$x_0$$ 和 $$x_t$$ 之间的这个噪声。那么能得到 $$x_0$$ ，是不是原因呢？否定的，因为 $$x_0$$ 的推导是借助了马尔可夫性质，所以还是要一步步推导。
-
-  把 $$x_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}(x_t - \sqrt{1 - \bar{\alpha}_t}\epsilon)$$ 代入 $$\tilde{\mu}_t(x_t, x_0)$$ 式中，有 $$\frac{1}{\sqrt{\alpha_t}}(x_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha}_t}}\epsilon)$$ 。
-
-- 总体脉络：从 $$P(x_{t - 1}|x_t) \to P(x_{t - 1}|x_t, x_0) \to \tilde{\mu}_t(x_0, x_t) \to x_0 \to \epsilon</script>
       </section>
       <section class="extra">
         
@@ -241,7 +240,7 @@ P(x_{t - 1}|x_t) = \frac{P(x_{t - 1}, x_t)}{P(x_t)} = \frac{P(x_t|x_{t - 1})P(x_
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DDPM"><span class="toc-text">DDPM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E5%99%AA%E8%BF%87%E7%A8%8B"><span class="toc-text">去噪过程</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DDPM"><span class="toc-text">DDPM</span></a></li></ol>
   </aside>
 
         
