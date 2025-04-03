@@ -1,5 +1,5 @@
 ---
-title: 算法整理
+title: Diffusion 学习
 tags: data structure, algorithm
 mathjax: true
 date: 2025-04-3 14:23:00
