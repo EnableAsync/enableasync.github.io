@@ -1770,12 +1770,15 @@ class Solution {
 }
 ```
 
+
+
 ### 改进递归做法
 
-分为两种情况
+- 如果要找的节点只在左子树中，那么最近公共祖先也只在左子树中。
+- 如果要找的节点只在右子树中，那么最近公共祖先也只在右子树中。
+- 如果要找的节点左右子树都有，那么最近公共祖先就是当前节点。
 
-- 一种是 p q 在左右不同子树中（都在各自子树中找到的才是最近公共祖先）
-- 另一种是在相同子树中（那么先找到的就是最近公共祖先）
+
 
 ```java
 class Solution {
@@ -1799,6 +1802,8 @@ class Solution {
     
 }
 ```
+
+
 
 ### 记录父节点的做法
 
@@ -1933,6 +1938,43 @@ class Solution {
 ```
 
 
+
+### 改进的递归
+
+1. 从根节点开始递归，同时维护全局最大深度 deepMax。
+2. 在「递」的时候往下传 depth，用来表示当前节点的深度。
+3. 在「归」的时候往上传当前子树最深的空节点的深度。这里为了方便，用空节点代替叶子，因为最深的空节点的上面一定是最深的叶子。
+4. 设左子树最深空节点的深度为 leftMax，右子树最深空节点的深度为 rightMax。如果最深的空节点左右子树都有，也就是 leftMax=rightMax=deepMax，那么更新答案为当前节点。注意这并不代表我们找到了答案，如果后面发现了更深的空节点，答案还会更新。另外注意，这个判断方式在只有一个最深叶子的情况下，也是正确的。
+
+
+
+```java
+class Solution {
+    int deepMax = 0;
+    TreeNode ans = null;
+
+    public TreeNode lcaDeepestLeaves(TreeNode root) {
+        dfs(root, 0);
+        return ans;
+    }
+
+    private int dfs(TreeNode root, int deep) {
+        if (root == null) {
+            deepMax = Math.max(deepMax, deep);
+            return deep;
+        }
+        // 递
+        int leftMax = dfs(root.left, deep + 1);
+        int rightMax = dfs(root.right, deep + 1);
+        // 归
+        if (leftMax == deepMax && rightMax == deepMax) { // 最深节点在左右节点都有，只关心：当前节点的左右子树是否都达到了最深深度
+            ans = root;
+        }
+        return Math.max(leftMax, rightMax);
+    }
+
+}
+```
 
 
 
