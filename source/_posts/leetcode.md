@@ -1790,9 +1790,9 @@ class Solution {
 
         TreeNode left = dfs(root.left, p, q);
         TreeNode right = dfs(root.right, p, q);
-        if (left == null) return right;
-        if (right == null) return left;
-        // 能从 root 找到 p 或者找到 q
+        if (left == null) return right; // 如果要找的节点只在右子树中，那么最近公共祖先也只在右子树中
+        if (right == null) return left; // 如果要找的节点只在左子树中，那么最近公共祖先也只在左子树中
+        // 如果要找的节点左右子树都有，那么最近公共祖先就是当前节点
         if (left != null && right != null) return root;
         return null;
     }
@@ -1860,6 +1860,83 @@ class Solution {
     }
 }
 ```
+
+
+
+## 最深叶节点的最近公共祖先
+
+### 暴力递归
+
+先找到最深叶节点，然后找最近公共祖先
+
+```java
+class Solution {
+    Map<Integer, List<TreeNode>> deepMap = new HashMap<>();
+
+    public TreeNode lcaDeepestLeaves(TreeNode root) {
+        // 先找到最深叶节点，然后找最近公共祖先
+        deepestNodes(root, 0);
+        List<TreeNode> deepestNodes = null;
+        int deep = 0;
+        for (Map.Entry<Integer, List<TreeNode>> entry : deepMap.entrySet()) {
+            if (entry.getKey() >= deep) {
+                deepestNodes = entry.getValue();
+            }
+        }
+        // 两两找最近公共祖先
+        return MergeLCA(root, deepestNodes, 0, deepestNodes.size() - 1);
+
+        // 数组找最近公共祖先
+        // return ArrayLCA(root, deepestNodes);
+    }
+
+    private TreeNode ArrayLCA(TreeNode root, List<TreeNode> list) {
+        TreeNode ans = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            ans = LCA(root, ans, list.get(i));
+        }
+        return ans;
+    }
+
+    private TreeNode MergeLCA(TreeNode root, List<TreeNode> list, int left, int right) {
+        if (right - left == 0) return list.get(left);
+        if (right - left == 1) {
+            return LCA(root, list.get(left), list.get(right));
+        }
+        if (right - left > 1) {
+            int mid = left + (right - left) / 2;
+            return LCA(root, MergeLCA(root, list, left, mid - 1), MergeLCA(root, list, mid + 1, right));
+        }
+        return null;
+    }
+
+    private void deepestNodes(TreeNode root, int deep) {
+        if (root == null) return;
+        List<TreeNode> nodes = deepMap.getOrDefault(deep, new ArrayList<>());
+        nodes.add(root);
+        deepMap.put(deep, nodes);
+        deepestNodes(root.left, deep + 1);
+        deepestNodes(root.right, deep + 1);
+    }
+
+    private TreeNode LCA(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) return null;
+        if (root == p || root == q) return root;
+        TreeNode left = LCA(root.left, p, q);
+        TreeNode right = LCA(root.right, p, q);
+        if (left == null) return right; // 左子树中没有 LCA
+        if (right == null) return left; // 右子树中没有 LCA
+        if (left != null && right != null) return root;
+        return null;
+    }
+}
+```
+
+
+
+
+
+
 
 # 图论
 
