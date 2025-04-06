@@ -5305,6 +5305,69 @@ impl Solution {
 }
 ```
 
+
+
+## 最大整除子集
+
+给你一个由 **无重复** 正整数组成的集合 `nums` ，请你找出并返回其中最大的整除子集 `answer` ，子集中每一元素对 `(answer[i], answer[j])` 都应当满足：
+
+- `answer[i] % answer[j] == 0` ，或
+- `answer[j] % answer[i] == 0`
+
+如果存在多个有效解子集，返回其中任何一个均可。
+
+### 动态规划
+
+设子集为 A，题目要求对于任意 (A[i],A[j])，都满足 A[i]modA[j]=0 或者 A[j]modA[i]=0，也就是一个数是另一个数的倍数。
+
+这里有两个条件，不好处理。我们可以把 A 排序，或者说把 nums 排序（从小到大）。由于 nums 所有元素互不相同（没有相等的情况），题目要求变成：
+
+从（排序后的）nums 中选一个子序列，在子序列中，右边的数一定是左边的数的倍数。
+由于 x 的倍数的倍数仍然是 x 的倍数，只要相邻元素满足倍数关系，那么任意两数一定满足倍数关系。于是题目要求变成：
+
+从（排序后的）nums 中选一个子序列，在子序列中，任意相邻的两个数，右边的数一定是左边的数的倍数。
+这类似 300. 最长递增子序列，都是相邻元素有约束，且要计算的都是子序列的最长长度。
+
+下文把满足题目要求的子序列叫做合法子序列。
+
+```java
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        Arrays.sort(nums);
+        
+        int n = nums.length;
+        int[] dp = new int[n]; // 以 nums[i] 结尾的最大整除子集
+        int[] from = new int[n];
+        Arrays.fill(from, -1);
+        int maxI = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] % nums[j] == 0 && dp[j] > dp[i]) {
+                    dp[i] = dp[j];
+                    from[i] = j;
+                }
+            }
+            dp[i]++;
+            if (dp[i] > dp[maxI]) {
+                maxI = i; // 最大整除子集最后一个数的下标
+            }
+        }
+
+        List<Integer> path = new ArrayList<>(dp[maxI]);
+        for (int i = maxI; i >= 0; i = from[i]) {
+            path.add(nums[i]);
+        }
+        return path;
+    }
+}
+```
+
+
+
+
+
+
+
 # 多维 dp
 
 ## 不同路径
