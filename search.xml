@@ -285,6 +285,86 @@ P(x_s | x_k, x_0) \sim \mathcal{N}(\sqrt{\alpha_s}x_0 + \sqrt{1 - \alpha_s - \si
       </tags>
   </entry>
   <entry>
+    <title>Linux 的一些使用心得</title>
+    <url>/linux/linux/</url>
+    <content><![CDATA[<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
+<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
+<p>如果网络不稳定，容易断开连接，用以下命令将该连接只用作隧道（-N），同时增加心跳<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -R 0.0.0.0:10800:127.0.0.1:10800 kdzlys@117.139.126.36 -p 2224<br></code></pre></td></tr></table></figure></p>
+<h1 id="conda-init-fish-之后-fish-崩溃"><a href="#conda-init-fish-之后-fish-崩溃" class="headerlink" title="conda init fish 之后 fish 崩溃"></a>conda init fish 之后 fish 崩溃</h1><p>原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo apt-add-repository ppa:fish-shell/release-3<br>sudo apt update<br>sudo apt install fish<br></code></pre></td></tr></table></figure></p>
+<h1 id="关闭-kde-文件索引程序"><a href="#关闭-kde-文件索引程序" class="headerlink" title="关闭 kde 文件索引程序"></a>关闭 kde 文件索引程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">balooctl <span class="hljs-built_in">suspend</span><br>balooctl <span class="hljs-built_in">disable</span><br></code></pre></td></tr></table></figure>
+<h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
+<li>运行 MITMProxy</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">docker run --<span class="hljs-built_in">rm</span> -it -p 18080:8080 -p 127.0.0.1:8081:8081 -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy  mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0 --<span class="hljs-built_in">set</span> block_global=<span class="hljs-literal">false</span> --<span class="hljs-built_in">set</span> ssl_insecure=<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>导入证书至浏览器或其他工具</li>
+<li>使用代理访问 HTTPS 页面</li>
+</ol>
+<h1 id="更新-ubuntu-22-04-之后网易云音乐无法使用"><a href="#更新-ubuntu-22-04-之后网易云音乐无法使用" class="headerlink" title="更新 ubuntu 22.04 之后网易云音乐无法使用"></a>更新 ubuntu 22.04 之后网易云音乐无法使用</h1><p>修改 <code>/opt/netease/netease-cloud-music/netease-cloud-music.bash</code> 为以下内容<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br>HERE=<span class="hljs-string">&quot;<span class="hljs-subst">$(dirname <span class="hljs-string">&quot;<span class="hljs-subst">$(readlink -f <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;0&#125;</span>&quot;</span>)</span>&quot;</span>)</span>&quot;</span><br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/libs<br><span class="hljs-built_in">export</span> QT_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins <br><span class="hljs-built_in">export</span> QT_QPA_PLATFORM_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins/platforms<br><span class="hljs-built_in">cd</span> /lib/x86_64-linux-gnu/<br><span class="hljs-built_in">exec</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/netease-cloud-music <span class="hljs-variable">$@</span><br><br></code></pre></td></tr></table></figure></p>
+<h1 id="关闭无用启动项"><a href="#关闭无用启动项" class="headerlink" title="关闭无用启动项"></a>关闭无用启动项</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看启动项</span><br><span class="hljs-built_in">ls</span> -l /etc/xdg/autostart<br><br><span class="hljs-comment"># 重命名</span><br>sudo <span class="hljs-built_in">mv</span> something something.bak<br></code></pre></td></tr></table></figure>
+<h1 id="Vmware-更新内核失败"><a href="#Vmware-更新内核失败" class="headerlink" title="Vmware 更新内核失败"></a>Vmware 更新内核失败</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/mkubecek/vmware-host-modules.git<br>git checkout &lt;your_version&gt;<br>sudo make<br>sudo make install<br></code></pre></td></tr></table></figure>
+<h1 id="双系统-Windows-更新失败"><a href="#双系统-Windows-更新失败" class="headerlink" title="双系统 Windows 更新失败"></a>双系统 Windows 更新失败</h1><p>我这里双系统 Windows 更新失败的原因是 Windows 引导出现了问题，可以进入 Windows 输入 <code>msconfig</code> 查看引导选项卡下是否有内容，我是用过 systemd boot 来引导的 Windows，所以没有出现内容。</p>
+<p>在 BIOS 中更改成直接引导 Windows 之后便可以正常更新了。</p>
+<h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">ls</span> -1t /var/log/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |<span class="hljs-built_in">tac</span> |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
+<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="Unite"><a href="#Unite" class="headerlink" title="Unite"></a>Unite</h2><p>最大化时隐藏标题栏</p>
+<h2 id="Clear-Top-Bar"><a href="#Clear-Top-Bar" class="headerlink" title="Clear Top Bar"></a>Clear Top Bar</h2><p>状态栏变成透明的</p>
+<h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><p>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</p>
+<h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
+<h2 id="Lock-Keys"><a href="#Lock-Keys" class="headerlink" title="Lock Keys"></a>Lock Keys</h2><p>可以显示当前大小写状况</p>
+<h2 id="NetSpeed"><a href="#NetSpeed" class="headerlink" title="NetSpeed"></a>NetSpeed</h2><p>显示当前网速</p>
+<h2 id="TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）"><a href="#TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）" class="headerlink" title="TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）"></a>TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</h2><p>在顶部显示图标</p>
+<h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
+<h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
+<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
+<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ul>
+<li><p>使用 im-config 修复</p>
+</li>
+<li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
+</li>
+<li><p>使用 <code>fcitx5-diagnose</code> 命令根据提示设置环境变量</p>
+</li>
+<li><p>删除 <code>/etc/profile.d/pop-im-ibus.sh</code> （pop os）</p>
+<p> <code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
+ <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+<p> 因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
+<p> <code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
+<p> 相关 issue，<a href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
+</li>
+</ul>
+<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
+   <figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
+<p>   之后重启 gnome 即可解决</p>
+<h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
+<p>参考：<a href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
+<h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
+<p>执行上述命令后再运行 fluxion 即可。</p>
+<h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
+<li>先停用 systemd-resolved 服务</li>
+</ol>
+<figure class="highlight nsis"><table><tr><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl stop <span class="hljs-params">system</span>d-resolved<br></code></pre></td></tr></table></figure>
+<ol>
+<li>编辑 /etc/systemd/resolved.conf 文件</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
+<ol>
+<li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
+</ol>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>最后运行下面命令即可。</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Linux 多用户管理</title>
     <url>/uncategorized/linux-user/</url>
     <content><![CDATA[<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h3><h4 id="1-1-什么是Linux用户管理？"><a href="#1-1-什么是Linux用户管理？" class="headerlink" title="1.1 什么是Linux用户管理？"></a>1.1 什么是Linux用户管理？</h4><p>Linux用户管理是指在Linux系统中管理用户账户的过程，包括创建、删除和设置用户属性等操作。</p>
@@ -407,86 +487,6 @@ P(x_s | x_k, x_0) \sim \mathcal{N}(\sqrt{\alpha_s}x_0 + \sqrt{1 - \alpha_s - \si
 <p>我们还提供了一些用户管理的最佳实践，如最小化权限原则、定期审查用户账户、使用复杂密码和启用登录审计。这些实践有助于提高系统的安全性和管理效率。</p>
 <p>通过本指南，读者可以获得关于Linux用户管理的全面了解，并学习如何在Linux操作系统中高效管理用户账户和权限。</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>Linux 的一些使用心得</title>
-    <url>/linux/linux/</url>
-    <content><![CDATA[<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
-<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
-<p>如果网络不稳定，容易断开连接，用以下命令将该连接只用作隧道（-N），同时增加心跳<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -R 0.0.0.0:10800:127.0.0.1:10800 kdzlys@117.139.126.36 -p 2224<br></code></pre></td></tr></table></figure></p>
-<h1 id="conda-init-fish-之后-fish-崩溃"><a href="#conda-init-fish-之后-fish-崩溃" class="headerlink" title="conda init fish 之后 fish 崩溃"></a>conda init fish 之后 fish 崩溃</h1><p>原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo apt-add-repository ppa:fish-shell/release-3<br>sudo apt update<br>sudo apt install fish<br></code></pre></td></tr></table></figure></p>
-<h1 id="关闭-kde-文件索引程序"><a href="#关闭-kde-文件索引程序" class="headerlink" title="关闭 kde 文件索引程序"></a>关闭 kde 文件索引程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">balooctl <span class="hljs-built_in">suspend</span><br>balooctl <span class="hljs-built_in">disable</span><br></code></pre></td></tr></table></figure>
-<h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
-<li>运行 MITMProxy</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">docker run --<span class="hljs-built_in">rm</span> -it -p 18080:8080 -p 127.0.0.1:8081:8081 -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy  mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0 --<span class="hljs-built_in">set</span> block_global=<span class="hljs-literal">false</span> --<span class="hljs-built_in">set</span> ssl_insecure=<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
-<ol>
-<li>导入证书至浏览器或其他工具</li>
-<li>使用代理访问 HTTPS 页面</li>
-</ol>
-<h1 id="更新-ubuntu-22-04-之后网易云音乐无法使用"><a href="#更新-ubuntu-22-04-之后网易云音乐无法使用" class="headerlink" title="更新 ubuntu 22.04 之后网易云音乐无法使用"></a>更新 ubuntu 22.04 之后网易云音乐无法使用</h1><p>修改 <code>/opt/netease/netease-cloud-music/netease-cloud-music.bash</code> 为以下内容<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br>HERE=<span class="hljs-string">&quot;<span class="hljs-subst">$(dirname <span class="hljs-string">&quot;<span class="hljs-subst">$(readlink -f <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;0&#125;</span>&quot;</span>)</span>&quot;</span>)</span>&quot;</span><br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/libs<br><span class="hljs-built_in">export</span> QT_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins <br><span class="hljs-built_in">export</span> QT_QPA_PLATFORM_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins/platforms<br><span class="hljs-built_in">cd</span> /lib/x86_64-linux-gnu/<br><span class="hljs-built_in">exec</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/netease-cloud-music <span class="hljs-variable">$@</span><br><br></code></pre></td></tr></table></figure></p>
-<h1 id="关闭无用启动项"><a href="#关闭无用启动项" class="headerlink" title="关闭无用启动项"></a>关闭无用启动项</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看启动项</span><br><span class="hljs-built_in">ls</span> -l /etc/xdg/autostart<br><br><span class="hljs-comment"># 重命名</span><br>sudo <span class="hljs-built_in">mv</span> something something.bak<br></code></pre></td></tr></table></figure>
-<h1 id="Vmware-更新内核失败"><a href="#Vmware-更新内核失败" class="headerlink" title="Vmware 更新内核失败"></a>Vmware 更新内核失败</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/mkubecek/vmware-host-modules.git<br>git checkout &lt;your_version&gt;<br>sudo make<br>sudo make install<br></code></pre></td></tr></table></figure>
-<h1 id="双系统-Windows-更新失败"><a href="#双系统-Windows-更新失败" class="headerlink" title="双系统 Windows 更新失败"></a>双系统 Windows 更新失败</h1><p>我这里双系统 Windows 更新失败的原因是 Windows 引导出现了问题，可以进入 Windows 输入 <code>msconfig</code> 查看引导选项卡下是否有内容，我是用过 systemd boot 来引导的 Windows，所以没有出现内容。</p>
-<p>在 BIOS 中更改成直接引导 Windows 之后便可以正常更新了。</p>
-<h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">ls</span> -1t /var/log/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |<span class="hljs-built_in">tac</span> |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
-<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="Unite"><a href="#Unite" class="headerlink" title="Unite"></a>Unite</h2><p>最大化时隐藏标题栏</p>
-<h2 id="Clear-Top-Bar"><a href="#Clear-Top-Bar" class="headerlink" title="Clear Top Bar"></a>Clear Top Bar</h2><p>状态栏变成透明的</p>
-<h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><p>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</p>
-<h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
-<h2 id="Lock-Keys"><a href="#Lock-Keys" class="headerlink" title="Lock Keys"></a>Lock Keys</h2><p>可以显示当前大小写状况</p>
-<h2 id="NetSpeed"><a href="#NetSpeed" class="headerlink" title="NetSpeed"></a>NetSpeed</h2><p>显示当前网速</p>
-<h2 id="TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）"><a href="#TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）" class="headerlink" title="TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）"></a>TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</h2><p>在顶部显示图标</p>
-<h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
-<h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
-<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
-<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ul>
-<li><p>使用 im-config 修复</p>
-</li>
-<li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
-</li>
-<li><p>使用 <code>fcitx5-diagnose</code> 命令根据提示设置环境变量</p>
-</li>
-<li><p>删除 <code>/etc/profile.d/pop-im-ibus.sh</code> （pop os）</p>
-<p> <code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
- <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
-<p> 因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
-<p> <code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
-<p> 相关 issue，<a href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
-</li>
-</ul>
-<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
-   <figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
-<p>   之后重启 gnome 即可解决</p>
-<h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
-<p>参考：<a href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
-<h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
-<p>执行上述命令后再运行 fluxion 即可。</p>
-<h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
-<li>先停用 systemd-resolved 服务</li>
-</ol>
-<figure class="highlight nsis"><table><tr><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl stop <span class="hljs-params">system</span>d-resolved<br></code></pre></td></tr></table></figure>
-<ol>
-<li>编辑 /etc/systemd/resolved.conf 文件</li>
-</ol>
-<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
-<ol>
-<li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
-</ol>
-<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
-<ol>
-<li>最后运行下面命令即可。</li>
-</ol>
-<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
   </entry>
   <entry>
     <title>MCP 协议学习</title>
@@ -3588,6 +3588,22 @@ P(x_s | x_k, x_0) \sim \mathcal{N}(\sqrt{\alpha_s}x_0 + \sqrt{1 - \alpha_s - \si
 <p>还有一种 O(1) 定位下一个数字的方法：</p>
 <p>如果这个数字为 x，那么不存在 x-1 的话，这个数字一定是连续序列的第一个数字。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">longestConsecutive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-keyword">if</span> (nums.length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        Set&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;<br>            set.add(nums[i]);<br>        &#125;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">longest</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : set) &#123;<br>            <span class="hljs-keyword">if</span> (set.contains(num - <span class="hljs-number">1</span>)) <span class="hljs-keyword">continue</span>;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">while</span> (set.contains(num + i)) &#123;<br>                i++;<br>                longest = Math.max(longest, i);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> longest;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="使数组的值全部为-K-的最少操作次数"><a href="#使数组的值全部为-K-的最少操作次数" class="headerlink" title="使数组的值全部为 K 的最少操作次数"></a>使数组的值全部为 K 的最少操作次数</h2><blockquote>
+<p>给你一个整数数组 <code>nums</code> 和一个整数 <code>k</code> 。</p>
+<p>如果一个数组中所有 <strong>严格大于</strong> <code>h</code> 的整数值都 <strong>相等</strong> ，那么我们称整数 <code>h</code> 是 <strong>合法的</strong> 。</p>
+<p>比方说，如果 <code>nums = [10, 8, 10, 8]</code> ，那么 <code>h = 9</code> 是一个 <strong>合法</strong> 整数，因为所有满足 <code>nums[i] &gt; 9</code> 的数都等于 10 ，但是 5 不是 <strong>合法</strong> 整数。</p>
+<p>你可以对 <code>nums</code> 执行以下操作：</p>
+<ul>
+<li>选择一个整数 <code>h</code> ，它对于 <strong>当前</strong> <code>nums</code> 中的值是合法的。</li>
+<li>对于每个下标 <code>i</code> ，如果它满足 <code>nums[i] &gt; h</code> ，那么将 <code>nums[i]</code> 变为 <code>h</code> 。</li>
+</ul>
+<p>你的目标是将 <code>nums</code> 中的所有元素都变为 <code>k</code> ，请你返回 <strong>最少</strong> 操作次数。如果无法将所有元素都变 <code>k</code> ，那么返回 -1 。</p>
+</blockquote>
+<p>其实就是把大的数字变小，需要变几次。</p>
+<p>我的做法：用 SortedSet 统计大于 k 的有多少，以及是否有小于 k 的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-comment">// 也就是说可以把大的变小</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">minOperations</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k)</span> &#123;<br>        SortedSet&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeSet</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>            set.add(num);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (set.first() &lt; k) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">if</span> (set.first() == k) <span class="hljs-keyword">return</span> set.size() - <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">return</span> set.size();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>官解：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">minOperations</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k)</span> &#123;<br>        Set&lt;Integer&gt; st = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : nums) &#123;<br>            <span class="hljs-keyword">if</span> (x &lt; k) &#123;<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (x &gt; k) &#123;<br>                st.add(x);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> st.size();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><h2 id="KMP-算法"><a href="#KMP-算法" class="headerlink" title="KMP 算法"></a>KMP 算法</h2><p>next 数组：<strong>是一个前缀表，前缀表是用来回退的，它记录了模式串与主串(文本串)不匹配的时候，模式串应该从哪里开始重新匹配。</strong></p>
 <p>那么什么是前缀表：<strong>记录下标i之前（包括i）的字符串中，有多大长度的相同前缀后缀。</strong></p>
 <p><strong>下标5之前这部分的字符串（也就是字符串aabaa）的最长相等的前缀 和 后缀字符串是 子字符串aa ，因为找到了最长相等的前缀和后缀，匹配失败的位置是后缀子串的后面，那么我们找到与其相同的前缀的后面重新匹配就可以了。</strong></p>
