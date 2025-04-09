@@ -4988,7 +4988,17 @@ class Solution {
 }
 ```
 
-优化空间：
+**优化空间：**
+
+和零钱兑换的一个关系：
+
+可以把nums看成是各种零钱组合，整数amount对应这里的target，也就是nums总和的一半。区别在于这里nums里面的值只能用一次。
+
+所以外层遍历都是遍历零钱组合，而内层遍历在遍历amount的时候有一个差别，即分割等和子集是倒着遍历，而零钱是正着遍历。
+
+这里为什么要**倒着遍历就是因为这里的值是不能用两遍**，而零钱问题中是可以用多遍的，所以从小到大遍历~~
+
+另外一个只判断能否成功一个判断最小零钱只是输出上的差异了。
 
 ```java
 class Solution {
@@ -5006,10 +5016,14 @@ class Solution {
 
         dp[0] = true;
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) { // 外层枚举数字
             int num = nums[i];
             for (int j = target; j >= num; j--) {
                 dp[j] |= dp[j - num];
+                // 等价于
+                // if (dp[j - num]) {
+                //     dp[j] = true;
+                // }
             }
         }
 
@@ -5640,6 +5654,69 @@ class Solution {
         }
 
         return ans;
+    }
+}
+```
+
+
+
+## 使数组元素互不相同所需的最少操作次数
+
+给你一个整数数组 `nums`，你需要确保数组中的元素 **互不相同** 。为此，你可以执行以下操作任意次：
+
+- 从数组的开头移除 3 个元素。如果数组中元素少于 3 个，则移除所有剩余元素。
+
+**注意：**空数组也视作为数组元素互不相同。返回使数组元素互不相同所需的 **最少操作次数** 。
+
+
+
+### 模拟
+
+```java
+class Solution {
+    public int minimumOperations(int[] nums) {
+        int n = nums.length;
+        int[] c = new int[101];
+        for (int i = 0; i < n; i++) {
+            c[nums[i]]++;
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i+=3) {
+            boolean ok = true;
+            for (int j = 1; j <= 100; j++) {
+                if (c[j] > 1) {
+                    c[nums[i]]--;
+                    if (i + 1 < n) c[nums[i+1]]--;
+                    if (i + 2 < n) c[nums[i+2]]--;
+                    ok = false;
+                    break;
+                }
+            }
+            if (!ok) ans++;
+        }
+        return ans;
+    }
+}
+```
+
+
+
+### 技巧
+
+```java
+class Solution {
+    // 倒序遍历
+    public int minimumOperations(int[] nums) {
+        int n = nums.length;
+        int ans = n / 3;
+        boolean[] seen = new boolean[101];
+        for (int i = n - 1; i >= 0; i--) {
+            if (seen[nums[i]]) {
+                return i / 3 + 1;
+            }
+            seen[nums[i]] = true;
+        }
+        return 0;
     }
 }
 ```
