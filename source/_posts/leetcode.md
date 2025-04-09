@@ -5319,6 +5319,69 @@ impl Solution {
 }
 ```
 
+
+
+## 最大整除子集
+
+给你一个由 **无重复** 正整数组成的集合 `nums` ，请你找出并返回其中最大的整除子集 `answer` ，子集中每一元素对 `(answer[i], answer[j])` 都应当满足：
+
+- `answer[i] % answer[j] == 0` ，或
+- `answer[j] % answer[i] == 0`
+
+如果存在多个有效解子集，返回其中任何一个均可。
+
+### 动态规划
+
+设子集为 A，题目要求对于任意 (A[i],A[j])，都满足 A[i]modA[j]=0 或者 A[j]modA[i]=0，也就是一个数是另一个数的倍数。
+
+这里有两个条件，不好处理。我们可以把 A 排序，或者说把 nums 排序（从小到大）。由于 nums 所有元素互不相同（没有相等的情况），题目要求变成：
+
+从（排序后的）nums 中选一个子序列，在子序列中，右边的数一定是左边的数的倍数。
+由于 x 的倍数的倍数仍然是 x 的倍数，只要相邻元素满足倍数关系，那么任意两数一定满足倍数关系。于是题目要求变成：
+
+从（排序后的）nums 中选一个子序列，在子序列中，任意相邻的两个数，右边的数一定是左边的数的倍数。
+这类似 300. 最长递增子序列，都是相邻元素有约束，且要计算的都是子序列的最长长度。
+
+下文把满足题目要求的子序列叫做合法子序列。
+
+```java
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        Arrays.sort(nums);
+        
+        int n = nums.length;
+        int[] dp = new int[n]; // 以 nums[i] 结尾的最大整除子集
+        int[] from = new int[n];
+        Arrays.fill(from, -1);
+        int maxI = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] % nums[j] == 0 && dp[j] > dp[i]) {
+                    dp[i] = dp[j];
+                    from[i] = j;
+                }
+            }
+            dp[i]++;
+            if (dp[i] > dp[maxI]) {
+                maxI = i; // 最大整除子集最后一个数的下标
+            }
+        }
+
+        List<Integer> path = new ArrayList<>(dp[maxI]);
+        for (int i = maxI; i >= 0; i = from[i]) {
+            path.add(nums[i]);
+        }
+        return path;
+    }
+}
+```
+
+
+
+
+
+
+
 # 多维 dp
 
 ## 不同路径
@@ -5660,6 +5723,7 @@ class Solution {
 
 
 
+
 ## 使数组元素互不相同所需的最少操作次数
 
 给你一个整数数组 `nums`，你需要确保数组中的元素 **互不相同** 。为此，你可以执行以下操作任意次：
@@ -5699,14 +5763,12 @@ class Solution {
 }
 ```
 
-
-
 ### 技巧
 
 ```java
 class Solution {
-    // 倒序遍历
     public int minimumOperations(int[] nums) {
+        // 倒序遍历
         int n = nums.length;
         int ans = n / 3;
         boolean[] seen = new boolean[101];
@@ -5722,7 +5784,92 @@ class Solution {
 ```
 
 
+# 数学
 
+## 找出所有子集的异或总和再求和
+
+### 简单做法
+
+枚举所有子集，然后求出异或总和
+
+```java
+class Solution {
+    public int subsetXORSum(int[] nums) {
+        int n = nums.length;
+        int ans = 0;
+        for (int i = 0; i < (1 << n); i++) {
+            int XORSum = 0;
+            for (int j = 0; j < n; j++) {
+                if ((i & (1 << j)) != 0) {
+                    XORSum = XORSum ^ nums[j];
+                }
+            }
+            ans += XORSum;
+        }
+        return ans;
+    }
+}
+```
+
+
+### 数学做法
+
+#### 提示1
+
+对于异或运算，每个比特位是互相独立的，我们可以先思考只有一个比特位的情况，也就是 nums 中只有 0 和 1 的情况。（从特殊到一般）
+
+在这种情况下，如果子集中有偶数个 1，那么异或和为 0；如果子集中有奇数个 1，那么异或和为 1。所以关键是求出异或和为 1 的子集个数。题目要求的是子集的异或总和再求和，异或和为 1 的子集的个数就是最终答案。
+
+设 nums 的长度为 n，且包含 1。我们可以先把其中一个 1 拿出来，剩下 n−1 个数随便选或不选，有 $2^{n−1}$ 种选法。
+
+- 如果这 n−1 个数中选了偶数个 1，那么放入我们拿出来的 1（选这个 1），得到奇数个 1，异或和为 1。
+- 如果这 n−1 个数中选了奇数个 1，那么不放入我们拿出来的 1（不选这个 1），得到奇数个 1，异或和为 1。
+
+所以，恰好有 $2^{n−1}$ 个子集的异或和为 1。
+
+注意这个结论与 nums 中有多少个 1 是无关的，只要有 1，异或和为 1 的子集个数就是 $2^{n−1}$。如果 nums 中没有 1，那么有 0 个子集的异或和为 1。
+
+所以，在有至少一个 1 的情况下，nums 的所有子集的异或和的总和为 $2^{n−1}$。
+
+
+
+#### 提示2
+
+推广到多个比特位的情况。
+
+例如 $nums = [3,2,8]$，3 = 11，2 = 10，8 = 1000
+
+第 $0,1,3$ 个比特位上有 $1$，每个比特位对应的「所有子集的异或和的总和」分别为
+$$
+2^0\cdot2^{n - 1}, 2^1\cdot2^{n - 1}, 2^3\cdot2^{n - 1}
+$$
+相加得
+
+$$
+(2^0 + 2^1 + 2^3)\cdot2^{n - 1}
+$$
+怎么知道哪些比特位上有 $1$？计算 $nums$ 的所有元素的 OR，即 $1011_{(2)}$。
+
+注意到，所有元素的 OR，就是上例中的 $2^0 + 2^1 + 2^3$。
+
+一般地，设 $nums$ 所有元素的 OR 为 $or$，$nums$ 的所有子集的异或和的总和为
+
+$$
+or\cdot2^{n - 1}
+$$
+
+```java
+class Solution {
+    public int subsetXORSum(int[] nums) {
+        int n = nums.length;
+        int XORSum = 0;
+        for (int i = 0; i < n; i++) {
+            XORSum = XORSum | nums[i]; 
+        }
+        return XORSum * 1 << (n - 1);
+    }
+}
+```
 
 
 
