@@ -604,6 +604,8 @@ class Solution {
 
 Arrays.equals 可以判断两个数组相等。
 
+
+
 # 区间
 
 ## 合并区间
@@ -5930,6 +5932,227 @@ class Solution {
 ```
 
 
+
+
+
+# 数位 dp
+
+## 统计强大整数的数目
+
+给你三个整数 `start` ，`finish` 和 `limit` 。同时给你一个下标从 **0** 开始的字符串 `s` ，表示一个 **正** 整数。
+
+如果一个 **正** 整数 `x` 末尾部分是 `s` （换句话说，`s` 是 `x` 的 **后缀**），且 `x` 中的每个数位至多是 `limit` ，那么我们称 `x` 是 **强大的** 。
+
+请你返回区间 `[start..finish]` 内强大整数的 **总数目** 。
+
+如果一个字符串 `x` 是 `y` 中某个下标开始（**包括** `0` ），到下标为 `y.length - 1` 结束的子字符串，那么我们称 `x` 是 `y` 的一个后缀。比方说，`25` 是 `5125` 的一个后缀，但不是 `512` 的后缀。
+
+
+
+### 组合数学
+
+我们可以实现一个计数函数 `calculate(x)` 来直接计算小于等于 `x` 的满足 `limit` 的数字数量，然后答案即为 `calculate(finish) - calculate(start - 1)`。 首先考虑 `x` 中与 `s` 长度相等的后缀部份（如果 `x` 长度小于 `s`，答案为 `0`），如果 `x` 的后缀大于等于 `s`，那么后缀部份对答案贡献为 `1`。 接着考虑剩余的前缀部份。令 `preLen` 表示前缀的长度，即 `|x| - |s|`。对于前缀的每一位 `x[i]`： - 如果超过了 `limit`，意味着当前位最多只能取到 `limit`，后面的所有位任取组成的数字也不会超过 `x`。因此包括第 `i` 位，后面的所有位（共 `preLen - i` 位）都可以取 `[0, limit]`（共 `limit + 1` 个数），对答案的贡献是 `(limit + 1)^(preLen - i)`。 - 如果 `x[i]` 没有超过 `limit`，那么当前位最多取到 `x[i]`，后面的所有位可以取 `[0, limit]`，对答案的贡献是 `x[i] × (limit + 1)^(preLen - i - 1)`。 
+
+```java
+class Solution {
+    public long numberOfPowerfulInt(long start, long finish, int limit, String s) {
+        String StrFinish = String.valueOf(finish);
+        String StrStart = String.valueOf(start - 1);
+        return calculate(StrFinish, s, limit) - calculate(StrStart, s, limit);
+    }
+
+    // 计算计算小于等于 x 的满足 limit 的数字数量
+    private long calculate(String x, String s, int limit) {
+        if (x.length() < s.length()) {
+            return 0;
+        }
+        if (x.length() == s.length()) {
+            return x.compareTo(s) >= 0 ? 1 : 0;
+        }
+        String suffix = x.substring(x.length() - s.length()); // begin index
+        long count = 0;
+        int preLen = x.length() - s.length();
+        for (int i = 0; i <= preLen; i++) {
+            int digit = x.charAt(i) - '0';
+            if (limit < digit) {
+                count += (long) Math.pow(limit + 1, preLen - i);
+                return count;
+            }
+            count += (long)digit * (long)Math.pow(limit + 1, preLen - 1 - i);
+        }
+        if (suffix.compareTo(s) >= 0) {
+            count++;
+        }
+        return count;
+    }
+}
+```
+
+
+
+### 数位 dp
+
+定义 `dfs(i, limitLow, limitHigh)` 表示构造第 `i` 位及其之后数位的合法方案数，其余参数的含义为：
+
+- `limitHigh` 表示当前是否受到了 `finish` 的约束（我们要构造的数字不能超过 `finish`）。若为真，则第 `i` 位填入的数字至多为 `finish[i]`，否则至多为 `9`，这个数记作 `hi`。如果在受到约束的情况下填了 `finish[i]`，那么后续填入的数字仍会受到 `finish` 的约束。例如 `finish = 123`，那么 `i = 0` 填的是 `1` 的话，`i = 1` 的这一位至多填 `2`。
+- `limitLow` 表示当前是否受到了 `start` 的约束（我们要构造的数字不能低于 `start`）。若为真，则第 `i` 位填入的数字至少为 `start[i]`，否则至少为 `0`，这个数记作 `lo`。如果在受到约束的情况下填了 `start[i]`，那么后续填入的数字仍会受到 `start` 的约束。
+
+枚举第 `i` 位填什么数字。
+
+如果 `i < n - |s|`，那么可以填 `[lo, min(hi, limit)]` 内的数，否则只能填 `s[i - (n - |s|)]`。这里 `|s|` 表示 `s` 的长度。
+
+
+
+为什么不能把 `hi` 置为 `min(hi, limit)`？
+
+```
+int hi = limitHigh ? Math.min(high[i] - '0', limit) : 9;
+```
+
+你就隐含地说：**`hi` 是由 limit 限制的，而不是由 high 限制的**，这就导致之后的 `limitHigh && d == hi` 判断会出错！
+
+**举个例子：**
+
+假设 `high = 5299`, 当前正在处理第 1 位（从左往右），也就是处理 `2`，而 `limit = 1`。
+
+如果你写：
+
+```java
+hi = Math.min(2, 1) = 1
+```
+
+你会枚举 `0,1` 而不是原本允许的 `0,1,2`，并且还会让 `limitHigh && d == hi` 在本应为 `d==2` 时失效！
+
+**正确的逻辑应该是：**
+
+- `hi` **始终**由 `limitHigh ? high[i] : 9` 来决定；
+- `limit` 是附加的“过滤”逻辑，不应该影响 Digit DP 的状态定义；
+- 在**枚举循环内部**使用 `Math.min(hi, limit)` 来限制合法的数位；
+- 这样才能确保转移关系和 memo 的缓存是准确的。
+
+
+
+
+
+递归终点：`dfs(n, *, *) = 1`，表示成功构造出一个合法数字。
+
+递归入口：`dfs(0, true, true)`，表示：
+
+- 从最高位开始枚举。
+- 一开始要受到 `start` 和 `finish` 的约束（否则就可以随意填了，这肯定不行）。 
+
+```java
+class Solution {
+    public long numberOfPowerfulInt(long start, long finish, int limit, String s) {
+        String low = String.valueOf(start);
+        String high = String.valueOf(finish);
+        int n = high.length();
+        low = "0".repeat(n - low.length()) + low; // 补前导零，和 high 对齐
+        long[] memo = new long[n];
+        Arrays.fill(memo, -1);
+        return dfs(0, true, true, low.toCharArray(), high.toCharArray(), limit, s.toCharArray(), memo);
+    }
+
+    private long dfs(int i, boolean limitLow, boolean limitHigh, char[] low, char[] high, int limit, char[] s, long[] memo) {
+        if (i == high.length) return 1;
+
+        if (!limitLow && !limitHigh && memo[i] != -1) {
+            return memo[i];
+        }
+
+        // 第 i 个数位可以从 lo 枚举到 hi
+        // 如果对数位还有其它约束，应当只在下面的 for 循环做限制，不应修改 lo 或 hi
+        int lo = limitLow ? low[i] - '0' : 0;
+        int hi = limitHigh ? high[i] - '0' : 9;
+
+        long res = 0;
+        if (i < high.length - s.length) { // 枚举这个数位填什么
+            for (int d = lo; d <= Math.min(hi, limit); d++) {
+                res += dfs(i + 1, limitLow && d == lo, limitHigh && d == hi, low, high, limit, s, memo);
+            }
+        } else {
+            int x = s[i - (high.length - s.length)] - '0';
+            if (lo <= x && x <= hi) { // 题目保证 x <= limit，无需判断
+                res = dfs(i + 1, limitLow && x == lo, limitHigh && x == hi, low, high, limit, s, memo);
+            }
+        }
+
+        if (!limitLow && !limitHigh) {
+            memo[i] = res; // 记忆化 (i,false,false)
+        }
+        return res;
+    }
+}
+```
+
+
+
+## 统计对称整数的数目
+
+### 暴力判断 O((*high*−*low*)log*high*)
+
+### 数位 dp
+
+```java
+class Solution {
+    private char[] lowS, highS;
+    private int n, m, diffLh;
+    private int[][][] memo;
+
+    public int countSymmetricIntegers(int low, int high) {
+        lowS = String.valueOf(low).toCharArray();
+        highS = String.valueOf(high).toCharArray();
+        n = highS.length;
+        m = n / 2;
+        diffLh = n - lowS.length;
+
+        memo = new int[n][diffLh + 1][m * 18 + 1]; // 注意 start <= diffLh
+        for (int[][] mat : memo) {
+            for (int[] row : mat) {
+                Arrays.fill(row, -1);
+            }
+        }
+
+        // 初始化 diff = m * 9，避免出现负数导致 memo 下标越界
+        return dfs(0, -1, m * 9, true, true);
+    }
+
+    private int dfs(int i, int start, int diff, boolean limitLow, boolean limitHigh) {
+        if (i == n) {
+            return diff == m * 9 ? 1 : 0;
+        }
+
+        // start 当 isNum 用
+        if (start != -1 && !limitLow && !limitHigh && memo[i][start][diff] != -1) {
+            return memo[i][start][diff];
+        }
+
+        int lo = limitLow && i >= diffLh ? lowS[i - diffLh] - '0' : 0;
+        int hi = limitHigh ? highS[i] - '0' : 9;
+
+        // 如果前面没有填数字，且剩余数位个数是奇数，那么当前数位不能填数字
+        if (start < 0 && (n - i) % 2 > 0) {
+            // 如果必须填数字（lo > 0），不合法，返回 0
+            return lo > 0 ? 0 : dfs(i + 1, start, diff, true, false);
+        }
+
+        int res = 0;
+        boolean isLeft = start < 0 || i < (start + n) / 2;
+        for (int d = lo; d <= hi; d++) {
+            res += dfs(i + 1,
+                       start < 0 && d > 0 ? i : start, // 记录第一个填数字的位置
+                       diff + (isLeft ? d : -d), // 左半 +，右半 -
+                       limitLow && d == lo,
+                       limitHigh && d == hi);
+        }
+
+        if (start != -1 && !limitLow && !limitHigh) {
+            memo[i][start][diff] = res;
+        }
+        return res;
+    }
+}
+```
 
 
 
