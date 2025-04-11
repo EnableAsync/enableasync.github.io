@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>扩散模型在图像分类域泛化中的应用研究综述 - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="扩散模型在图像分类域泛化中的应用研究综述过去三年中，扩...">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">扩散模型在图像分类域泛化中的应用研究综述</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">扩散模型在图像分类域泛化中的应用研究综述</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 11, 2025</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>9055</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="扩散模型在图像分类域泛化中的应用研究综述"><a href="#扩散模型在图像分类域泛化中的应用研究综述" class="headerlink" title="扩散模型在图像分类域泛化中的应用研究综述"></a>扩散模型在图像分类域泛化中的应用研究综述</h1><p>过去三年中，扩散模型（Diffusion Models）在图像分类的<strong>域泛化</strong>（Domain Generalization）任务中展现出新颖而有效的应用。域泛化旨在训练出能够直接适应未知目标域的数据分布的模型，而无需在目标域上进行任何微调。以下我们将从核心方法、所用扩散模型类型、应用场景、实验评估及代表性研究等方面进行综述。</p>
+<h2 id="核心方法与思想"><a href="#核心方法与思想" class="headerlink" title="核心方法与思想"></a>核心方法与思想</h2><p><strong>1. 基于数据增广的扩散生成</strong>：许多方法利用扩散模型强大的图像生成能力来<strong>扩充源域数据的多样性</strong>，缩小不同域之间的差异。这类方法通过在训练时引入<strong>跨域合成图像</strong>来模拟未见过的目标域分布。例如，Hemati等人提出<strong>跨域生成增广（CDGA）</strong>方法，借助预训练的潜变量扩散模型（latent diffusion model）生成<strong>填补多个源域分布间隙</strong>的图像。简单而言，CDGA从任意两个源域出发，在其“附近”合成新样本，从而<strong>减少域间分布差异</strong>，实践中显著提升了模型在未见域的表现。Noori等人提出的<strong>FDS（Feedback-guided Domain Synthesis）</strong>则通过<strong>多源条件扩散模型</strong>来进行“域混合”生成。他们在源域数据上训练扩散模型，<strong>插值噪声级和条件</strong>以混合多个源域特征，生成“新域”样本，并筛选出对源模型具有挑战性的难例加入训练。这种反馈生成策略确保训练集覆盖更广泛的分布，从而<strong>将模型鲁棒性提升到新的水平</strong>。</p>
+<p><strong>2. 文本引导与条件控制</strong>：扩散模型允许通过<strong>文本或图像条件</strong>引导生成不同风格的图像。Ren等人（2025）提出<strong>“语言引导的扩散”</strong>数据增广框架，利用大型语言模型（LLM）<strong>生成描述新域风格的文本提示</strong>，然后用文本条件扩散模型合成相应风格的图像。他们还结合CLIP模型进行多样性分析，确保生成的数据既提升泛化性又保持多样性和效率。实验证明，在PACS等基准上，该方法显著优于传统增广技术。另外，Lin等人关注<strong>公平域泛化</strong>问题，提出<strong>FADE</strong>方法：先预训练扩散模型和分类器，然后用<strong>分类器指导扩散模型去除生成图像中的敏感属性信息</strong>，生成“公平”的数据用于训练。这一<strong>分类器引导的扩散</strong>生成不仅减轻了偏见，还提升了分布偏移下的模型准确度。综上，这些方法通过<strong>条件控制扩散模型</strong>来<strong>合成多样且具有特定属性的图像</strong>（不同风格、新环境、无敏感信息等），增强模型对新域的适应力。</p>
+<p><strong>3. 扩散模型辅助的域不变特征提取</strong>：除了直接生成图像，一些方法利用扩散模型的<strong>中间表征</strong>来提升域泛化模型的特征学习。Huang等人提出的<strong>DomainFusion</strong>框架同时在<strong>潜空间</strong>和<strong>像素空间</strong>利用预训练的潜变量扩散模型（如Stable Diffusion）来辅助分类模型训练。在潜空间，DomainFusion设计了<strong>梯度得分蒸馏（GSD）</strong>，从扩散模型中提取<strong>梯度先验</strong>来指导分类模型的优化，理论上可逼近两模型输出分布的KL散度最小化。在像素空间，他们通过<strong>自回归采样策略</strong>生成并洗牌合成样本，优化合成图像的语义和非语义因素，使其更贴近未见域。该方法相当于将稳定扩散模型中蕴含的大规模图像分布知识<strong>融入判别模型</strong>，因而相比仅用生成数据的方法取得了更大的性能提升。Thomas和Ghadiyaram（2025）提出的<strong>GUIDE</strong>方法则完全不依赖域标签，<strong>直接利用扩散模型的表征来推断伪域</strong>。他们观察到扩散模型（如Stable Diffusion或DiT）的潜空间中<strong>自然形成了风格聚类</strong>，可代表数据的不同“伪域”。GUIDE首先用预训练扩散模型提取训练样本的潜向量并聚类，以获得若干伪域质心，然后将这些伪域表示与原始特征拼接一起训练分类器。这种融合了“域信息”的特征空间比仅用图像特征更能抵抗域移变，在多个基准上显著提高了分类准确率（例如OfficeHome数据集上比强基线提升3%）。上述方法表明，<strong>扩散模型的知识可通过蒸馏或特征拼接等方式提升模型的域不变表征能力</strong>。</p>
+<p><strong>4. 模型参数空间的扩散建模</strong>：一种独特的思路是将扩散模型用于<strong>直接生成模型参数</strong>，以实现对未来域的自适应。Xie等人在NeurIPS 2024提出<strong>Weight Diffusion (W-Diff)</strong>框架，针对<strong>持续变化的非平稳环境</strong>下的域泛化。W-Diff在<strong>参数空间</strong>训练条件扩散模型：将历次源域训练得到的分类器权重存入队列，计算当前（最新）域分类器与历史分类器之间的<strong>权重差</strong>，并将这种权重残差作为diffusion的训练数据。扩散模型以历史域的分类器为条件、以当前域的类别原型为附加条件，学习从历史权重过渡到当前权重的<strong>演化模式</strong>。通过这种方式，模型捕获了参数随域分布演进的规律。推理时，以当前已训练分类器为锚点，让扩散模型生成<strong>大量针对未来域定制的分类器权重</strong>，并对它们的预测结果做集成。实验证明，与以往仅在特征层面外推未来域的方法相比，W-Diff在模拟未来未知域时更加有效，在合成和真实的<strong>时间演变域</strong>数据上都取得了更优的性能。这一方法开创性地将扩散模型用于<strong>学习模型参数的渐变规律</strong>，为持续学习和未来域预测提供了新思路。</p>
+<h2 id="使用的扩散模型类型及用途"><a href="#使用的扩散模型类型及用途" class="headerlink" title="使用的扩散模型类型及用途"></a>使用的扩散模型类型及用途</h2><p><strong>1. DDPM及其扩展</strong>：大部分方法使用<strong>扩散概率模型</strong>的典型实现——<strong>DDPM</strong>（Denoising Diffusion Probabilistic Models）及其变种。<strong>Stable Diffusion</strong>等潜变量扩散模型（Latent Diffusion Models, LDM）是最常用的选择。它在低维潜空间进行扩散，大幅提高了采样效率，同时通过融合<strong>文本编码</strong>实现可控生成。许多域泛化研究直接利用开源的Stable Diffusion模型作为图像生成器。例如CDGA使用了Stable Diffusion对源域图像应用提示词（prompt）引导，生成不同域风格的样本；在PACS、OfficeHome等风格域数据上，CDGA主要通过<strong>文本提示</strong>控制生成，而在VLCS等现实数据上则使用<strong>图像混合引导</strong>来生成跨域样本。另外，FDS方法则<strong>微调</strong>了预训练扩散模型并引入<strong>多条件控制</strong>：将“域标签”作为条件嵌入到扩散模型的噪声预测网络中，然后在推断时对不同域条件进行<strong>分层插值</strong>（如对噪声级、文本embedding插值），合成混合域图像。通过这种<strong>条件扩散</strong>，FDS能够严格控制生成图像所属的域分布，保证生成样本的多样性和跨域跨度。</p>
+<p><strong>2. Score-based模型</strong>：部分工作采用<strong>score-based</strong>扩散模型（本质上与DDPM等价，只是从概率流角度定义），特别是在需要自定义训练扩散模型的场景。Lin等人的FADE框架即在其特定数据集上预训练了<strong>得分匹配扩散模型</strong>，并训练了两个分类器（任务分类器和敏感属性分类器），然后通过<strong>分类器指导采样</strong>的方式来引导扩散模型产生不含敏感信息的图像。这里使用的“分类器指导”技术与Diffusion模型生成图像时添加引导梯度相似，可以看作对<strong>score-based生成过程</strong>的条件微调，以<strong>去除特定特征</strong>。相比直接使用预训练的大模型，这种自训练的扩散模型更易于在<strong>小型专用数据集</strong>（如公平学习场景）上操控。需要注意的是，score-based模型生成质量虽高，但计算开销也大，因而有些研究仍倾向于利用预训练的稳定扩散模型，以减少训练负担。</p>
+<p><strong>3. 文本与图像条件</strong>：为了实现<strong>精细的生成控制</strong>，研究中广泛使用了<strong>条件扩散模型</strong>。最常见的是<strong>文本条件扩散</strong>（如Stable Diffusion），用于根据描述生成具有某种风格或属性的图像。例如语言引导扩散方法中，LLM产生的描述提示通过Stable Diffusion生成全新风格的图像。同时也有方法采用<strong>图像条件</strong>（image-to-image扩散），即给定一张源域图像，通过扩散模型添加噪声再去噪，将其<strong>转换到另一种域的外观</strong>。Niemeijer等（WACV 2024）的研究在语义分割背景下使用了图像条件扩散模型，将合成源域图像的风格转化为真实目标域风格，从而提升模型在真实场景的泛化。在图像分类任务中，类似的思想被用于将源域图像“风格迁移”到其他域：例如Truong等人的<strong>ED-SAM</strong>方法，在扩散模型最后一步加噪后对潜变量进行扰动，再映射回图像，产生在造型和风格上有所变化的样本。此外，<strong>多模态扩散</strong>也被探索，如DomainFusion除了文本条件外，还利用扩散模型的<strong>内部梯度</strong>信息（可视为条件）来指导判别模型训练。总的来说，各方法充分利用了扩散模型<strong>灵活加入条件</strong>的特性，通过文本描述域属性、图像示例目标风格或直接针对特定特征进行引导，来<strong>精确地控制生成内容</strong>并服务于域泛化目标。</p>
+<p><strong>4. 潜空间与参数空间扩散</strong>：有别于传统的像素空间生成，一些方法探索了<strong>非像素空间</strong>的扩散模型应用。GUIDE利用扩散模型<strong>潜空间</strong>提取的隐变量代表图像的域属性；通过对这些隐变量聚类获得伪域标签，再将其反馈给判别模型训练，从而在不生成额外图像的情况下利用了扩散模型的“见多识广”来增强域泛化能力。W-Diff则是在<strong>模型权重空间</strong>实施扩散：它训练的扩散模型输入是历史域的分类器参数，输出是下一域的分类器参数（以残差形式），实质是在参数空间进行“去噪”推理来预测未来域的模型。这种创新用法展示了扩散模型在除图像像素以外的数据分布上（如特征、参数）的强大建模能力，可用于生成<strong>域不变特征</strong>或<strong>自适应模型参数</strong>。</p>
+<h2 id="域泛化应用场景"><a href="#域泛化应用场景" class="headerlink" title="域泛化应用场景"></a>域泛化应用场景</h2><p><strong>1. 跨视觉风格的泛化</strong>：许多研究集中在<strong>风格或外观差异</strong>明显的图像域上，如绘画风格 vs. 实拍照片等典型情形。<strong>PACS</strong>数据集是此类场景的代表，它包含照片、艺术画作、卡通和素描四个域，相同物体在不同域中呈现出<strong>显著的形状、颜色和纹理差异</strong>。扩散模型可以方便地在这些风格之间进行转换或生成过渡风格的图像，从而提升模型对任意风格的新图像的识别能力。例如，CDGA在PACS上通过文本提示生成介于真实照片和卡通画之间风格的图像，以弥合二者差异。<strong>Office-Home</strong>数据集类似地涉及艺术画、剪贴画、产品照片和真实拍摄四种域，主要差别在于物体的绘制风格和背景环境。对这类<strong>多风格对象分类</strong>任务，扩散模型生成的<strong>多样风格合成图像</strong>显著提高了模型的鲁棒性，例如GUIDE在Office-Home上无须域标签就挖掘出了潜在风格信息，使准确率相比不使用扩散特征时提高了约3个百分点。</p>
+<p><strong>2. 跨合成与真实域</strong>：在一些应用中，训练域为模拟/合成数据，而测试域为真实世界数据，二者存在<strong>显著的视觉差异</strong>。这类问题常见于自动驾驶、遥感等领域，如语义分割中的GTA5（合成游戏画面）到Cityscapes（真实街景）转换。在图像分类中，<strong>DomainNet</strong>数据集提供了类似场景：它包含照片、剪贴画、画作、素描、模拟画（infograph）和涂鸦（quickdraw）等<strong>六种不同来源的图像</strong>。不同来源之间不仅风格迥异，甚至图像细节复杂度也不同（例如Quickdraw域是非常简化的线条画）。扩散模型可以用文本描述这些合成域的特征，生成与真实域更接近的样本，或者反过来从真实图像生成具有合成风格的样本来丰富训练集。例如，有方法构建<strong>文本库</strong>描述DomainNet中潜在的新域，然后通过扩散模型生成相应图像以补充训练。实践表明，通过这种<strong>跨合成-真实的对齐生成</strong>，模型在DomainNet等复杂多源数据上的平均性能有明显提升，证明扩散模型有助于<strong>模拟潜在的新域</strong>。</p>
+<p><strong>3. 跨拍摄环境和设备</strong>：另一类场景涉及<strong>成像条件或环境改变</strong>导致的域差异，例如不同相机、不同光照/天气、不同地点等。在<strong>Terra Incognita</strong>数据集中，不同域对应不同的相机陷阱拍摄地点，因而<strong>背景植被、地形纹理等环境特征各异</strong>。这种情况下，域泛化要求模型关注与任务相关的主体而忽略环境变化。扩散模型可以通过<strong>改变背景或环境元素</strong>生成新的训练样本。例如，将一张森林中动物的照片扩散生成在荒漠背景下的版本，从而让模型学会在极端不同的环境中仍能识别动物。上述GUIDE方法的分析显示，Stable Diffusion这类模型能够捕捉诸如<strong>植被密度、地形模式</strong>等细微环境差异。通过在训练集中合成各种环境下的图像，模型在Terra Incognita未见地点上的表现得以提升。同样，针对不同摄像头成像差异、不同图像质量（清晰度、噪声水平）等，扩散模型均可用于制造这些条件下的样本，帮助模型实现<strong>跨设备、跨条件</strong>的泛化。</p>
+<p><strong>4. 非传统视觉任务</strong>：值得一提的是，扩散模型在一些特殊领域泛化任务中也开始展现作用。例如在<strong>故障诊断</strong>中，不同机器或传感器采集的振动信号可视为不同“域”。Liu等人（2025）提出一种频域引导的潜变量扩散模型，将机械设备的振动频谱图表示为图像，在潜空间引入噪声扰动并生成不同工况下的频谱，从而提升模型对新机台故障的诊断准确率。又如<strong>公平人脸分类</strong>场景中，把不同性别或种族视作域，FADE通过去除敏感属性信息来生成中性人脸数据训练模型，实现对未见人群分布的公平泛化。这些应用表明，扩散模型的域泛化价值不局限于一般物体分类；对于各种需要跨域（跨设备、跨人群、跨时间）鲁棒性的任务，都可以设计相应的扩散模型策略来提高模型可靠性。</p>
+<h2 id="实验设置与评估基准"><a href="#实验设置与评估基准" class="headerlink" title="实验设置与评估基准"></a>实验设置与评估基准</h2><p><strong>1. 多源域训练与留一法测试</strong>：域泛化研究通常采用<strong>多源域训练、目标域留出</strong>的实验范式。也就是给定若干个来源域的数据集，用其中的全部或部分域作为源域训练模型，然后在<strong>从未参与训练的目标域</strong>上直接测试模型表现。例如在PACS上，典型做法是依次选取其中一个域作为目标域，其余三个域一起训练模型，然后测试模型在该目标域的准确率；对每个域如此重复，最后报告平均性能。类似地，Office-Home、DomainNet等多域数据也采取这种<strong>交叉验证式</strong>评估。许多工作使用统一的开源框架<strong>DomainBed</strong>来进行评测，该框架涵盖PACS、VLCS、Office-Home、Terra Incognita、DomainNet五大经典数据集。使用DomainBed可以确保不同方法在<strong>相同数据划分和模型架构</strong>下比较性能，增强公平性。</p>
+<p><strong>2. 常用基准数据集</strong>：上述数据集中，<strong>PACS</strong>与<strong>Office-Home</strong>因为规模适中且域差异直观，最为常用。PACS有4个域共9991张图像，Office-Home有4个域共约15,500张图像，各包含数十类对象。<strong>VLCS</strong>较早期，包含4个摄影图像数据集的组合（PASCAL VOC2007、LabelMe、Caltech101、SUN09），共有5类对象，每个子数据集作为一个域。<strong>Terra Incognita</strong>聚焦野生动物相机陷阱数据，共4个域约24,788张图片，包含10类动物，每个域对应不同地理位置。<strong>DomainNet</strong>规模最大，6个域合计约0.6百万张图，涵盖345类日常物体，是目前<strong>最具挑战</strong>的域泛化基准之一。由于DomainNet数据量巨大，一些研究只选取其中部分域或类进行实验，以控制训练时间。对于特定场景，有时也会引入额外数据集，如FADE在公平性实验中可能使用人脸属性数据集，W-Diff在持续学习实验中可能构造序列化的多个数据流（例如数字图像不断旋转变化形成一系列域）等。这些数据集和设置共同确保评价<strong>模型在未知域上的性能</strong>。</p>
+<p><strong>3. 评价指标</strong>：图像分类域泛化主要采用<strong>分类准确率</strong>（Accuracy）作为指标，关注模型在各目标域上的准确率以及<strong>平均准确率</strong>。通常报告在每个单独留出域的准确率以及所有域的宏平均。有时也关注<strong>相对提升</strong>：如相比经验风险最小化(ERM)基线方法提升了多少个百分点。另外，一些研究引入了<strong>域泛化特有分析</strong>指标。例如，Hemati等利用<strong>Fréchet距离</strong>定量评估源域与合成数据分布的差异，以验证生成数据确实缩小了域间距离。还有工作度量<strong>特征空间的Hessian矩阵距离</strong>或<strong>loss landscape平坦度</strong>来解释模型泛化性的提升。然而最终评价仍以<strong>目标域识别准确率</strong>为主，辅以统计显著性检验确保结果可靠。</p>
+<p><strong>4. 实验结果概况</strong>：基于扩散模型的策略目前在各大基准上均取得了<strong>领先性能</strong>。例如，前文提到的CDGA方法在PACS和Office-Home上分别达到<strong>88.4%</strong>和<strong>70.2%</strong>的平均准确率，大幅超过传统ERM基线的78.3%和63.9%。相比其它数据增广方法，CDGA在这两个数据集上均名列前茅。又如DomainFusion在PACS、VLCS、Office-Home、DomainNet上全面超过先前的生成式方法，取得当前最优的平均成绩。FDS方法在PACS上达到<strong>89.7%</strong>的最高准确率，在VLCS和Office-Home上也有显著提升，据报道刷新了这些基准的SOTA。GUIDE方法在无需域标签的情况下，性能甚至赶超了部分使用域标签的算法，在DomainBed五个数据集的平均准确率上名列前茅。此外，W-Diff在其设定的<strong>持续演变域</strong>任务中表现出色，实现了对未来域的准确预测。总体而言，引入扩散模型后的方法在标准基准的<strong>稳健性和平均性能</strong>上均优于以往无生成模型的方案，证明了扩散模型在提升域泛化能力方面的价值。</p>
+<h2 id="最新代表性论文与综述"><a href="#最新代表性论文与综述" class="headerlink" title="最新代表性论文与综述"></a>最新代表性论文与综述</h2><p>近三年出现了多篇将扩散模型用于域泛化的代表性论文和综述，下面列出其中具有代表性的工作：</p>
+<ul>
+<li><p><strong>Cross Domain Generative Augmentation: Domain Generalization with Latent Diffusion Models</strong> – Sobhan Hemati等人，TMLR 2024（arXiv 2023）。主要贡献：提出CDGA数据增广方法，利用预训练潜变量扩散模型生成源域对之间的中间态图像，显著缩小域间分布差距，提升了DomainBed基准下的SOTA性能。作者通过生成超过500万张合成图像并进行丰富的分析（数据分布可视化、损失景观等）解释了该方法效果。</p>
+</li>
+<li><p><strong>DomainFusion: Generalizing to Unseen Domains with Latent Diffusion Models</strong> – Yuyang Huang等人，ECCV 2024。主要贡献：提出将大规模<strong>潜变量扩散模型</strong>融入判别模型训练的框架。在潜空间提出梯度得分蒸馏（GSD）指导特征学习，在像素空间设计高效采样策略生成多样样本。DomainFusion在多个基准上超过此前所有基于扩散的数据生成方法，达到新的SOTA水平。</p>
+</li>
+<li><p><strong>Feedback-guided Domain Synthesis with Multi-Source Conditional Diffusion Models for Domain Generalization</strong> – Mehrdad Noori等人，arXiv 2024。主要贡献：提出FDS方法，将<strong>多源条件扩散模型</strong>用于域泛化数据合成。通过在源数据上训练扩散模型并交叉混合多个域的条件来生成新域样本，同时设计难例筛选机制。综合实验在PACS、VLCS、OfficeHome等数据集上取得了新的最佳成绩。该方法代码已开源，促进复现和扩展。</p>
+</li>
+<li><p><strong>Weight Diffusion for Future: Learn to Generalize in Non-Stationary Environments</strong> – Mixue Xie等人，NeurIPS 2024。主要贡献：开创性地将扩散模型引入<strong>模型权重空间</strong>，解决持续变化环境下的域泛化。通过条件扩散模拟分类器随时间演化的模式，生成面向未来域的多个分类器并集成预测。在合成序列数据和真实非静态数据上均证明了优异的泛化性能，推动了<strong>渐变域泛化</strong>研究。</p>
+</li>
+<li><p><strong>“What’s in a Latent? Leveraging Diffusion Latent Space for Domain Generalization”</strong> – Xavier Thomas, Deepti Ghadiyaram，arXiv 2025。主要贡献：提出GUIDE方法，不借助域标签直接<strong>利用扩散模型潜空间</strong>来推断域结构。通过聚类扩散模型的特征表示得到伪域，再用于指导分类模型训练，实现了在未知域上的高性能，同时揭示了扩散模型潜空间中蕴含的丰富域信息。</p>
+</li>
+<li><p><strong>Language-Guided Diffusion for Domain Generalization</strong> – Haolin Ren等人，ICLR 2025研讨会。主要贡献：首次将<strong>大语言模型与扩散模型结合</strong>用于域泛化数据增广。由LLM生成描述新域风格的文本提示，再经Stable Diffusion合成对应图像。并引入CLIP度量确保生成样本既丰富又贴合任务需求，实验证明在PACS等数据集上显著提升了模型泛化性能。</p>
+</li>
+<li><p><strong>FADE: Towards Fairness-aware Augmentation for Domain Generalization via Classifier-Guided Score-based Diffusion Models</strong> – Yujie Lin等人，arXiv 2024。主要贡献：针对公平学习，提出结合扩散模型的域泛化方法。通过预训练<strong>得分基扩散模型</strong>和分类器，并在采样过程中用分类器梯度引导去除敏感属性，从而生成公平且域不变的数据用于训练。在多个真实数据集上，FADE同时提高了模型在新域中的准确性和决策公平性。</p>
+</li>
+<li><p><strong>Domain Generalization Through Data Augmentation: A Survey of Methods, Applications, and Challenges</strong> – Jianing Mai等人，_Mathematics_期刊 (MDPI) 2025。主要内容：综述了域泛化中数据增广的方法，将其分为规则、梯度和生成三类，并比较了输入层面和特征层面增广的效果。特别地，综述指出<strong>基于扩散模型的生成增广</strong>在近年来表现突出：如CDGA方法利用扩散模型使PACS和Office-Home的ResNet-18准确率达到88.4%和70.2%，显著优于不使用生成的78.3%和63.9%。文章还讨论了这类方法的多样性优势和计算代价等问题。</p>
+</li>
+</ul>
+<p>以上工作体现了扩散模型在提升域泛化能力上的多种思路和优越性。从数据层面的多域合成、特征层面的知识蒸馏，到参数层面的模型生成，扩散模型为长期存在的域移变问题提供了新的解法。展望未来，随着扩散模型生成质量和效率的进一步提高，以及与其他技术（如大模型、增量学习）的结合，基于扩散模型的域泛化方法有望在更大规模、更复杂的跨域场景中取得突破，为提升视觉模型的鲁棒性和泛化性奠定坚实基础。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/uncategorized/Generalization-Diffusion/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;Generalization-Diffusion&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;Generalization-Diffusion&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/uncategorized/leetcode/">算法整理<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E5%9F%9F%E6%B3%9B%E5%8C%96%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E7%A0%94%E7%A9%B6%E7%BB%BC%E8%BF%B0"><span class="toc-text">扩散模型在图像分类域泛化中的应用研究综述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95%E4%B8%8E%E6%80%9D%E6%83%B3"><span class="toc-text">核心方法与思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%9A%84%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E7%B1%BB%E5%9E%8B%E5%8F%8A%E7%94%A8%E9%80%94"><span class="toc-text">使用的扩散模型类型及用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%9F%E6%B3%9B%E5%8C%96%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">域泛化应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E4%B8%8E%E8%AF%84%E4%BC%B0%E5%9F%BA%E5%87%86"><span class="toc-text">实验设置与评估基准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E6%96%B0%E4%BB%A3%E8%A1%A8%E6%80%A7%E8%AE%BA%E6%96%87%E4%B8%8E%E7%BB%BC%E8%BF%B0"><span class="toc-text">最新代表性论文与综述</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
