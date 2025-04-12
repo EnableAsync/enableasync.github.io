@@ -409,46 +409,6 @@ P(x_s | x_k, x_0) \sim \mathcal{N}(\sqrt{\alpha_s}x_0 + \sqrt{1 - \alpha_s - \si
 ]]></content>
   </entry>
   <entry>
-    <title>MCP 协议学习</title>
-    <url>/ai/mcp/</url>
-    <content><![CDATA[<h1 id="MCP-协议是什么"><a href="#MCP-协议是什么" class="headerlink" title="MCP 协议是什么"></a>MCP 协议是什么</h1><p>MCP 是一个开放协议，用于标准化应用程序如何为大语言模型（LLM）提供上下文。可以将 MCP 想象成 AI 应用程序的 USB-C 接口。就像 USB-C 为连接各种外围设备和配件提供了标准化的方式，MCP 为将 AI 模型连接到不同的数据源和工具提供了标准化的方式。</p>
-<p><img  src="f92b54d519822246291cc942866d4db.png"  ><span class="image-caption">MCP协议说明</span></p>
-<h1 id="MCP-使用"><a href="#MCP-使用" class="headerlink" title="MCP 使用"></a>MCP 使用</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">pip install mcp<br>pip install mcp[cli]<br></code></pre></td></tr></table></figure>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>python 创建 server.py 文件</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> mcp.server.fastmcp <span class="hljs-keyword">import</span> FastMCP<br><br><span class="hljs-comment"># Create an MCP server</span><br>mcp = FastMCP(<span class="hljs-string">&quot;Demo&quot;</span>)<br><br><br><span class="hljs-comment"># Add an addition tool</span><br><span class="hljs-meta">@mcp.tool()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">a: <span class="hljs-built_in">int</span>, b: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Add two numbers&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> a + b<br><br><br><span class="hljs-comment"># Add a dynamic greeting resource</span><br><span class="hljs-meta">@mcp.resource(<span class="hljs-params"><span class="hljs-string">&quot;greeting://&#123;name&#125;&quot;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_greeting</span>(<span class="hljs-params">name: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Get a personalized greeting&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Hello, <span class="hljs-subst">&#123;name&#125;</span>!&quot;</span><br></code></pre></td></tr></table></figure>
-<p>运行 dev</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">mcp dev server.py<br></code></pre></td></tr></table></figure>
-<p>然后在浏览器打开 <a href="http://localhost:5173/">http://localhost:5173/</a></p>
-<p>能够看到</p>
-<p><img  src="image-20250328113411422.png"  ><span class="image-caption">MCP Inspector</span></p>
-<h2 id="与-Claude-Desktop-联调"><a href="#与-Claude-Desktop-联调" class="headerlink" title="与 Claude Desktop 联调"></a>与 Claude Desktop 联调</h2><p>执行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">mcp install server.py<br></code></pre></td></tr></table></figure>
-<p>然后会在 claude 目录下 <code>AppData\Roaming\Claude</code> 下生成 <code>claude_desktop_config.json</code> 文件，默认是包含 <code>uv</code> 命令的，我修改为以下内容：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;mcpServers&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;Demo&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mcp&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;args&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-string">&quot;run&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;D:\\sjj\\script\\mcp_test\\server.py&quot;</span><br>      <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
-<p>然后重启 Claude Desktop ，出现了以下内容：</p>
-<p><img  src="image-20250328113652395.png"   style="zoom:67%;" /><span class="image-caption">image-20250328113652395</span></p>
-<p>执行加法：</p>
-<p><img  src="image-20250328113721120.png"   style="zoom:67%;" /><span class="image-caption">image-20250328113721120</span></p>
-<h1 id="自己编写一个操作数据库的-MCP-Server"><a href="#自己编写一个操作数据库的-MCP-Server" class="headerlink" title="自己编写一个操作数据库的 MCP Server"></a>自己编写一个操作数据库的 MCP Server</h1><h2 id="server-py-代码"><a href="#server-py-代码" class="headerlink" title="server.py 代码"></a>server.py 代码</h2><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> MySQLdb<br><span class="hljs-keyword">from</span> mcp.server.fastmcp <span class="hljs-keyword">import</span> FastMCP<br><br>mcp = FastMCP(<span class="hljs-string">&quot;MySQL Explorer&quot;</span>)<br><br>conn = MySQLdb.connect(<br>    host=<span class="hljs-string">&quot;127.0.0.1&quot;</span>,<br>    port=<span class="hljs-number">3306</span>,<br>    user=<span class="hljs-string">&quot;root&quot;</span>,<br>    password=<span class="hljs-string">&quot;root&quot;</span>,<br>)<br><br><span class="hljs-meta">@mcp.resource(<span class="hljs-params"><span class="hljs-string">&quot;schema://main&quot;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_schema</span>() -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Provide the database schema as a resource&quot;&quot;&quot;</span><br>    cursor = conn.cursor()<br>    cursor.execute(<span class="hljs-string">&quot;SHOW TABLES&quot;</span>)  <span class="hljs-comment"># Get a list of all tables</span><br><br>    tables = cursor.fetchall()<br>    schema = []<br><br>    <span class="hljs-keyword">for</span> table <span class="hljs-keyword">in</span> tables:<br>        table_name = table[<span class="hljs-number">0</span>]<br>        cursor.execute(<span class="hljs-string">f&quot;SHOW CREATE TABLE `<span class="hljs-subst">&#123;table_name&#125;</span>`&quot;</span>)  <span class="hljs-comment"># Get the create statement for each table</span><br>        create_table_sql = cursor.fetchone()[<span class="hljs-number">1</span>]<br>        schema.append(create_table_sql)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;\n&quot;</span>.join(schema)<br><br><br><br><span class="hljs-meta">@mcp.tool()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">query_data</span>(<span class="hljs-params">sql: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Execute SQL queries safely&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">try</span>:<br>        cursor = conn.cursor()<br>        cursor.execute(sql)<br>        result = cursor.fetchall()<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;\n&quot;</span>.join(<span class="hljs-built_in">str</span>(row) <span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> result)<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Error: <span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(e)&#125;</span>&quot;</span><br>    <br><br></code></pre></td></tr></table></figure>
-<h2 id="然后-MCP-Inspector-获取-resource"><a href="#然后-MCP-Inspector-获取-resource" class="headerlink" title="然后 MCP Inspector 获取 resource"></a>然后 MCP Inspector 获取 resource</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">curl <span class="hljs-string">&#x27;http://localhost:3000/message?sessionId=c73d174d-8772-441a-bfa1-1771ad358aa1&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Accept: */*&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Connection: keep-alive&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Origin: http://localhost:5173&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Referer: http://localhost:5173/&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Sec-Fetch-Dest: empty&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Sec-Fetch-Mode: cors&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Sec-Fetch-Site: same-site&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;content-type: application/json&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;sec-ch-ua: &quot;Chromium&quot;;v=&quot;134&quot;, &quot;Not:A-Brand&quot;;v=&quot;24&quot;, &quot;Microsoft Edge&quot;;v=&quot;134&quot;&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;sec-ch-ua-mobile: ?0&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;sec-ch-ua-platform: &quot;Windows&quot;&#x27;</span> \<br>  --data-raw <span class="hljs-string">&#x27;&#123;&quot;method&quot;:&quot;resources/list&quot;,&quot;params&quot;:&#123;&#125;,&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
-<h2 id="在网页上得到了-schema"><a href="#在网页上得到了-schema" class="headerlink" title="在网页上得到了 schema"></a>在网页上得到了 schema</h2><p><img  src="image-20250328151443784.png"  ><span class="image-caption">image-20250328151443784</span></p>
-<h2 id="安装到-Claude"><a href="#安装到-Claude" class="headerlink" title="安装到 Claude"></a>安装到 Claude</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">mcp install .\mysql_server.py --with mysqlclient<br></code></pre></td></tr></table></figure>
-<p>Claude 配置文件</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;mcpServers&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;Demo&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mcp&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;args&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-string">&quot;run&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;D:\\sjj\\script\\mcp_test\\server.py&quot;</span><br>      <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;MySQL Explorer&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mcp&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;args&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-string">&quot;run&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;--with&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;mysqlclient&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;D:\\sjj\\script\\mcp_test\\mysql_server.py&quot;</span><br>      <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
-<h2 id="开始测试"><a href="#开始测试" class="headerlink" title="开始测试"></a>开始测试</h2><p><img  src="image-20250328153747577.png"    /><span class="image-caption">image-20250328153747577</span></p>
-<p><img  src="image-20250328153758113.png"  ><span class="image-caption">image-20250328153758113</span></p>
-<p><img  src="image-20250328153822340.png"  ><span class="image-caption">image-20250328153822340</span></p>
-<p><img  src="image-20250328153835288.png"  ><span class="image-caption">image-20250328153835288</span></p>
-<p><img  src="image-20250328153845382.png"  ><span class="image-caption">image-20250328153845382</span></p>
-<p><img  src="image-20250328153857103.png"  ><span class="image-caption">image-20250328153857103</span></p>
-<p><img  src="image-20250328153916122.png"  ><span class="image-caption">image-20250328153916122</span></p>
-<p><img  src="image-20250328153926680.png"  ><span class="image-caption">image-20250328153926680</span></p>
-]]></content>
-      <categories>
-        <category>ai</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Linux 的一些使用心得</title>
     <url>/linux/linux/</url>
     <content><![CDATA[<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
@@ -526,6 +486,46 @@ P(x_s | x_k, x_0) \sim \mathcal{N}(\sqrt{\alpha_s}x_0 + \sqrt{1 - \alpha_s - \si
 ]]></content>
       <categories>
         <category>linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>MCP 协议学习</title>
+    <url>/ai/mcp/</url>
+    <content><![CDATA[<h1 id="MCP-协议是什么"><a href="#MCP-协议是什么" class="headerlink" title="MCP 协议是什么"></a>MCP 协议是什么</h1><p>MCP 是一个开放协议，用于标准化应用程序如何为大语言模型（LLM）提供上下文。可以将 MCP 想象成 AI 应用程序的 USB-C 接口。就像 USB-C 为连接各种外围设备和配件提供了标准化的方式，MCP 为将 AI 模型连接到不同的数据源和工具提供了标准化的方式。</p>
+<p><img  src="f92b54d519822246291cc942866d4db.png"  ><span class="image-caption">MCP协议说明</span></p>
+<h1 id="MCP-使用"><a href="#MCP-使用" class="headerlink" title="MCP 使用"></a>MCP 使用</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">pip install mcp<br>pip install mcp[cli]<br></code></pre></td></tr></table></figure>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>python 创建 server.py 文件</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> mcp.server.fastmcp <span class="hljs-keyword">import</span> FastMCP<br><br><span class="hljs-comment"># Create an MCP server</span><br>mcp = FastMCP(<span class="hljs-string">&quot;Demo&quot;</span>)<br><br><br><span class="hljs-comment"># Add an addition tool</span><br><span class="hljs-meta">@mcp.tool()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">a: <span class="hljs-built_in">int</span>, b: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Add two numbers&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> a + b<br><br><br><span class="hljs-comment"># Add a dynamic greeting resource</span><br><span class="hljs-meta">@mcp.resource(<span class="hljs-params"><span class="hljs-string">&quot;greeting://&#123;name&#125;&quot;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_greeting</span>(<span class="hljs-params">name: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Get a personalized greeting&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Hello, <span class="hljs-subst">&#123;name&#125;</span>!&quot;</span><br></code></pre></td></tr></table></figure>
+<p>运行 dev</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">mcp dev server.py<br></code></pre></td></tr></table></figure>
+<p>然后在浏览器打开 <a href="http://localhost:5173/">http://localhost:5173/</a></p>
+<p>能够看到</p>
+<p><img  src="image-20250328113411422.png"  ><span class="image-caption">MCP Inspector</span></p>
+<h2 id="与-Claude-Desktop-联调"><a href="#与-Claude-Desktop-联调" class="headerlink" title="与 Claude Desktop 联调"></a>与 Claude Desktop 联调</h2><p>执行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">mcp install server.py<br></code></pre></td></tr></table></figure>
+<p>然后会在 claude 目录下 <code>AppData\Roaming\Claude</code> 下生成 <code>claude_desktop_config.json</code> 文件，默认是包含 <code>uv</code> 命令的，我修改为以下内容：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;mcpServers&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;Demo&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mcp&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;args&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-string">&quot;run&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;D:\\sjj\\script\\mcp_test\\server.py&quot;</span><br>      <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<p>然后重启 Claude Desktop ，出现了以下内容：</p>
+<p><img  src="image-20250328113652395.png"   style="zoom:67%;" /><span class="image-caption">image-20250328113652395</span></p>
+<p>执行加法：</p>
+<p><img  src="image-20250328113721120.png"   style="zoom:67%;" /><span class="image-caption">image-20250328113721120</span></p>
+<h1 id="自己编写一个操作数据库的-MCP-Server"><a href="#自己编写一个操作数据库的-MCP-Server" class="headerlink" title="自己编写一个操作数据库的 MCP Server"></a>自己编写一个操作数据库的 MCP Server</h1><h2 id="server-py-代码"><a href="#server-py-代码" class="headerlink" title="server.py 代码"></a>server.py 代码</h2><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> MySQLdb<br><span class="hljs-keyword">from</span> mcp.server.fastmcp <span class="hljs-keyword">import</span> FastMCP<br><br>mcp = FastMCP(<span class="hljs-string">&quot;MySQL Explorer&quot;</span>)<br><br>conn = MySQLdb.connect(<br>    host=<span class="hljs-string">&quot;127.0.0.1&quot;</span>,<br>    port=<span class="hljs-number">3306</span>,<br>    user=<span class="hljs-string">&quot;root&quot;</span>,<br>    password=<span class="hljs-string">&quot;root&quot;</span>,<br>)<br><br><span class="hljs-meta">@mcp.resource(<span class="hljs-params"><span class="hljs-string">&quot;schema://main&quot;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_schema</span>() -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Provide the database schema as a resource&quot;&quot;&quot;</span><br>    cursor = conn.cursor()<br>    cursor.execute(<span class="hljs-string">&quot;SHOW TABLES&quot;</span>)  <span class="hljs-comment"># Get a list of all tables</span><br><br>    tables = cursor.fetchall()<br>    schema = []<br><br>    <span class="hljs-keyword">for</span> table <span class="hljs-keyword">in</span> tables:<br>        table_name = table[<span class="hljs-number">0</span>]<br>        cursor.execute(<span class="hljs-string">f&quot;SHOW CREATE TABLE `<span class="hljs-subst">&#123;table_name&#125;</span>`&quot;</span>)  <span class="hljs-comment"># Get the create statement for each table</span><br>        create_table_sql = cursor.fetchone()[<span class="hljs-number">1</span>]<br>        schema.append(create_table_sql)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;\n&quot;</span>.join(schema)<br><br><br><br><span class="hljs-meta">@mcp.tool()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">query_data</span>(<span class="hljs-params">sql: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Execute SQL queries safely&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">try</span>:<br>        cursor = conn.cursor()<br>        cursor.execute(sql)<br>        result = cursor.fetchall()<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;\n&quot;</span>.join(<span class="hljs-built_in">str</span>(row) <span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> result)<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Error: <span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(e)&#125;</span>&quot;</span><br>    <br><br></code></pre></td></tr></table></figure>
+<h2 id="然后-MCP-Inspector-获取-resource"><a href="#然后-MCP-Inspector-获取-resource" class="headerlink" title="然后 MCP Inspector 获取 resource"></a>然后 MCP Inspector 获取 resource</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">curl <span class="hljs-string">&#x27;http://localhost:3000/message?sessionId=c73d174d-8772-441a-bfa1-1771ad358aa1&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Accept: */*&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Connection: keep-alive&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Origin: http://localhost:5173&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Referer: http://localhost:5173/&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Sec-Fetch-Dest: empty&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Sec-Fetch-Mode: cors&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;Sec-Fetch-Site: same-site&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;content-type: application/json&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;sec-ch-ua: &quot;Chromium&quot;;v=&quot;134&quot;, &quot;Not:A-Brand&quot;;v=&quot;24&quot;, &quot;Microsoft Edge&quot;;v=&quot;134&quot;&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;sec-ch-ua-mobile: ?0&#x27;</span> \<br>  -H <span class="hljs-string">&#x27;sec-ch-ua-platform: &quot;Windows&quot;&#x27;</span> \<br>  --data-raw <span class="hljs-string">&#x27;&#123;&quot;method&quot;:&quot;resources/list&quot;,&quot;params&quot;:&#123;&#125;,&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+<h2 id="在网页上得到了-schema"><a href="#在网页上得到了-schema" class="headerlink" title="在网页上得到了 schema"></a>在网页上得到了 schema</h2><p><img  src="image-20250328151443784.png"  ><span class="image-caption">image-20250328151443784</span></p>
+<h2 id="安装到-Claude"><a href="#安装到-Claude" class="headerlink" title="安装到 Claude"></a>安装到 Claude</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">mcp install .\mysql_server.py --with mysqlclient<br></code></pre></td></tr></table></figure>
+<p>Claude 配置文件</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;mcpServers&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;Demo&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mcp&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;args&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-string">&quot;run&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;D:\\sjj\\script\\mcp_test\\server.py&quot;</span><br>      <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;MySQL Explorer&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mcp&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;args&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-string">&quot;run&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;--with&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;mysqlclient&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-string">&quot;D:\\sjj\\script\\mcp_test\\mysql_server.py&quot;</span><br>      <span class="hljs-punctuation">]</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<h2 id="开始测试"><a href="#开始测试" class="headerlink" title="开始测试"></a>开始测试</h2><p><img  src="image-20250328153747577.png"    /><span class="image-caption">image-20250328153747577</span></p>
+<p><img  src="image-20250328153758113.png"  ><span class="image-caption">image-20250328153758113</span></p>
+<p><img  src="image-20250328153822340.png"  ><span class="image-caption">image-20250328153822340</span></p>
+<p><img  src="image-20250328153835288.png"  ><span class="image-caption">image-20250328153835288</span></p>
+<p><img  src="image-20250328153845382.png"  ><span class="image-caption">image-20250328153845382</span></p>
+<p><img  src="image-20250328153857103.png"  ><span class="image-caption">image-20250328153857103</span></p>
+<p><img  src="image-20250328153916122.png"  ><span class="image-caption">image-20250328153916122</span></p>
+<p><img  src="image-20250328153926680.png"  ><span class="image-caption">image-20250328153926680</span></p>
+]]></content>
+      <categories>
+        <category>ai</category>
       </categories>
   </entry>
   <entry>
@@ -2138,6 +2138,168 @@ P(x_s | x_k, x_0) \sim \mathcal{N}(\sqrt{\alpha_s}x_0 + \sqrt{1 - \alpha_s - \si
 <li><p>【14】PapersWithCode, <strong>Point Cloud Generation Task</strong>, <em>Latest SOTA methods overview</em>, 2024</p>
 </li>
 </ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>扩散模型在跨域生成中的研究综述</title>
+    <url>/uncategorized/Generalization-Generation/</url>
+    <content><![CDATA[<h1 id="扩散模型用于跨域数据生成的研究进展"><a href="#扩散模型用于跨域数据生成的研究进展" class="headerlink" title="扩散模型用于跨域数据生成的研究进展"></a>扩散模型用于跨域数据生成的研究进展</h1><h2 id="扩散模型跨域泛化能力的探索"><a href="#扩散模型跨域泛化能力的探索" class="headerlink" title="扩散模型跨域泛化能力的探索"></a>扩散模型跨域泛化能力的探索</h2><p>扩散模型（Diffusion Models）近年来在图像、音频等生成任务中取得了显著成功，并展现出跨域泛化的潜力。例如，大规模预训练的潜在扩散模型（Latent Diffusion Models，如Stable Diffusion）在广泛的图文数据上训练后，能够生成多种风格和领域的图像。研究者开始探索这些模型在未见过的新域上的生成能力，包括无监督跨域生成、领域自适应扩散、条件扩散生成以及风格迁移和模态迁移等方向。</p>
+<p>一种探索是<strong>无监督跨域生成</strong>，即在没有成对训练数据的情况下，将一个域的数据转换到另一个域。例如，有工作将扩散过程用于图像到图像的风格迁移，利用噪声迭代引导实现不同域之间的转换，而无需像GAN那样成对训练。DiffusionCLIP等方法通过预训练文本图像模型（如CLIP）指导扩散模型，将输入图像编辑到目标风格。相比判别模型的引导，利用生成式扩散模型的引导可提供更丰富的跨域迁移信息。此外，训练大模型涵盖多种域本身也是提高泛化性的途径，比如Stable Diffusion已学习了多种风格概念，因而对未明确出现过的风格也有一定生成能力。</p>
+<p>在<strong>领域适应扩散模型</strong>方面，研究者尝试将预训练的扩散模型调整到新领域。例如，NeurIPS 2024提出了<strong>Terra</strong>，通过引入时间可变的低秩适配器，实现扩散模型在“领域流（domain flow）”上的连续变化。Terra将源域图像逐步变换到目标域，并生成中间插值域以缩小域间差距，从而提升模型的跨域泛化能力。这不仅用于图像风格迁移，也作为一种生成式方法来解决无监督领域自适应和领域泛化问题。另外，一些方法（如StyleGAN-NADA及其改进）利用文本提示将生成器从一个域微调到另一个域；最新的StyleGAN-Fusion工作则使用扩散模型的梯度引导来替代CLIP引导，取得更好效果。</p>
+<p><strong>条件扩散模型（Conditional Diffusion）</strong>提供了在生成时引入条件信息（如标签、文本或图像提示）的机制，可用于跨域生成。例如，通过在扩散模型中添加域标签或风格标签，可以实现根据所需域来引导图像生成。复合标签引导扩散就是一例：研究者将类别标签、伪标签和域标签融合作为条件，对扩散模型进行引导，以提升目标域样本的生成质量。又如<strong>ODGEN</strong>方法通过边界框和文本描述作为条件，控制扩散模型生成包含多物体的复杂场景，实现特定领域的数据增强。此外，文本条件的扩散模型天然属于跨模态：从文本描述生成图像即是从语言域到视觉域的迁移。类似地，也有工作探索将音频特征或其他模态作为条件输入扩散模型，实现跨模态的生成和转换。</p>
+<p><strong>风格迁移与模态迁移</strong>也是扩散模型跨域应用的重要方向。风格迁移方面，扩散模型可用来将内容与不同风格解耦再组合：例如采用扩散模型先对图像进行去噪生成，再在中间过程引入目标风格的信息，从而得到内容相同但风格不同的图像。相较于传统风格迁移方法，扩散模型提供了一种逐步细化图像的途径，可以更好地保持内容结构同时逼近目标域分布。在模态迁移方面，扩散模型已被用于语音到语音、文本到音频、音频到视觉等任务。例如，AudioLDM利用潜在扩散模型实现了文本到音频的生成，还支持音频风格的零样本迁移。总的来说，现有扩散模型在跨域泛化上展现出巨大潜力，许多研究正致力于进一步挖掘其在未见新域上的生成能力。</p>
+<h2 id="处理新域数据的技术路线"><a href="#处理新域数据的技术路线" class="headerlink" title="处理新域数据的技术路线"></a>处理新域数据的技术路线</h2><p>针对生成“训练数据未出现过的新域”样本的挑战，研究者提出了多种技术路线，包括元学习、零样本/少样本泛化、潜在空间建模以及领域引导的生成等。</p>
+<ul>
+<li><p><strong>元学习（Meta-learning）</strong>：元学习旨在让模型学会快速适应新任务新域的能力。在扩散模型领域，这可能体现为训练一个基模型，使其在接收到少量新域数据或新条件时，能通过极少的梯度更新或甚至无需更新就产生合理的结果。一些工作借鉴元学习范式训练扩散模型的条件模块，使模型对新域的条件分布具有更强的适应性。不过，目前明确以元学习用于扩散跨域生成的研究相对较少，该方向仍有待深入探索。</p>
+</li>
+<li><p><strong>零样本与少样本生成</strong>：零样本指无需任何新域样本就能生成，新域信息通常通过语言描述或已学到的泛化能力获得；少样本则利用极少量的新域样本进行调适。一个代表性成果是<strong>“无微调的few-shot生成”</strong>方法。该方法假设我们有一个预训练扩散模型，以及目标新域的极少量图像。研究发现，预训练的DDPM扩散模型实际上拥有重构任意图像的表示能力：通过扩散过程的逆向推理，可以将任意OOD（域外）图像映射到模型的潜在编码。这些OOD图像在模型潜在空间中近似呈现出新的高斯分布，并与原训练域分离。基于这一发现，提出了<strong>“无需调参的潜在生成”</strong>范式：不改动模型参数，而是通过在扩散过程的噪声潜空间中<strong>寻找合适的隐编码</strong>来合成新域图像。这种方法等于扩展了预训练模型的潜在空间，使其覆盖新域，而无需像以往方法那样微调模型参数。实践证明，冻结的DDPM模型可以通过该策略生成未见域的样本，而且不损害原本域的生成质量。这一思路展示了利用少量样本和模型内部表示即可拓展新域生成的可能。</p>
+</li>
+<li><p><strong>潜在空间建模</strong>：上面提到的方法实质上是一种潜在空间建模策略。除此之外，还有其他工作在模型的潜在空间上做文章。例如，一些方法尝试在扩散模型的潜空间中进行插值、噪声扰动或添加正则，以引导模型产生不同于训练集分布的样本。还有研究引入<strong>一致性正则</strong>或<strong>潜在空间约束</strong>，使得扩散模型在生成时朝向目标域的潜在分布。总体而言，潜在空间的方法通过分析和操作扩散模型的隐变量，提供了一条不依赖大量新域数据的生成途径。</p>
+</li>
+<li><p><strong>领域引导的生成</strong>：这类方法利用来自源域和目标域的信息来指导生成过程。前述<strong>CCDFG（Composite-Label guided Cross-Domain Data Fusion Generation）</strong>就是典型例子。它将源域和目标域的图像、类别标签、伪标签以及域标签一起整合训练扩散模型，并重新设计了无分类器引导（classifier-free guidance）的条件策略，从源域“借用”信息提高目标域数据的生成质量。通过这种复合条件引导，模型在目标域极度数据匮乏的情况下，仍能生成逼真的目标域样本用于提升下游任务性能。另一种领域引导方式是利用预训练模型中包含的知识：比如通过语言提示描述目标域特征，引导扩散模型往该方向生成（相当于通过文字将新域知识注入模型）。实践中，用户经常使用Stable Diffusion这类模型配合特定文本prompt来得到某种新风格的图像，这也是利用模型已有知识进行零样本领域引导的体现。此外，ControlNet等扩散模型扩展通过引入特定模态的条件（如草图、深度图），可在保持预训练模型权重不变的情况下，实现跨域的<strong>结构引导</strong>生成（例如将草图转为照片等）。这些领域或模态条件的引入，使得扩散模型在跨域生成时可以得到更精细的控制。</p>
+</li>
+<li><p><strong>少样本微调</strong>：尽管不属于新颖方法，但少样本微调（如DreamBooth等）依然是处理新域的常用手段。DreamBooth通过对Stable Diffusion进行少量（3-5张）目标概念图像的微调，使模型学习一个新的概念或风格，并能将其与原有模型的其它概念组合生成。这种方法适用于将特定对象或风格注入模型，被视为将预训练扩散模型<strong>专用化</strong>到新域的一种方式。然而微调往往存在过拟合或遗忘原有能力的风险，因此诸如上文提到的低秩适配（LoRA）、模型融合等技术被提出以在小样本调适时保留住模型原有的泛化性。</p>
+</li>
+</ul>
+<p>综上，针对新域的扩散生成，当前的技术路线大体在于：<strong>不依赖额外训练的潜在空间探索</strong>，以及<strong>轻量高效的模型适配</strong>。前者追求充分利用预训练模型自身的表示能力来涵盖新域；后者则通过优化方式的改进（如低秩适配、Few-shot微调、一致性蒸馏等）快速将模型迁移到新域。这些方法为扩散模型生成前所未见的领域数据提供了多样化的解法。</p>
+<h2 id="图像、音频与多模态跨域生成实例"><a href="#图像、音频与多模态跨域生成实例" class="headerlink" title="图像、音频与多模态跨域生成实例"></a>图像、音频与多模态跨域生成实例</h2><p>针对不同类型数据的跨域生成，下面列举具体案例、模型和相关研究成果。</p>
+<h3 id="图像跨域生成"><a href="#图像跨域生成" class="headerlink" title="图像跨域生成"></a>图像跨域生成</h3><p>图像领域的跨域生成主要包括跨风格图像生成、跨领域图像翻译，以及利用扩散模型进行数据增强等。很多工作致力于让模型在训练集未覆盖的图像风格或视觉域上生成高保真、高多样性的图像。</p>
+<p>一个典型任务是<strong>跨风格图像生成</strong>。例如，将真实照片转换为艺术画风格，或将卡通图像转换为写实风格。传统的无监督图像翻译方法如CycleGAN曾用于这类任务，而扩散模型提供了新思路。有研究将扩散模型视作去噪自动编码器，通过修改扩散过程中的条件或添加引导，实现<strong>不成对数据</strong>的图像域转换。相比GAN方法，扩散模型逐步应用噪声和去噪，有助于保留图像结构细节并逐步迁移风格。例如，<strong>StyleGAN-Fusion</strong>利用Stable Diffusion的得分蒸馏采样（Score Distillation Sampling, SDS）来引导StyleGAN生成器适应新域，仅通过一个文本描述（如“3D动漫风格的人脸”）就成功将人脸生成器转移到目标风格。与之前纯文本引导的方法相比，扩散模型引导能更好捕捉目标域的细粒度特征，如关键外观细节等。</p>
+<p>此外，<strong>领域特定的数据生成</strong>正在成为提高计算机视觉任务性能的有效手段。 <em>如图所示，ODGEN 可根据输入的边界框（带类别标签）布局（左）生成对应场景的合成图像（右）。该方法能够处理复杂场景（包含多类别、物体密集和遮挡），例如交通路口、医学MRI、游戏画面、水下环境等不同领域。ODGEN 生成的高质量图像可用于扩充目标检测模型的训练集，在多个特定领域的检测基准上带来显著性能提升（mAP 提高最多达25.3%）。</em> ODGEN展现了扩散模型在<strong>受控场景生成</strong>中的威力：通过在目标域上微调扩散模型并引入空间和语义约束，它可以生成原始模型无法直接产生的新域复杂图像。</p>
+<p>除了图像到图像的迁移，扩散模型还可以<strong>组合来自不同域的图像内容</strong>。ICCV 2023的<strong>TF-ICON</strong>提出了一种无需训练的跨域图像合成框架。它利用预训练的文本到图像扩散模型，将<strong>指导图像</strong>的内容融合到<strong>基底图像</strong>中，而不损坏模型原有的多样化先验。具体而言，TF-ICON通过巧妙设计的“例外提示（exceptional prompt）”实现对真实图像的准确潜编码反演，然后在扩散采样初期逐步注入组合后的自注意力图，引导模型将参考图像的目标对象融入背景图像。这一过程无需对扩散模型额外训练或微调，却能生成<strong>跨域的和谐合成</strong>结果，例如将一个真人照片中的人物无缝融合到一幅动漫场景中。TF-ICON展示了预训练扩散模型在跨域编辑上的潜力——通过潜空间操作和注意力融合，实现不同域视觉内容的整合。</p>
+<p>在<strong>小样本新域图像生成</strong>方面，前文提到的冻结DDPM潜在扩展方法已在跨域图像上验证。例如，研究者使用只有几张样本的新域（如天文望远镜成像）来引导预训练模型，成功合成了该新域的逼真图像，同时原模型在常规图像上的生成质量不受影响。这表明扩散模型具有<strong>发现和扩展新域</strong>的能力，即便新域在训练时未出现。类似地，DreamBooth等方法微调模型后，也能在新风格域生成高质量图像，但往往需要权衡训练步骤以避免过度遗忘原域。</p>
+<p>总体而言，图像跨域生成的研究进展表明：<strong>（1）扩散模型结合条件引导或额外正则，可以实现无监督的域迁移和风格转换；（2）通过少量新域数据的利用或潜空间操控，预训练模型可以被“挖掘”出生成新域样本的能力；（3）这些跨域生成方法还被用于提升下游任务，例如通过生成合成数据提高模型对新域的识别性能</strong>。</p>
+<p>下面的表格汇总了部分代表性的图像跨域生成方法：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方法 / 文献 (年份)</th>
+<th>任务类型</th>
+<th>技术路线</th>
+<th>特色与效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Terra</strong> (NeurIPS 2024)</td>
+<td>图像领域流适应 / 插值</td>
+<td>时间连续低秩适配器，微调扩散模型</td>
+<td>连续表征域迁移，实现源到目标域映射并生成中间域；提升无监督域适应与泛化性能</td>
+</tr>
+<tr>
+<td><strong>ODGEN</strong> (NeurIPS 2024)</td>
+<td>特定域复杂场景数据合成 (检测)</td>
+<td>预训练模型微调 + 边界框/文本条件控制</td>
+<td>生成多物体场景用于检测数据增强；7个领域mAP提升最高25.3%</td>
+</tr>
+<tr>
+<td><strong>TF-ICON</strong> (ICCV 2023)</td>
+<td>跨域图像合成/编辑</td>
+<td>无需训练，扩散潜空间反演 + 注意力融合</td>
+<td>不损害原模型先验下，将对象融合进新背景；适用于多种域组合</td>
+</tr>
+<tr>
+<td><strong>Latent OOD扩展</strong> (Zhu 等 2024)</td>
+<td>少样本新域图像生成</td>
+<td>冻结DDPM模型，探索噪声隐编码</td>
+<td>利用少量OOD样本触发潜在高斯模态；无须调参即可生成新域，质量不减</td>
+</tr>
+<tr>
+<td><strong>StyleGAN-Fusion</strong> (WACV 2024)</td>
+<td>文本引导的域迁移 (生成器微调)</td>
+<td>扩散模型SDS指导GAN优化</td>
+<td>仅用文本描述目标域，实现生成器跨域；FID显著优于CLIP引导方法，细节更丰富</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="音频跨域生成"><a href="#音频跨域生成" class="headerlink" title="音频跨域生成"></a>音频跨域生成</h3><p>音频领域的跨域生成包含语音、音乐、环境音效等不同模态和风格的转换，典型任务有跨语言语音合成、说话人转换、音频风格迁移等。扩散模型凭借其对连续信号逐步逼近的生成特性，在音频质量和多样性上表现出色，逐渐应用到这些任务中。</p>
+<p><strong>跨语言语音生成</strong>是指利用一个语言的语音数据来生成另一种语言的语音。例如跨语言的文本到语音合成（TTS）或语音到语音翻译（S2ST）。2023年提出的<strong>DiCLET-TTS</strong>方法，将扩散模型用于跨语言带情感迁移的TTS。它针对仅有单语语料的情感语音合成问题，引入了一个语言无关但情感相关的隐语义先验：通过先验文本编码器结合情感嵌入，对扩散模型正向过程的末端分布进行参数化，从而减少外语口音并提高情感表达。同时，DiCLET-TTS设计了正交投影的情感解耦模块，获得说话人无关但情感判别性强的情感嵌入，并在扩散模型的逆过程引入条件增强的解码器，以加强情感和说话人在合成语音中的表现力。实验表明，该方法在英语-汉语跨语言情感合成中相比现有模型有明显优势，能够有效消除外语口音并更准确地迁移情感。</p>
+<p><strong>语音到语音的跨域生成</strong>方面，<strong>直接语音翻译</strong>(Speech-to-Speech Translation, S2ST)是一个具有挑战的跨模态跨语言任务。最新的工作<strong>DiffuseST</strong>将扩散模型应用于端到端的语音翻译系统中，作为语音合成器来替代传统的神经声码器。DiffuseST能够在不使用文本中间表示的情况下，将多种源语言直接翻译为英文语音，并<strong>零样本</strong>保留说话人声纹。与基于Tacotron的合成器相比，引入扩散模型后，语音质量评价MOS和PESQ各提升了23%，说话人相似度提升5%，且保持了可比的BLEU翻译准确度。有趣的是，尽管扩散模型参数量更大，但通过架构优化，该系统实现了低延迟（整体推理速度超过实时5倍）。这说明扩散生成在提升跨语言语音质量的同时，并未牺牲效率。</p>
+<p><strong>音色/说话人转换</strong>（Voice Conversion）任务也从扩散模型中获益良多。任何到任何的说话人转换需要模型在没有并行数据的情况下，将一段语音转换为目标说话人的声音。扩散模型强大的建模能力使其生成的语音质量和保真度很高，但传统扩散推理速度慢。为此，2024年的<strong>LCM-SVC</strong>工作引入<strong>潜在一致性蒸馏</strong>，将预训练的扩散语音转换模型压缩为一致性模型，从而实现了一步或少步的快速推理。LCM-SVC首先训练一个潜在扩散模型用于歌声音色转换（SVC），在获得高质量转换的基础上，进一步通过一致性蒸馏训练一个学生模型，使其在单步内近似扩散过程的效果。实验结果显示，该方法<strong>大幅降低</strong>了推理时间，同时在音质和音色相似度上与扩散模型基本持平，明显优于其他SOTA转换模型。这表明扩散模型在跨域语音转换中性能优越，并可通过后处理加速以实用化。</p>
+<p><strong>多语言多说话人合成</strong>也是跨域音频生成的一个方向。一些开源项目如Facebook的<strong>Voicebox</strong>（非扩散模型）实现了任意语言任意说话人的续说；相应地，基于扩散的模型也可以借助大量多语言数据进行训练，从而做到零样本的跨说话人、跨语言语音生成。尽管这方面具体研究尚不多见，但理念上与多语言文本-图像类似：大规模训练使模型学到跨语言的语音表示，再通过提示或少量适配在特定新语言上说话。</p>
+<p><strong>音频风格迁移</strong>方面，扩散模型同样崭露头角。AudioLDM模型利用潜在扩散架构，不仅可以根据文本描述合成音频，还实现了任意音频之间的<strong>风格转换</strong>。例如，将一段钢琴曲风格迁移为小提琴演奏，或将语音的情感状态改变，AudioLDM都可以在无需显式训练这种对应关系的情况下实现。这得益于其学到的联合语言-音频潜在空间表示，使不同来源的音频内容能够通过扩散过程找到对应的表征并重新生成。此外，在音乐生成领域，一些研究将图像扩散模型应用到梅尔谱等表示上（如Riffusion），达到了根据文本关键词生成短音乐片段的效果，这其实也是一种跨模态（文本到音乐）生成的形式。</p>
+<p>总的来说，音频跨域生成的研究侧重于<strong>保持内容信息的同时改变音频域属性</strong>（语言、说话人、情感、乐器等）。扩散模型通过逐步生成确保了合成音频的高保真度，而结合条件控制或先验约束的方法保证了内容的一致性。例如在说话人转换中保证语义不变，在翻译中保持原说话人声音，在情感迁移中保持词内容正确等。这类模型的评估通常依赖主观和客观结合：主观上通过人类评价MOS分数来衡量自然度和相似度，客观上利用如PESQ、STOI、ASR识别错误率等指标。下表汇总了若干扩散模型在音频跨域生成上的代表工作：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方法 / 文献 (年份)</th>
+<th>任务场景</th>
+<th>核心思路</th>
+<th>成果与优势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DiCLET-TTS</strong> (TASLP 2023)</td>
+<td>跨语言文本到语音合成（情感迁移）</td>
+<td>语言无关情感先验 + 正交情感解耦</td>
+<td>缓解外语口音，情感表达提升；中英跨语言情感合成效果优于现有方法</td>
+</tr>
+<tr>
+<td><strong>DiffuseST</strong> (Interspeech 2024)</td>
+<td>端到端语音到语音翻译（保留声纹）</td>
+<td>扩散合成器替换TTS模块</td>
+<td>实现零样本说话人克隆，MOS/PESQ提高23%；整体系统快于实时5倍</td>
+</tr>
+<tr>
+<td><strong>LCM-SVC</strong> (ArXiv 2024)</td>
+<td>任意说话人歌声转换</td>
+<td>潜在扩散模型 + 一致性蒸馏</td>
+<td>单步生成高质量转换语音；推理提速百倍，音质和音色接近扩散基准</td>
+</tr>
+<tr>
+<td><strong>AudioLDM</strong> (ICLR 2023)</td>
+<td>文本到音频 &amp; 音频风格迁移</td>
+<td>CLAP先验编码 + 潜在扩散</td>
+<td>通用文本生成音频系统，涵盖语音、音乐、音效；支持任意音频的零样本风格转换</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="多模态跨域生成"><a href="#多模态跨域生成" class="headerlink" title="多模态跨域生成"></a>多模态跨域生成</h3><p>多模态跨域生成指的是涉及不同数据模态之间的生成转换，如文本-图像、音频-图像等。这类任务兼具跨域和跨模态的特性，扩散模型同样在其中发挥了作用。</p>
+<p><strong>文本→图像</strong>生成是最广为人知的跨模态生成，由于发展成熟，我们常常忽略它其实也是一种“跨域”泛化：模型学习到了语言和视觉之间的对应关系，从而能将文本描述（语言域）转换为相应图像（视觉域）。以Stable Diffusion为代表的潜在扩散模型正是通过大规模的图文配对训练，成功捕获了跨语言-视觉域的丰富映射。一段描述从未见过的新奇情景的文字，Stable Diffusion也常能给出逼真的图像，这证明了扩散模型在跨域理解和生成上的强大能力。当然，这依赖于训练数据涵盖足够广泛的概念域。OpenAI的DALL·E 2、Google的Imagen等扩散模型也都展示了类似的跨模态生成能力——将抽象的语言输入转化为具体的视觉输出。</p>
+<p>除了文本到图像，<strong>图像→文本</strong>（如图像描述生成）通常由编码器-解码器模型完成，扩散模型较少直接用于生成文本，因为语言是离散符号序列，不适合扩散模型处理连续空间的特点。不过，有研究尝试将图像嵌入扩散模型的潜在空间，然后逐步“扩散”生成描述词向量，再用解码器转成文本，但这不是主流方向，在此不作深入讨论。</p>
+<p>另一个有趣的方向是<strong>语音→视频（说话人面部生成）</strong>，涉及音频和视觉的跨模态。传统方法利用3D人脸模型参数驱动动画，或直接学端到端的说话人视频合成。最新的<strong>DisentTalk</strong>工作结合了<strong>3DMM参数空间</strong>与<strong>扩散模型</strong>：它将3D人脸表情参数按照语义区域解耦，形成可精细控制的子空间，然后在此参数空间上训练分层扩散模型来合成视频帧。扩散模型引入了Stable Diffusion擅长的空间细节生成能力，同时3DMM保证了时间连贯性。通过区域感知的注意力机制，DisentTalk实现了唇动精确对齐语音、面部表情自然丰富且帧间平滑的说话人视频生成。特别地，由于中文高质量对嘴数据缺乏，作者构建了一个高清中语说话人视频数据集CHDTF用于训练，显著提升了模型在中文音频驱动下的写实度。这种将物理先验（3D人脸）与扩散生成相结合的方式，为跨语言的说话人合成奠定了基础，解决了纯扩散模型在视频一致性上的不足。随着该方向的发展，我们有望看到更多音频驱动的表情动画、手势生成等多模态融合应用，其中扩散模型提供高品质帧合成，另一些模块保证时序和结构约束。</p>
+<p>此外，多模态扩散模型还可以用于<strong>视觉→音频</strong>的任务，例如根据一张图生成对应的环境声音效果，这属于较新的研究领域。一些初步尝试可能会利用预训练的音频扩散模型，将图像内容映射到音频潜在空间，再通过扩散过程得到声音。例如，看着一段无声视频片段，用扩散模型生成逼真的音效配音（下雨场景生成雨声、海边生成海浪声等）。虽然目前专门的工作不多，但这类应用潜力巨大，扩散模型能保证生成音频的连续性和多样性，而跨模态对齐需要结合对视觉场景的理解模型（如CLIP）。</p>
+<p>总的来说，多模态跨域生成是一个融合领域，多模态模型（如CLIP、统一Transformer等）可与扩散模型结合，承担理解和生成不同模态的不同部分。在这一领域，<strong>扩散模型主要负责难度最大的高质量内容生成</strong>（如高清图像帧或清晰音频），而跨域对齐由其它模块或预训练模型提供先验。如文本-&gt;图像由文本编码提供条件，音频-&gt;视频由音频提取表情参数提供条件等。随着多模态大模型的发展，我们可能会看到扩散模型作为通用生成模块，嵌入到更大的多模态系统中，去处理各类跨域生成任务。</p>
+<h2 id="模型评估方式与常用基准"><a href="#模型评估方式与常用基准" class="headerlink" title="模型评估方式与常用基准"></a>模型评估方式与常用基准</h2><p>评估扩散模型的跨域生成能力，需要从<strong>感知质量</strong>和<strong>跨域有效性</strong>两个方面进行。常用的评估指标和基准包括：</p>
+<ul>
+<li><p><strong>图像质量与多样性指标</strong>：包括Fréchet Inception Distance (FID)、Inception Score (IS)、精确度/覆盖率等，用于衡量生成图像与目标域真实数据分布的接近程度和多样性。例如，在图像跨域转换任务中，评价生成结果是否逼真且风格符合目标域，常以FID与真实目标域图片集进行比较，FID越低表示生成分布越接近真实分布。有时也使用CLIP Score评估图像与文本描述的匹配程度，以验证跨域（如跨模态）的一致性。对于特定风格迁移任务，还可能训练一个风格分类器来计算生成图像被判别为目标风格的比例。</p>
+</li>
+<li><p><strong>语音质量与相似度指标</strong>：在音频跨域生成中，主观的MOS（Mean Opinion Score）是衡量音质和自然度的重要指标，由听众打分获得。此外客观指标如PESQ（语音信号保真度）、STOI（可懂度）用于评估音频质量。说话人转换和语音克隆任务则关注说话人相似度，可通过embedding相似度或ABX偏好测试度量。跨语言语音合成还会用ASR识别错误率或BLEU来评价内容传达的准确性。DiffuseST的实验中就同时报告了音质提升（MOS/PESQ）和翻译内容准确度不下降。因此一套综合指标才能全面反映音频跨域生成的效果。</p>
+</li>
+<li><p><strong>多模态匹配指标</strong>：对于跨模态生成，如文本生成图像，会用文本图像匹配的指标（CLIP得分、Referee metric等）来测量生成图片是否符合输入描述。在音频驱动视频这类任务中，则需评估视听同步（如嘴型与语音对齐度）以及生成视频的清晰度、连贯性等，可以通过计算嘴唇同步分数，表情变化曲线相似度等专门指标来量化。例如DisentTalk通过测量唇同步误差、表情质量得分和视频稳定性指标，证明其方法在这些方面优于现有方案。</p>
+</li>
+<li><p><strong>下游任务性能</strong>：若跨域生成用于数据增广或辅助训练，还可以通过下游任务的效果来评估其价值。如前述ODGEN方法通过将合成图像加入训练，检测模型mAP提升了5%~25%不等。类似地，生成的跨域数据用于分类、分割等任务时，可观察这些任务在未见域上的性能提升幅度，以判断生成数据的实用性。</p>
+</li>
+</ul>
+<p><strong>常用benchmark数据集</strong>方面，不同任务各有标准：</p>
+<ul>
+<li><p><strong>图像领域</strong>：DomainBed基准集合包含PACS、Office-Home、VLCS、DomainNet等数据集用于评测跨域分类和生成算法的泛化性能。这些数据集中每个包含多个风格各异的子域，用于验证模型对未见域的表现。对于图像翻译，有夏普转卡通、现实转画作等基准数据，如CelebA-HQ (人脸照片)对Anime Faces (动漫脸)等。有些研究自建小型基准，比如将FFHQ人脸照片→3D卡通等，以定量评估迁移效果（通过FID或人脸识别保持率等）。另外COCO常用于文本到图像模型评测，如Stable Diffusion在COCO上的零样本FID、CLIP Score是比较模型的指标之一。</p>
+</li>
+<li><p><strong>音频领域</strong>：语音合成常用的有LJSpeech（单说话人英文朗读）、VCTK（多说话人英文）、AISHELL-3（中文多人）、Emotional Speech Dataset等作为训练或评测数据。跨语言TTS会组合多语种数据，如英文LibriTTS+中文标贝数据集。语音转换评测使用Voice Conversion Challenge (VCC)提供的标准数据对，比方说VCC2020包含若干源和目标说话人语音，用于评测转换系统在保持音色和内容上的表现。S2ST可能使用LibriTrans、CVSS等语音翻译语料。音乐和音效生成则缺乏统一基准，通常各论文构建案例进行主观评测。</p>
+</li>
+<li><p><strong>多模态领域</strong>：文本图像常用MS-COCO、Flickr30k等含标注描述的图像集用于测试生成模型的图文对齐和图像质量。说话人视频合成使用LRS3（大量英文字幕对嘴视频）或自己录制的数据集。DisentTalk中引入的CHDTF是高清中语说话人视频数据集，用来弥补中文部分评估的不足。其他如AVHubHub、GRID等数据集也被用于评估视听合成模型的对齐和质量。</p>
+</li>
+</ul>
+<p>无论哪种任务，人类评估依然非常重要。研究通常结合用户调研或专家打分来评估生成结果在感知上的好坏，特别是判断跨域生成是否合乎期望（如翻译语气是否自然，图像风格是否确实转换）。因此，客观指标和主观评测相辅相成，共同衡量模型性能。</p>
+<h2 id="最新论文、开源项目与趋势"><a href="#最新论文、开源项目与趋势" class="headerlink" title="最新论文、开源项目与趋势"></a>最新论文、开源项目与趋势</h2><p>近年来（2023-2025）在顶会和期刊上涌现出大量关于扩散模型跨域生成的研究，也有不少开源项目推动了这一领域的发展。下面列举若干具有代表性的最新成果：</p>
+<ul>
+<li><p><strong>CVPR/ICCV 等视觉会议</strong>：跨域扩散图像生成是热点主题。ICCV 2023的TF-ICON提出无训练的跨域图像合成方法；WACV 2024的StyleGAN-Fusion通过扩散指导GAN完成文本驱动的域迁移；WACV 2024还出现了DiffusionCLIP改进方法，用于更好地实现图像风格转换。CVPR 2024 预计也有相关工作，如扩散模型用于未见域的图像着色、去噪增强等。</p>
+</li>
+<li><p><strong>NeurIPS/ICLR 等机器学习会议</strong>：扩散模型的领域适应和生成被广泛关注。NeurIPS 2024的Terra方法针对领域泛化提出了新型低秩适配技术；同届的ODGEN将扩散模型用于目标检测数据生成。OpenReview上还出现了DomainFusion框架，用扩散模型帮助分类器进行 domain generalization。ICLR 2024的一些投稿探讨了扩散预训练在下游任务中的迁移、扩散模型与对抗训练结合提升跨域鲁棒性等。这些新思想丰富了扩散模型在跨域领域的应用场景。</p>
+</li>
+<li><p><strong>音频与语音领域会议</strong>：在ICASSP、Interspeech等会议上，扩散模型逐渐成为高质量语音合成的基础。2023年Interspeech有工作将扩散模型用于语音转换、语音增强；2024年Interspeech的DiffuseST展示了语音翻译的最新进展。IEEE TASLP等期刊也发表了若干扩散语音合成相关论文，例如DiCLET-TTS。音乐方面，ISMIR等会议开始出现文本到音乐的扩散模型探索。可以预见，随着音频生成模型需求增长，扩散模型相关研究在音频顶会上会越来越多。</p>
+</li>
+<li><p><strong>多模态与其他方向</strong>：多模态生成在ACL、EMNLP等自然语言会议和ICME多媒体会议中也有涉及。上文提到的DisentTalk已被ICME 2025接收。此外，3D生成（如NeRF融合扩散）、医学影像跨模态合成等也是新趋势。例如有论文研究了零样本医学图像模态转换，用扩散模型将MRI合成CT。这些方向的研究大多发布在arXiv，逐渐会走向相关领域会议。</p>
+</li>
+<li><p><strong>开源项目</strong>：在社区驱动下，许多开源工具加速了扩散跨域应用的落地。Hugging Face的🤗 Diffusers库集成了Stable Diffusion及其各种派生模型，支持模型微调和控制示例，降低了研究和应用门槛。ControlNet的开源让开发者能方便地利用边缘图、分割等条件进行跨域生成。DreamBooth的代码和模型广泛流传，使定制化模型进入大众创作。音频方面，AudioLDM提供了开源实现，可以生成多种类别的声音。还有一些GitHub项目将扩散模型应用到特定领域，如「diffusion for speech enhancement」、「latent diffusion for IR simulation」等。这些开源成果丰富了工具链，也推动着跨域生成从学术走向工业实践。</p>
+</li>
+</ul>
+<p><strong>未来趋势</strong>：综合来看，扩散模型在跨域数据生成的研究仍在快速发展。模型正朝着<strong>更高保真度</strong>和<strong>更强泛化性</strong>演进：更好的生成质量、更少的依赖新域数据。同时，效率也是关注点，出现了通过模型压缩和快速采样技术使扩散生成接近实时的工作。随着AIGC（生成式AI）热潮，跨域和多模态的大模型将继续涌现，扩散模型可能与其他架构（如Transformer、Flow等）结合，取长补短，用于构建能够跨越多个领域和模态的通用生成人工智能。可以预见，在不远的将来，我们将看到更加<strong>通用</strong>且<strong>智能</strong>的扩散模型应用于图像、语音、文本、视频等各种数据的跨域生成，为内容创作和数据增强带来新的革命。</p>
 ]]></content>
   </entry>
   <entry>
