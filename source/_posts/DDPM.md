@@ -153,3 +153,124 @@ $\sigma = \eta \sqrt{\frac{1 - \overline{\alpha}_t}{1 - \overline{\alpha}_t} \be
 
 
 
+
+# Classifier Guidance / Classifier - Free Guidance
+
+## 内容说明
+1. **①**：在分类器引导（CG）之前，FID不如 GAN（生成对抗网络）。  
+2. **②**：扩散模型（diffusion model）原本控制性不佳，条件生成可提升 FID。CG 本质是一种采样方法，可利用训练好的 DDPM（Denoising Diffusion Probabilistic Model）。  
+
+### 公式推导
+- $\hat{q}(x_{t-1} | x_t, y) = \frac{ \hat{q}(x_{t-1} | x_t) \hat{q}(y | x_{t-1}, x_t) }{ \hat{q}(y | x_t) }$ 
+  注：$\hat{q}(y | x_t)$ 为常数，与 $x_{t-1}$ 无关。 
+- 定义： 
+  $\hat{q}(x_t | x_{t-1}, y) := q(x_t | x_{t-1})$，$\hat{q}(x_0) := q(x_0)$，无需重新训练，与 DDPM 相同。 
+- $\nabla \hat{q}(x_{t-1} | x_0, y) = \prod_{t'=1}^{t} \hat{q}(x_{t'} | x_{t'-1}, y)$（链式展开）。 
+
+### 详细推导步骤
+1. **①**：
+   $\hat{q}(x_{t-1} | x_t) = \frac{ \hat{q}(x_t | x_{t-1}) \hat{q}(x_{t-1}) }{ \hat{q}(x_t) }$（贝叶斯公式应用）。
+2. **②**： 
+   - 推导 $\hat{q}(x_t | x_{t-1})$：
+     $\hat{q}(x_t | x_{t-1}) = \int_y \hat{q}(x_t, y | x_{t-1}) dy$ 
+     $= \int_y \hat{q}(x_t | y, x_{t-1}) \hat{q}(y | x_{t-1}) dy$ 
+     $= \int_y q(x_t | x_{t-1}) \hat{q}(y | x_{t-1}) dy$（因 $\hat{q}(x_t | y, x_{t-1}) = q(x_t | x_{t-1})$） 
+     $= q(x_t | x_{t-1}) \int_y \hat{q}(y | x_{t-1}) dy$ 
+     $= q(x_t | x_{t-1})$（因 $\int_y \hat{q}(y | x_{t-1}) dy = 1$）。
+   - 推导 $\hat{q}(x_t)$： 
+     $\hat{q}(x_t) = \int_{x_{0:t-1}} \hat{q}(x_{0:t}) d x_{0:t-1}$ 
+     $= \int_{x_{0:t-1}} \hat{q}(x_0) \hat{q}(x_{1:t} | x_0) d x_{0:t-1}$。
+     进一步展开 $\hat{q}(x_{1:t} | x_0)$：
+     $\hat{q}(x_{1:t} | x_0) = \int_y \hat{q}(x_{1:t}, y | x_0) dy$ 
+     $= \int_y \hat{q}(x_{1:t} | y, x_0) \hat{q}(y | x_0) dy$
+     $= \int_y \hat{q}(y | x_0) \prod_{t'=1}^t \hat{q}(x_{t'} | x_{t'-1}, y) dy$
+     $= \int_y \hat{q}(y | x_0) \prod_{t'=1}^t q(x_{t'} | x_{t'-1}) dy$（因 $\hat{q}(x_{t'} | x_{t'-1}, y) = q(x_{t'} | x_{t'-1})$）
+     $= \int_y \hat{q}(y | x_0) q(x_{1:t} | x_0) dy$。
+
+
+
+
+
+$\hat{q}(x_t)$ 的推导
+$$
+\hat{q}(x_t) = \int_{x_{0:t-1}} q(x_0) q(x_{1:t} | x_0) dx_{0:t-1} = \int_{x_{0:t-1}} q(x_{0:t}) dx_{0:t-1} = q(x_t)
+$$
+**说明**：通过积分运算，证明了 $\hat{q}(x_t)$ 与 $q(x_t)$ 相等，体现了分布在积分变换下的不变性。
+
+$q(y | x_t, x_{t-1})$ 的化简
+$$
+q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \hat{q}(x_0 | x_{t-1}) } = \frac{ \hat{q}(x_0 | y, x_{t-1}) }{ \hat{q}(x_0 | x_{t-1}) } \hat{q}(y | x_{t-1})
+$$
+进一步化简：
+$$
+= q(x_t | x_{t-1}) \frac{ \hat{q}(y | x_{t-1}) }{ \hat{q}(x_0 | x_{t-1}) }
+$$
+**说明**：利用条件概率公式进行变形，结合已知分布关系化简，展示条件概率与其他分布的关联。
+
+$\hat{q}(x_{t-1} | x_t, y)$ 的表达式
+$$
+\hat{q}(x_{t-1} | x_t, y) = \frac{ q(x_{t-1} | x_t) \hat{q}(y | x_{t-1}) }{... }
+$$
+**标注说明**：红色标注强调与 **DDPM 模型** 的联系，表明该公式在 DDPM 框架下的应用特性。
+
+### 采样方式与近似推导
+- **采样式**：$x_t = \mu + \epsilon$，其中 $\epsilon$ 很小。
+- **对数概率展开**：
+$$
+  \log P_\phi(y | x_t) \approx \text{泰勒展开近似}
+$$
+  进一步对 $\log P_\phi(x_{t-1} | x_t, y)$ 推导：
+$$
+  \log P_\phi(x_{t-1} | x_t, y) = -\frac{1}{2}(x_t - \mu)^T \Sigma^{-1}(x_t - \mu) + (x_t - \mu) \nabla + C
+$$
+  通过变形：
+$$
+  = -\frac{1}{2}(x_t - \mu - \Sigma \nabla)^T \Sigma^{-1}(x_t - \mu - \Sigma \nabla) + C'
+$$
+  近似为正态分布：
+$$
+\sim N(\mu + \Sigma \nabla, \Sigma^2) \implies x_t = \mu + \Sigma \nabla + \Sigma \epsilon
+$$
+**说明**：描述了采样的形式，通过对数概率的展开和变形，推导得出近似正态分布的结果，展示了从概率表达式到采样公式的推导过程。
+
+通过上述推导，展现了分类器引导（CG）相关的采样方法与公式逻辑，基于 DDPM 框架且无需重新训练，体现了其在扩散模型中的应用特性。 
+
+
+
+![5d117d10d332d1d5f747467b99e798f](5d117d10d332d1d5f747467b99e798f.jpg)
+
+
+
+![c63015d4464ad72db9343356fc0a66c](c63015d4464ad72db9343356fc0a66c.jpg)
+
+
+
+# SDE（随机微分方程）下的 Diffusion Model
+
+## 随机过程基础
+- 布朗运动增量：$W(t+\Delta t) - W(t) \sim N(0, \Delta t)$，当 $\Delta t \to 0$ 时，可表示为微分形式 $dW = \sqrt{dt} \epsilon$，其中 $\epsilon \sim N(0,1)$，即 $dW \sim N(0, dt)$。
+- Itô 过程（扩散过程）：$dX = f(x,t)dt + g(t)dW$，描述了系统状态 $X$ 随时间 $t$ 的变化，包含确定性项 $f(x,t)dt$ 和随机性项 $g(t)dW$。
+
+## 模型与 SDE 关联的优势
+1. **数学方法紧密结合**：SDE 提供了丰富的数学工具，便于分析和求解。
+2. **刻画分布转换**：能更好地描述数据分布（data distribution）与先验分布（prior distribution）之间的相互转换，因为扩散（加噪）的逆向过程同样是扩散过程。
+
+## 逆向过程公式
+- 一般形式：$dX = [f(x,t) - g^2(t) \nabla_x \log p_t(x)]dt + g_t d\tilde{W}$。
+- 在 DDPM 中：
+  - 正向扩散：$dX = -\frac{1}{2} \beta(t) X(t)dt + \sqrt{\beta(t)} dW$。
+  - 逆向过程：$dX = [-\frac{1}{2} \beta(t) X(t) - \beta(t) S_\theta(t)]dt + \sqrt{\beta(t)} dW$，其中 $S_\theta(t) = \nabla_{x_t} \log P(x_t | x_0) = -\frac{x_t - \mu_t}{\sigma^2}$（通过对 $P(x_t | x_0)$ 求梯度得到）。
+  - 由 $x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon$ 代入化简可得 $S_\theta(t) = -\frac{\epsilon}{\sqrt{1 - \alpha_t}}$。
+
+## 数值解法（欧拉方法）
+- **SDE 欧拉近似**：$X(t+\Delta t) = X(t) + f(x,t)\Delta t + g(t)\Delta W$。
+- **ODE 欧拉法**：$\frac{dx}{dt} = a(X(t))$，则 $X(t+\Delta t) = X(t) + a(X(t))\Delta t$。
+- 逆向扩散采样（reverse diffusion sampler）的数值估计：
+  - $x_{i+1} = x_i + f(x,t) + g(t)\epsilon$（简化形式，$\Delta t$ 融入 $f$ 和 $g$）。
+  - 进一步推导 $x_i$ 的表达式：$x_i = x_{i+1} + \frac{1}{2} \beta_{i+1} x_{i+1} + \beta_{i+1} S_\theta + \sqrt{\beta_{i+1}} \epsilon$，通过近似（如泰勒公式 $(1+x)^\alpha \approx 1+\alpha x$）化简，最终得出 DDPM 是欧拉方法的特例，如 $(2 - \sqrt{1 - \beta(t)})x_{t'} + \beta'(t) S_\theta + \sqrt{\beta'(t)} \epsilon$。
+
+以上内容系统阐述了 SDE 框架下扩散模型的数学基础、逆向过程及数值解法，体现了 SDE 在扩散模型分析中的重要作用。 
+
+
+
+![b012c3a57ba9325b7e6acd7fd6703d0](b012c3a57ba9325b7e6acd7fd6703d0.jpg)
