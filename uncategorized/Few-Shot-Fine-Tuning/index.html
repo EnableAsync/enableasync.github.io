@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>小样本微调研究综述 - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="小样本微调领域（2022年至今）的代表性论文以下列出几...">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">小样本微调研究综述</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">小样本微调研究综述</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 16, 2025</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3070</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="小样本微调领域（2022年至今）的代表性论文"><a href="#小样本微调领域（2022年至今）的代表性论文" class="headerlink" title="小样本微调领域（2022年至今）的代表性论文"></a>小样本微调领域（2022年至今）的代表性论文</h1><p>以下列出几篇2022年以来在计算机视觉领域关于<strong>小样本微调（Few-Shot Fine-Tuning）</strong>的代表性论文。每篇包括论文标题、作者与年份、主要贡献摘要、公开源码情况以及发表的会议或期刊，涵盖图像分类、目标检测、语义分割等方向：</p>
+<ol>
+<li><p><strong>论文标题</strong>: <em>Pushing the Limits of Simple Pipelines for Few-Shot Learning: External Data and Fine-Tuning Make a Difference</em><br><strong>作者与年份</strong>: Shell Xu Hu，Da Li，Jan Stühmer，Minyoung Kim，Timothy M. Hospedales，2022年<br><strong>摘要</strong>: 提出利用一个简单但有效的三阶段小样本学习流程，包括<strong>在外部数据上预训练</strong>、<strong>小样本任务的元训练</strong>以及<strong>特定任务的微调</strong>。作者探讨了：(1) 外部数据预训练如何提升小样本学习性能，(2) 利用最新Transformer架构的效果，以及 (3) 如何充分利用微调步骤。实验表明，一个基于Transformer的简单管线在Mini-ImageNet、CIFAR-FS、CDFSL和Meta-Dataset等标准小样本分类基准上取得了惊人的性能。这一结果强调了<strong>将大规模外部数据与微调相结合</strong>的策略对提升小样本学习效果的重要作用。<strong>代码</strong>: 提供了开源代码 (GitHub: <code>hushell/pmf_cvpr22</code>)。<br><strong>发表</strong>: CVPR 2022</p>
+</li>
+<li><p><strong>论文标题</strong>: <em>Conditional Prompt Learning for Vision-Language Models</em><br><strong>作者与年份</strong>: Kaiyang Zhou，Jingkang Yang，Chen Change Loy，Ziwei Liu，2022年<br><strong>摘要</strong>: 针对CLIP等大型视觉-语言模型的小样本适应问题，作者提出了<strong>条件上下文优化（CoCoOp）</strong>方法。此前的方法CoOp通过学习一组固定的可调节提示（prompt）在小样本下取得了显著效果，但存在<strong>对训练类别过拟合、无法泛化到新类别</strong>的问题。CoCoOp通过引入一个轻量级网络为每张图像<strong>动态生成输入相关的提示向量</strong>，使提示根据图像自适应变化，从而减轻了类别移位带来的影响。实验表明，相比静态提示，<strong>动态提示的CoCoOp在未见类别上的泛化性能明显优于CoOp</strong>，在跨数据集迁移和域泛化上也更出色。<strong>代码</strong>: 提供了开源代码 (GitHub: <code>KaiyangZhou/CoOp</code>)。<br><strong>发表</strong>: CVPR 2022</p>
+</li>
+<li><p><strong>论文标题</strong>: <em>Singular Value Fine-tuning: Few-shot Segmentation requires Few-parameters Fine-tuning</em><br><strong>作者与年份</strong>: Yanpeng Sun，Qiang Chen，Xiangyu He 等，2022年<br><strong>摘要</strong>: 提出了一种针对小样本语义分割的<strong>奇异值微调（SVF）</strong>方法。传统方法为了避免过拟合通常<strong>冻结预训练骨干网络</strong>，仅在其上添加复杂的特征融合或度量模块。作者重新思考这一范式，发现<strong>只微调骨干网络的一小部分参数</strong>同样可以避免过拟合并提升对新类别的泛化性能。具体而言，SVF将预训练卷积权重用奇异值分解拆解为三个矩阵，只<strong>训练中间的奇异值参数</strong>，冻结奇异向量（两侧矩阵）。这种策略在<strong>保持预训练语义信息</strong>的同时<strong>调整特征以适应新类</strong>。在Pascal-5<sup>i</sup>和COCO-20<sup>i</sup>的1-shot和5-shot分割基准上，SVF取得了<strong>当前最佳性能</strong>，显著优于仅冻结骨干的方案。这证明了微调骨干的一小部分参数可以在小样本分割中取得更好效果。<strong>代码</strong>: 提供了官方开源实现 (GitHub: <code>zechao-li/SVF-pytorch</code>)。<br><strong>发表</strong>: NeurIPS 2022</p>
+</li>
+<li><p><strong>论文标题</strong>: <em>Few-Shot Recognition via Stage-Wise Augmented Finetuning</em><br><strong>作者与年份</strong>: Tian Liu，Huixin Zhang，Shubham Parashar，Shu Kong，2024年<br><strong>摘要</strong>: 提出了一种<strong>分阶段增强微调 (SWAT)</strong> 方法来提升小样本图像识别性能。作者将<strong>检索增强学习 (retrieval-augmented learning, RAL)</strong>引入Few-Shot场景：首先从外部大型图像-文本数据中检索与新类别相关的样本用于辅助训练。研究发现：直接在大量检索数据上微调预训练的视觉-语言模型（VLM，如CLIP）由于数据分布不均衡和域偏差，效果几乎不超越零样本基线；仅使用少量标注样本微调反而已经<strong>大幅超越现有方法</strong>；而<strong>将检索数据与标注的少样本混合微调</strong>可以进一步提升性能。为此，SWAT方法分两阶段进行微调：<strong>第一阶段</strong>在“检索数据+少量标注数据”混合集上端到端微调整个模型，<strong>第二阶段</strong>仅使用少量标注数据重新训练分类头，以缓解不均衡和域差异。这种分阶段策略使模型性能显著提升，在标准few-shot识别基准上<strong>比此前最佳方法准确率高出约10%</strong>。<strong>代码</strong>: 提供了开源代码 (GitHub: <code>tian1327/SWAT</code>)。<br><strong>发表</strong>: CVPR 2024</p>
+</li>
+<li><p><strong>论文标题</strong>: <em>Strong Baselines for Parameter-Efficient Few-Shot Fine-Tuning</em><br><strong>作者与年份</strong>: Samyadeep Basu，Shell Xu Hu，Daniela Massiceti，Soheil Feizi，2024年<br><strong>摘要</strong>: 本文对<strong>参数高效的小样本微调</strong>方法进行了大规模系统的实证分析，在Meta-Dataset和ORBIT等大型few-shot基准上进行了超过1800次对比实验。研究的主要发现有两点：(i) <strong>仅微调LayerNorm层参数（LN-Tune）</strong>在few-shot图像分类中是一个<strong>极其强大的基线</strong>，无论主干ViT是经自监督还是监督预训练获得。(ii) 对于自监督预训练的ViT模型，<strong>仅为每个注意力矩阵引入可学习的缩放参数（AttnScale）并配合一个轻量的残差适配器模块（DRA）</strong>即可达到当前最优性能，同时参数规模比微调全部参数减少约9倍。这些结果为few-shot微调提供了强基线，并<strong>呼吁重新思考现有参数高效微调方法的设计</strong>。<em>（注：作者在文中未公布官方源码）</em>。<br><strong>发表</strong>: AAAI 2024</p>
+</li>
+<li><p><strong>论文标题</strong>: <em>Few-Shot Object Detection with Foundation Models</em><br><strong>作者与年份</strong>: Guangxing Han，Ser-Nam Lim，2024年<br><strong>摘要</strong>: 探索了利用<strong>基础模型</strong>解决Few-Shot目标检测（FSOD）的新方法。作者使用两个大型预训练模型：其一是<strong>视觉基础模型DINOv2</strong>，作为<strong>冻结的特征提取骨干</strong>，提供强大的通用视觉特征；其二是<strong>大语言模型 (LLM)</strong>，用于对检测提议区域进行<strong>上下文化的小样本分类</strong>。具体而言，采用Transformer架构（如Deformable DETR）生成<strong>类感知的候选区域</strong>，然后构造文本提示将所有候选及类别标签嵌入到LLM中，通过LLM强大的<strong>上下文推理</strong>能力，对每个候选进行分类。这种方式利用提议之间以及提议与类别之间的关系，大幅提升了少样本情况下的检测准确率。模型在PASCAL VOC和MS COCO等<strong>Few-Shot检测基准</strong>上取得了当前最先进的性能。<em>（注：源码暂未公开，但模型基于Facebook开放的Detrex检测代码库实现）</em>。<br><strong>发表</strong>: CVPR 2024</p>
+</li>
+</ol>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/uncategorized/Few-Shot-Fine-Tuning/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;Few-Shot-Fine-Tuning&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;Few-Shot-Fine-Tuning&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/uncategorized/leetcode/">算法整理<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E6%A0%B7%E6%9C%AC%E5%BE%AE%E8%B0%83%E9%A2%86%E5%9F%9F%EF%BC%882022%E5%B9%B4%E8%87%B3%E4%BB%8A%EF%BC%89%E7%9A%84%E4%BB%A3%E8%A1%A8%E6%80%A7%E8%AE%BA%E6%96%87"><span class="toc-text">小样本微调领域（2022年至今）的代表性论文</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
