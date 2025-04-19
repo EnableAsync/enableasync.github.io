@@ -3230,6 +3230,75 @@ class Solution {
 }
 ```
 
+
+
+## 统计公平数对的数目
+
+给你一个下标从 **0** 开始、长度为 `n` 的整数数组 `nums` ，和两个整数 `lower` 和 `upper` ，返回 **公平数对的数目** 。
+
+如果 `(i, j)` 数对满足以下情况，则认为它是一个 **公平数对** ：
+
+- `0 <= i < j < n`，且
+- `lower <= nums[i] + nums[j] <= upper`
+
+
+
+由于排序不影响答案，可以先（从小到大）排序，这样可以二分查找。
+
+`nums` 是 `[1,2]` 还是 `[2,1]`，算出来的答案都是一样的，因为加法满足交换律 $a + b = b + a$。
+
+排序后，枚举右边的 `nums[j]`，那么左边的 `nums[i]` 需要满足 $0 \leq i < j$ 以及
+
+$$
+lower - nums[j] \leq nums[i] \leq upper - nums[j]
+$$
+
+计算 $\leq upper - nums[j]$ 的元素个数，减去 $< lower - nums[j]$ 的元素个数，即为满足上式的元素个数。(联想一下前缀和)
+
+由于 `nums` 是有序的，我们可以在 $[0, j - 1]$ 中二分查找，原理见【基础算法精讲 04】：
+
+- 找到 $> upper - nums[j]$ 的第一个数，设其下标为 $r$，那么下标在 $[0, r - 1]$ 中的数都是 $\leq upper - nums[j]$ 的，这有 $r$ 个。如果 $[0, j - 1]$ 中没有找到这样的数，那么二分结果为 $j$。这意味着 $[0, j - 1]$ 中的数都是 $\leq upper - nums[j]$ 的，这有 $j$ 个。
+- 找到 $\geq lower - nums[j]$ 的第一个数，设其下标为 $l$，那么下标在 $[0, l - 1]$ 中的数都是 $< lower - nums[j]$ 的，这有 $l$ 个。如果 $[0, j - 1]$ 中没有找到这样的数，那么二分结果为 $j$。这意味着 $[0, j - 1]$ 中的数都是 $< lower - nums[j]$ 的，这有 $j$ 个。 
+- 满足 $lower - nums[j] \leq nums[i] \leq upper - nums[j]$ 的 `nums[i]` 的个数为 $r - l$，加入答案。 
+
+
+
+```java
+class Solution {
+    public long countFairPairs(int[] nums, int lower, int upper) {
+        Arrays.sort(nums);
+        long ans = 0;
+        for (int j = 0; j < nums.length; j++) {
+            // 注意要在 [0, j-1] 中二分，因为题目要求两个下标 i < j
+            int r = lowerBound(nums, j, upper - nums[j] + 1);
+            int l = lowerBound(nums, j, lower - nums[j]);
+            ans += r - l;
+        }
+        return ans;
+    }
+
+    private int lowerBound(int[] nums, int right, int target) {
+        int left = -1;
+        while (left + 1 < right) {
+            int mid = (left + right) >>> 1;
+            if (nums[mid] >= target) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        return right;
+    }
+}
+
+```
+
+
+
+
+
+
+
 # 栈
 
 ## 有效的括号
@@ -4321,6 +4390,39 @@ class Solution {
             }
         }
         return st.size();
+    }
+}
+```
+
+
+
+## 统计坏数对的数目
+
+给你一个下标从 **0** 开始的整数数组 `nums` 。如果 `i < j` 且 `j - i != nums[j] - nums[i]` ，那么我们称 `(i, j)` 是一个 **坏数对** 。
+
+请你返回 `nums` 中 **坏数对** 的总数目。
+
+
+
+正难则反，考虑坏数对的个数=总数对-好数对。
+
+好数对：`j - i == nums[j] - nums[i]` 得到 `j - nums[j] = nums[i] - i`
+
+于是有：
+
+```java
+class Solution {
+    public long countBadPairs(int[] nums) {
+        int n = nums.length;
+        long ans = (long)n * (n - 1) / 2;
+        Map<Long, Long> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            long x = nums[i] - i;
+            long c = map.getOrDefault(x, 0L);
+            ans -= c;
+            map.put(x, c + 1);
+        }
+        return ans;
     }
 }
 ```
@@ -5598,9 +5700,9 @@ class Solution {
 要点在于：
 
 1. 初始状态所有字符都和自己回文。
-2. dp\[i][j] 表示子串 i...j 是否是回文串。
+2. dp$$i][j] 表示子串 i...j 是否是回文串。
 3. 为了便于考虑边界情况，外层循环枚举 j，内层循环枚举 i。
-4. dp\[i][j] 如果是回文字符串，要求 dp\[i + 1][j - 1] 是回文字符串，并且 s[i] == s[j]。
+4. dp$$i][j] 如果是回文字符串，要求 dp$$i + 1][j - 1] 是回文字符串，并且 s[i] == s[j]。
 
 ```java
 class Solution {
@@ -6285,12 +6387,12 @@ class Solution {
 
 以示例 2 为例，定义如下置换 $P(x)$：
 
-\[
+$$
 \begin{pmatrix}
 x & 0 & 1 & 2 & 3 & 4 \\
 P(x) & 1 & 2 & 4 & 3 & 0
 \end{pmatrix}
-\]
+$$
 
 把 `nums1 = [4,0,1,3,2]` 中的每个元素 $x$ 替换为 $P(x)$，可以得到一个单调递增的排列 $A = [0,1,2,3,4]$。把 $P(x)$ 应用到 `nums2 = [4,1,0,2,3]` 上，可以得到一个新的排列 $B = [0,2,1,4,3]$。
 
