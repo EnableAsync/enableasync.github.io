@@ -3881,6 +3881,36 @@ class Solution {
 
 
 
+## 统计隐藏数组数目
+
+给你一个下标从 **0** 开始且长度为 `n` 的整数数组 `differences` ，它表示一个长度为 `n + 1` 的 **隐藏** 数组 **相邻** 元素之间的 **差值** 。更正式的表述为：我们将隐藏数组记作 `hidden` ，那么 `differences[i] = hidden[i + 1] - hidden[i]` 。
+
+<img src="/image-20250421172529810.png" alt="image-20250421172529810" style="zoom: 80%;" />
+
+```java
+class Solution {
+    public int numberOfArrays(int[] differences, int lower, int upper) {
+        int maxWave = 0;
+        int minWave = 0;
+        int cur = 0;
+        for (int i = 0; i < differences.length; i++) {
+            cur = cur + differences[i];
+            maxWave = Math.max(maxWave, cur);
+            minWave = Math.min(minWave, cur);
+            if (maxWave - minWave > upper - lower) {
+                return 0;
+            }
+        }
+        int ans = upper - lower + 1; // 最好的情况
+        return ans - (maxWave - minWave); // 最好的情况减去最大波动大小
+    }
+}
+```
+
+
+
+
+
 
 
 # 子串
