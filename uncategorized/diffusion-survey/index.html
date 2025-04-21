@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title> - EnableAsync&#39;s Blog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="golang,java">
+  <meta name="description" content="diffusion 综述：https://arxiv....">
+  <meta name="author" content="EnableAsync">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+
+  
+
+  
+    
+    
+<link rel="stylesheet" href="/lib/highlight/a11y-dark.css">
+
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '[object Object]'
+      },
+      donate: {
+        enable: false,
+        alipay: 'https://pic.izhaoo.com/alipay.jpg',
+        wechat: 'https://pic.izhaoo.com/wechat.jpg'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: false
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '生于忧患，死于安乐',
+          typing: true,
+          api: '',
+          data_contents: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title"></h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 21, 2025</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2038</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>diffusion 综述：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2209.02646">https://arxiv.org/abs/2209.02646</a></p>
+<h1 id="Diffusion-本身存在的问题"><a href="#Diffusion-本身存在的问题" class="headerlink" title="Diffusion 本身存在的问题"></a>Diffusion 本身存在的问题</h1><h1 id="推理速度慢"><a href="#推理速度慢" class="headerlink" title="推理速度慢"></a>推理速度慢</h1><h1 id="训练速度慢"><a href="#训练速度慢" class="headerlink" title="训练速度慢"></a>训练速度慢</h1><h1 id="文本生成"><a href="#文本生成" class="headerlink" title="文本生成"></a>文本生成</h1><ul>
+<li><strong>文本生成的连贯性和多样性</strong>：传统自回归语言模型虽然在语义连贯性方面表现良好，但在生成多样化文本时速度较慢且容易陷入模式重复。扩散模型能够并行生成文本，提高生成速度，同时保持一定的语义连贯性。</li>
+</ul>
+<h1 id="时间序列补全-生成-预测：https-arxiv-org-abs-2305-00624"><a href="#时间序列补全-生成-预测：https-arxiv-org-abs-2305-00624" class="headerlink" title="时间序列补全/生成/预测：https://arxiv.org/abs/2305.00624"></a>时间序列补全/生成/预测：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2305.00624">https://arxiv.org/abs/2305.00624</a></h1><ul>
+<li><strong>时间序列生成的长期依赖关系</strong>：时间序列数据通常具有长期依赖关系，传统模型在捕捉这些关系时可能会遇到困难。扩散模型能够通过建模时间依赖关系，生成具有长期一致性的高质量时间序列数据。</li>
+</ul>
+<h3 id="模型性能方面"><a href="#模型性能方面" class="headerlink" title="模型性能方面"></a>模型性能方面</h3><ul>
+<li><strong>捕捉复杂分布能力强</strong>：许多传统的时间序列预测模型，如线性回归、ARIMA等，通常假设数据服从单一的分布，难以有效处理具有复杂分布的数据。而扩散模型通过逐步添加噪声并学习逆过程来恢复数据，能够更好地捕捉数据中的复杂分布和多模态特征，从而生成更符合实际的预测结果。</li>
+<li><strong>生成结果具有随机性</strong>：扩散模型的输出是通过采样得到的，这意味着每次运行模型都会得到略有不同的预测结果，这种结果的多样性可以被解释为模型的不确定性。在一些难以预测的情况下，模型可能会表现出更高的不确定性，为决策者提供更丰富的信息。</li>
+<li><strong>生成高质量和详细输出</strong>：扩散模型在生成数据时能够产生高质量和详细的输出，这使得它们在需要精确预测和详细数据生成的任务中具有优势。</li>
+</ul>
+<h3 id="数据特性方面"><a href="#数据特性方面" class="headerlink" title="数据特性方面"></a>数据特性方面</h3><ul>
+<li><strong>处理不规则采样数据</strong>：在一些实际应用中，时间序列数据可能存在不规则采样的情况，即数据点的时间间隔不固定。扩散模型可以将时间序列建模为连续函数的值，通过高斯随机过程等方法来注入和移除噪声，从而更好地处理不规则采样数据。</li>
+<li><strong>建模时空相关性</strong>：对于具有时空相关性的数据，如交通流量、气象数据等，扩散模型能够同时考虑时间和空间维度上的依赖关系。例如，通过图神经网络等结构，扩散模型可以有效地捕捉节点之间的空间关系以及时间上的演变，从而更准确地进行预测。</li>
+</ul>
+<h3 id="模型特性方面"><a href="#模型特性方面" class="headerlink" title="模型特性方面"></a>模型特性方面</h3><ul>
+<li><strong>灵活性和可扩展性</strong>：扩散模型具有较高的灵活性，可以通过调整噪声注入和去除的过程，以及结合不同的网络结构和训练策略，来适应不同的时间序列预测任务和数据特性。此外，扩散模型还可以与其他模型或技术结合，如与循环神经网络、注意力机制等结合，进一步提升模型的性能。</li>
+<li><strong>强大的概率基础</strong>：扩散模型基于概率理论和随机过程，具有坚实的数学基础。这使得模型在理论上更加严谨，能够更好地解释和理解模型的行为和结果。</li>
+</ul>
+<h1 id="图片生成"><a href="#图片生成" class="headerlink" title="图片生成"></a>图片生成</h1><p><strong>图像生成的多样性与质量平衡</strong>：传统生成模型在生成高质量、多样化图像时往往面临挑战。扩散模型通过逐步去噪过程，能够在生成过程中更好地捕捉数据分布的细节，从而生成高质量且多样化的图像。</p>
+<h1 id="图像编辑"><a href="#图像编辑" class="headerlink" title="图像编辑"></a>图像编辑</h1><h1 id="3D-生成：Diffusion-Models-for-3D-Generation-A-Survey-TUP-Journals-amp-Magazine-IEEE-Xplore"><a href="#3D-生成：Diffusion-Models-for-3D-Generation-A-Survey-TUP-Journals-amp-Magazine-IEEE-Xplore" class="headerlink" title="3D 生成：Diffusion Models for 3D Generation: A Survey | TUP Journals &amp; Magazine | IEEE Xplore"></a>3D 生成：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/10901942">Diffusion Models for 3D Generation: A Survey | TUP Journals &amp; Magazine | IEEE Xplore</a></h1><ul>
+<li><strong>3D生成的复杂性和计算成本</strong>：3D数据的生成通常比2D图像更复杂且计算成本更高。扩散模型可以直接在3D数据上进行训练，也可以通过2D扩散先验生成3D内容，从而降低了生成3D模型的复杂性和计算成本。</li>
+</ul>
+<h1 id="视频生成-编辑-理解：https-arxiv-org-abs-2310-10647"><a href="#视频生成-编辑-理解：https-arxiv-org-abs-2310-10647" class="headerlink" title="视频生成/编辑/理解：https://arxiv.org/abs/2310.10647"></a>视频生成/编辑/理解：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.10647">https://arxiv.org/abs/2310.10647</a></h1><ul>
+<li><strong>视频生成的时空一致性</strong>：视频生成需要考虑时间维度上的连续性和一致性。扩散模型通过在时间轴上扩展2D扩散模型，能够有效地建模跨帧依赖关系，生成具有时空一致性的视频。</li>
+</ul>
+<h1 id="医学分析"><a href="#医学分析" class="headerlink" title="医学分析"></a>医学分析</h1><ul>
+<li><strong>医学图像的标注数据稀缺性</strong>：高质量标注的医学图像数据通常难以获取，这限制了监督学习方法的应用。扩散模型能够在有限的标注数据上进行有效的训练，并生成高质量的医学图像，从而缓解数据稀缺性问题。</li>
+<li><strong>跨模态医学图像生成的复杂性</strong>：不同模态的医学图像（如MRI、CT等）之间的转换和生成需要处理复杂的非线性关系。扩散模型通过强大的生成能力，能够实现不同模态之间的图像转换，为医学图像分析提供新的工具。</li>
+</ul>
+<h1 id="语音生成"><a href="#语音生成" class="headerlink" title="语音生成"></a>语音生成</h1><ul>
+<li><strong>语音合成的自然度和多样性</strong>：传统的语音合成方法在生成自然且多样化的语音时存在局限性。扩散模型能够生成高质量的语音波形，捕捉语音的细微变化，从而提高语音合成的自然度和多样性。</li>
+<li><strong>音频生成的高维和时变特性</strong>：音频数据通常是高维且具有时变特性的，这使得传统的生成模型在处理时面临挑战。扩散模型能够有效地处理高维和时变数据，生成高质量的音频内容。</li>
+</ul>
+<h1 id="分子生成"><a href="#分子生成" class="headerlink" title="分子生成"></a>分子生成</h1><ul>
+<li><strong>分子设计的复杂性和多样性</strong>：设计具有特定功能的新分子是一个复杂且耗时的过程。扩散模型能够生成多样化的分子结构，加速药物发现过程，并通过多模态生成整合功能信息，提高分子设计的效率和效果。</li>
+<li><strong>生物网络和分子图的生成</strong>：生物网络和分子图的生成需要考虑复杂的拓扑结构和功能关系。扩散模型能够生成结构合理的生物网络和分子图，帮助研究人员更好地理解生物系统和化学物质的结构和功能。</li>
+</ul>
+<h1 id="图生成"><a href="#图生成" class="headerlink" title="图生成"></a>图生成</h1>
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/uncategorized/diffusion-survey/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;diffusion-survey&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;uncategorized&#x2F;diffusion-survey&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+        
+  <nav class="nav">
+    <a href="/uncategorized/leetcode/"><i class="iconfont iconleft"></i>算法整理</a>
+    <a href="/uncategorized/Few-Shot-Fine-Tuning/">小样本微调研究综述<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Diffusion-%E6%9C%AC%E8%BA%AB%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">Diffusion 本身存在的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%E6%85%A2"><span class="toc-text">推理速度慢</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E9%80%9F%E5%BA%A6%E6%85%A2"><span class="toc-text">训练速度慢</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90"><span class="toc-text">文本生成</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E8%A1%A5%E5%85%A8-%E7%94%9F%E6%88%90-%E9%A2%84%E6%B5%8B%EF%BC%9Ahttps-arxiv-org-abs-2305-00624"><span class="toc-text">时间序列补全&#x2F;生成&#x2F;预测：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2305.00624</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%80%A7%E8%83%BD%E6%96%B9%E9%9D%A2"><span class="toc-text">模型性能方面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%89%B9%E6%80%A7%E6%96%B9%E9%9D%A2"><span class="toc-text">数据特性方面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E7%89%B9%E6%80%A7%E6%96%B9%E9%9D%A2"><span class="toc-text">模型特性方面</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90"><span class="toc-text">图片生成</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%BC%96%E8%BE%91"><span class="toc-text">图像编辑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3D-%E7%94%9F%E6%88%90%EF%BC%9ADiffusion-Models-for-3D-Generation-A-Survey-TUP-Journals-amp-Magazine-IEEE-Xplore"><span class="toc-text">3D 生成：Diffusion Models for 3D Generation: A Survey | TUP Journals &amp; Magazine | IEEE Xplore</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90-%E7%BC%96%E8%BE%91-%E7%90%86%E8%A7%A3%EF%BC%9Ahttps-arxiv-org-abs-2310-10647"><span class="toc-text">视频生成&#x2F;编辑&#x2F;理解：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2310.10647</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%BB%E5%AD%A6%E5%88%86%E6%9E%90"><span class="toc-text">医学分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%AD%E9%9F%B3%E7%94%9F%E6%88%90"><span class="toc-text">语音生成</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%AD%90%E7%94%9F%E6%88%90"><span class="toc-text">分子生成</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%BE%E7%94%9F%E6%88%90"><span class="toc-text">图生成</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/EnableAsync "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+<script src="/lib/jquery/jquery.js"></script>
+
+
+
+  
+<script src="/lib/lazyload/lazyload.js"></script>
+
+
+
+
+  
+<script src="/lib/fancybox/fancybox.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/qrcode/qrcode.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
