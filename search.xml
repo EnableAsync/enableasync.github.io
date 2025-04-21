@@ -184,50 +184,6 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/uncategorized/diffusion-survey/</url>
-    <content><![CDATA[<p>diffusion 综述：<a href="https://arxiv.org/abs/2209.02646">https://arxiv.org/abs/2209.02646</a></p>
-<h1 id="Diffusion-本身存在的问题"><a href="#Diffusion-本身存在的问题" class="headerlink" title="Diffusion 本身存在的问题"></a>Diffusion 本身存在的问题</h1><h1 id="推理速度慢"><a href="#推理速度慢" class="headerlink" title="推理速度慢"></a>推理速度慢</h1><h1 id="训练速度慢"><a href="#训练速度慢" class="headerlink" title="训练速度慢"></a>训练速度慢</h1><h1 id="文本生成"><a href="#文本生成" class="headerlink" title="文本生成"></a>文本生成</h1><ul>
-<li><strong>文本生成的连贯性和多样性</strong>：传统自回归语言模型虽然在语义连贯性方面表现良好，但在生成多样化文本时速度较慢且容易陷入模式重复。扩散模型能够并行生成文本，提高生成速度，同时保持一定的语义连贯性。</li>
-</ul>
-<h1 id="时间序列补全-生成-预测：https-arxiv-org-abs-2305-00624"><a href="#时间序列补全-生成-预测：https-arxiv-org-abs-2305-00624" class="headerlink" title="时间序列补全/生成/预测：https://arxiv.org/abs/2305.00624"></a>时间序列补全/生成/预测：<a href="https://arxiv.org/abs/2305.00624">https://arxiv.org/abs/2305.00624</a></h1><ul>
-<li><strong>时间序列生成的长期依赖关系</strong>：时间序列数据通常具有长期依赖关系，传统模型在捕捉这些关系时可能会遇到困难。扩散模型能够通过建模时间依赖关系，生成具有长期一致性的高质量时间序列数据。</li>
-</ul>
-<h3 id="模型性能方面"><a href="#模型性能方面" class="headerlink" title="模型性能方面"></a>模型性能方面</h3><ul>
-<li><strong>捕捉复杂分布能力强</strong>：许多传统的时间序列预测模型，如线性回归、ARIMA等，通常假设数据服从单一的分布，难以有效处理具有复杂分布的数据。而扩散模型通过逐步添加噪声并学习逆过程来恢复数据，能够更好地捕捉数据中的复杂分布和多模态特征，从而生成更符合实际的预测结果。</li>
-<li><strong>生成结果具有随机性</strong>：扩散模型的输出是通过采样得到的，这意味着每次运行模型都会得到略有不同的预测结果，这种结果的多样性可以被解释为模型的不确定性。在一些难以预测的情况下，模型可能会表现出更高的不确定性，为决策者提供更丰富的信息。</li>
-<li><strong>生成高质量和详细输出</strong>：扩散模型在生成数据时能够产生高质量和详细的输出，这使得它们在需要精确预测和详细数据生成的任务中具有优势。</li>
-</ul>
-<h3 id="数据特性方面"><a href="#数据特性方面" class="headerlink" title="数据特性方面"></a>数据特性方面</h3><ul>
-<li><strong>处理不规则采样数据</strong>：在一些实际应用中，时间序列数据可能存在不规则采样的情况，即数据点的时间间隔不固定。扩散模型可以将时间序列建模为连续函数的值，通过高斯随机过程等方法来注入和移除噪声，从而更好地处理不规则采样数据。</li>
-<li><strong>建模时空相关性</strong>：对于具有时空相关性的数据，如交通流量、气象数据等，扩散模型能够同时考虑时间和空间维度上的依赖关系。例如，通过图神经网络等结构，扩散模型可以有效地捕捉节点之间的空间关系以及时间上的演变，从而更准确地进行预测。</li>
-</ul>
-<h3 id="模型特性方面"><a href="#模型特性方面" class="headerlink" title="模型特性方面"></a>模型特性方面</h3><ul>
-<li><strong>灵活性和可扩展性</strong>：扩散模型具有较高的灵活性，可以通过调整噪声注入和去除的过程，以及结合不同的网络结构和训练策略，来适应不同的时间序列预测任务和数据特性。此外，扩散模型还可以与其他模型或技术结合，如与循环神经网络、注意力机制等结合，进一步提升模型的性能。</li>
-<li><strong>强大的概率基础</strong>：扩散模型基于概率理论和随机过程，具有坚实的数学基础。这使得模型在理论上更加严谨，能够更好地解释和理解模型的行为和结果。</li>
-</ul>
-<h1 id="图片生成"><a href="#图片生成" class="headerlink" title="图片生成"></a>图片生成</h1><p><strong>图像生成的多样性与质量平衡</strong>：传统生成模型在生成高质量、多样化图像时往往面临挑战。扩散模型通过逐步去噪过程，能够在生成过程中更好地捕捉数据分布的细节，从而生成高质量且多样化的图像。</p>
-<h1 id="图像编辑"><a href="#图像编辑" class="headerlink" title="图像编辑"></a>图像编辑</h1><h1 id="3D-生成：Diffusion-Models-for-3D-Generation-A-Survey-TUP-Journals-amp-Magazine-IEEE-Xplore"><a href="#3D-生成：Diffusion-Models-for-3D-Generation-A-Survey-TUP-Journals-amp-Magazine-IEEE-Xplore" class="headerlink" title="3D 生成：Diffusion Models for 3D Generation: A Survey | TUP Journals &amp; Magazine | IEEE Xplore"></a>3D 生成：<a href="https://ieeexplore.ieee.org/document/10901942">Diffusion Models for 3D Generation: A Survey | TUP Journals &amp; Magazine | IEEE Xplore</a></h1><ul>
-<li><strong>3D生成的复杂性和计算成本</strong>：3D数据的生成通常比2D图像更复杂且计算成本更高。扩散模型可以直接在3D数据上进行训练，也可以通过2D扩散先验生成3D内容，从而降低了生成3D模型的复杂性和计算成本。</li>
-</ul>
-<h1 id="视频生成-编辑-理解：https-arxiv-org-abs-2310-10647"><a href="#视频生成-编辑-理解：https-arxiv-org-abs-2310-10647" class="headerlink" title="视频生成/编辑/理解：https://arxiv.org/abs/2310.10647"></a>视频生成/编辑/理解：<a href="https://arxiv.org/abs/2310.10647">https://arxiv.org/abs/2310.10647</a></h1><ul>
-<li><strong>视频生成的时空一致性</strong>：视频生成需要考虑时间维度上的连续性和一致性。扩散模型通过在时间轴上扩展2D扩散模型，能够有效地建模跨帧依赖关系，生成具有时空一致性的视频。</li>
-</ul>
-<h1 id="医学分析"><a href="#医学分析" class="headerlink" title="医学分析"></a>医学分析</h1><ul>
-<li><strong>医学图像的标注数据稀缺性</strong>：高质量标注的医学图像数据通常难以获取，这限制了监督学习方法的应用。扩散模型能够在有限的标注数据上进行有效的训练，并生成高质量的医学图像，从而缓解数据稀缺性问题。</li>
-<li><strong>跨模态医学图像生成的复杂性</strong>：不同模态的医学图像（如MRI、CT等）之间的转换和生成需要处理复杂的非线性关系。扩散模型通过强大的生成能力，能够实现不同模态之间的图像转换，为医学图像分析提供新的工具。</li>
-</ul>
-<h1 id="语音生成"><a href="#语音生成" class="headerlink" title="语音生成"></a>语音生成</h1><ul>
-<li><strong>语音合成的自然度和多样性</strong>：传统的语音合成方法在生成自然且多样化的语音时存在局限性。扩散模型能够生成高质量的语音波形，捕捉语音的细微变化，从而提高语音合成的自然度和多样性。</li>
-<li><strong>音频生成的高维和时变特性</strong>：音频数据通常是高维且具有时变特性的，这使得传统的生成模型在处理时面临挑战。扩散模型能够有效地处理高维和时变数据，生成高质量的音频内容。</li>
-</ul>
-<h1 id="分子生成"><a href="#分子生成" class="headerlink" title="分子生成"></a>分子生成</h1><ul>
-<li><strong>分子设计的复杂性和多样性</strong>：设计具有特定功能的新分子是一个复杂且耗时的过程。扩散模型能够生成多样化的分子结构，加速药物发现过程，并通过多模态生成整合功能信息，提高分子设计的效率和效果。</li>
-<li><strong>生物网络和分子图的生成</strong>：生物网络和分子图的生成需要考虑复杂的拓扑结构和功能关系。扩散模型能够生成结构合理的生物网络和分子图，帮助研究人员更好地理解生物系统和化学物质的结构和功能。</li>
-</ul>
-<h1 id="图生成"><a href="#图生成" class="headerlink" title="图生成"></a>图生成</h1>]]></content>
-  </entry>
-  <entry>
     <title>Docker 镜像都失效之后的处理</title>
     <url>/linux/docker-proxy/</url>
     <content><![CDATA[<h1 id="Docker-镜像都失效之后的处理"><a href="#Docker-镜像都失效之后的处理" class="headerlink" title="Docker 镜像都失效之后的处理"></a>Docker 镜像都失效之后的处理</h1><p>在 2024 年，所有的 docker 镜像已经失效了，想要继续进行 <code>docker pull</code> 就需要自建镜像，或者使用代理进行 pull，这里记录一下具体的处理方式。</p>
@@ -869,6 +825,17 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
       </tags>
   </entry>
   <entry>
+    <title>tensorflow 中的一些坑</title>
+    <url>/uncategorized/tensorflow/</url>
+    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
+<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
+<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ai</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>远程服务器的 Git 使用本地的密钥——ssh-agent</title>
     <url>/linux/ssh-agent/</url>
     <content><![CDATA[<h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>有的时候我们在远程服务器上开发，但是远程服务器有多个人使用，我们并不想把自己的私钥放到服务器上，但是又想通过私钥连接到 Github 等远程仓库，那么该怎么做呢？</p>
@@ -891,17 +858,6 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
       <categories>
         <category>linux</category>
       </categories>
-  </entry>
-  <entry>
-    <title>tensorflow 中的一些坑</title>
-    <url>/uncategorized/tensorflow/</url>
-    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
-<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
-<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>ai</tag>
-      </tags>
   </entry>
   <entry>
     <title>一些杂记</title>
