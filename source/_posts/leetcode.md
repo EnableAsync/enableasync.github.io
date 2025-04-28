@@ -686,6 +686,79 @@ class Solution {
 
 
 
+## 统计得分小于 K 的子数组数目
+
+滑动窗口使用前提：
+
+- 连续子数组/子串。
+- 有单调性。本题元素均为正数，所以子数组越长，分数越高；子数组越短，分数越低。这意味着只要某个子数组的分数小于 k，在该子数组内的更短的子数组，分数也小于 k。
+
+
+
+为什么用滑动窗口的复杂度为 O（n）：虽然用了两个循环，但是内层循环的总循环次数不超过 n，所以总的时间复杂度为 O(n)。
+
+
+
+```java
+class Solution {
+    long[] sum;
+    public long countSubarrays(int[] nums, long k) {
+        int n = nums.length;
+        sum = new long[n + 1];
+        long ans = 0;
+        for (int i = 1; i <= n; i++) {
+            sum[i] = sum[i - 1] + nums[i - 1];
+        }
+        int left = 0;
+        for (int right = 1; right <= n; right++) {
+            while (left < right && !check(left, right, k)) {
+                left++;
+            }
+            ans += right - left;
+        }
+        return ans;
+    }
+
+    private boolean check(int left, int right, long k) {
+        return (right - left) * (sum[right] - sum[left]) < k;
+    }
+}
+```
+
+
+
+### 小优化
+
+可以不用前缀和，把前缀和动态维护。
+
+```java
+class Solution {
+    long sum = 0;
+    public long countSubarrays(int[] nums, long k) {
+        int n = nums.length;
+        long ans = 0;
+        int left = 0;
+        for (int right = 1; right <= n; right++) {
+            sum += nums[right - 1];
+            while (left < right && !check(left, right, sum, k)) {
+                sum -= nums[left];
+                left++;
+            }
+            ans += right - left;
+        }
+        return ans;
+    }
+
+    private boolean check(int left, int right, long sum, long k) {
+        return (right - left) * sum < k;
+    }
+}
+```
+
+
+
+
+
 
 
 # 区间
