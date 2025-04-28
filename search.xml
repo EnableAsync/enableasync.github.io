@@ -825,17 +825,6 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
       </tags>
   </entry>
   <entry>
-    <title>tensorflow 中的一些坑</title>
-    <url>/uncategorized/tensorflow/</url>
-    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
-<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
-<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>ai</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>远程服务器的 Git 使用本地的密钥——ssh-agent</title>
     <url>/linux/ssh-agent/</url>
     <content><![CDATA[<h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>有的时候我们在远程服务器上开发，但是远程服务器有多个人使用，我们并不想把自己的私钥放到服务器上，但是又想通过私钥连接到 Github 等远程仓库，那么该怎么做呢？</p>
@@ -858,6 +847,17 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
       <categories>
         <category>linux</category>
       </categories>
+  </entry>
+  <entry>
+    <title>tensorflow 中的一些坑</title>
+    <url>/uncategorized/tensorflow/</url>
+    <content><![CDATA[<h1 id="Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以"><a href="#Tensorflow-安装之后无法使用-GPU，但是-Pytorch-可以" class="headerlink" title="Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以"></a>Tensorflow 安装之后无法使用 GPU，但是 Pytorch 可以</h1><p>有错误提示：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs pain">tensorflow/core/common_runtime/gpu/gpu_device.cc:2251] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.<br></code></pre></td></tr></table></figure></p>
+<p>原因是 Tensorflow 无法使用 cudnn 的库，找个安装了 Pytorch 的环境，导出其中的 cudnn 路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDNN_PATH=~/miniconda3/envs/sd/lib/python3.12/site-packages/nvidia/cudnn<br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$CUDNN_PATH</span>/lib&quot;</span>:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br></code></pre></td></tr></table></figure></p>
+<p>之后测试通过：<br><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf<br><span class="hljs-built_in">print</span>(tf.test.is_gpu_available())<br></code></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ai</tag>
+      </tags>
   </entry>
   <entry>
     <title>一些杂记</title>
@@ -941,46 +941,6 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
 ]]></content>
   </entry>
   <entry>
-    <title>阿德勒心理学讲义</title>
-    <url>/uncategorized/%E9%98%BF%E5%BE%B7%E5%8B%92%E5%BF%83%E7%90%86%E5%AD%A6%E8%AE%B2%E4%B9%89/</url>
-    <content><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本文是对《阿德勒心理学讲义》的总结和记录</p>
-<p><strong>子曰：“仁远乎哉？我欲仁，斯仁至矣。”</strong></p>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>阿尔弗雷德·阿德勒（Adler Alfred,1870-1937），奥地利心理学家，个体心理学派创始人，人本主义心理学先驱，现代自我心理学之父。阿德勒认为人们为得到满足和实现自我而一生努力奋斗，以补偿产生自童年时期的强烈自卑感。大部分人可以满意地实现补偿，而那些没有成功实现补偿的则发展为神经症。他与弗洛伊德和荣格并称为20世纪精神分析学派三大巨擘。</p>
-<p>阿德勒出生在奥地利维也纳郊区的一个犹太粮商家庭，家境富裕。他在家中六个孩子中排行老三。3岁时，睡在身旁的弟弟去世，他幼年又有两次被车撞的经历，使他十分畏惧死亡。5岁时得了肺炎，痊愈后他决定当医生。</p>
-<p>1895年，阿德勒进入维也纳大学学习，取得医学博士学位，成为一名眼科医师，他特别注意身体器官的自卑，认为它是驱使个人采取行动的真正动力。后转向精神病学研究，曾追随弗洛伊德探讨神经症问题。</p>
-<p>1896年4月到9月，他应征服役，在奥地利军队的一所医院工作。1897年到1898年，他又回到维也纳大学深造。期间，他和来自俄国的留学生罗莎（Raissa Timofeyewna Epstein）结婚。他们生育四个孩子，三女一男，其中亚历山德拉（Alexandra）和库尔特（Kurt）后来成为阿德勒学派的心理学家。</p>
-<p>1899年至1900年，他与弗洛伊德在同一个城市行医，两人结识并成为好友。不久，他又和威廉·斯特克尔一起从事《心理分析汇编》的编辑工作。1902年，阿德勒与精神分析创始人弗洛伊德成为当时精神分析学派的核心成员。他是第一个虔诚地对弗洛伊德理论产生兴趣的人，认识到其理论打开了精神病学和心理学一个新发展阶段。</p>
-<p>1908年在奥地利萨尔茨堡召开的第一次国际心理分析会议上，阿德勒发表了关于“好斗的冲动”的报告。1910年任维也纳精神分析学会主席。1911年因突出强调社会因素的作用，拒绝接受弗洛伊德将性作为人类行为的重要动机的观点，公开反对弗洛伊德的泛性论而两人关系破裂，阿德勒创立个体心理学（Individual Psychology），另建自由精神分析研究会。1912年改称个体心理学会，成为一个颇有影响的学派。1914年他创办《国际个体心理学杂志》。1920年后他任教于维也纳教育学院，并在学校系统中组织儿童指导临床活动，成立儿童指导中心。1922年至1930年期间，他主持召开了五次国际个体心理学会议。1926年任美国哥伦比亚大学客座教授。1932年他到长岛医学院主持美国医学心理学的第一个讲座。1934年定居纽约。1937年赴苏格兰亚伯丁做讲演旅行时病逝。</p>
-<p>阿德勒的学说以“自卑感”与“创造性自我”为中心，并强调“社会意识”。主要概念是创造性自我、生活风格、假想的目的论、追求优越、自卑感、补偿和社会兴趣。他继承了弗洛伊德的精神分析理念，但其基本观点与之大相径庭。</p>
-<p>个体心理学认为人的行为是由社会力量决定的。阿德勒认为人天生就是一种社会存在物，在社会生活中，人们进行交往，相互依赖，相互合作；而弗洛伊德则强调人的生物学本能，人的成长过程是本能的自然展开，其行为是先天决定的。</p>
-<p>个体心理学视人格为统一的整体，强调其不可分割。阿德勒认为每个人的人格都是内在各种动机、特质、兴趣、价值所构成的统一整体；弗洛伊德把人格分为本我、自我、超我这些不同的部分，各部分各司其职。</p>
-<p>阿德勒认为人是一个有意识的存在物。通常，人能意识到行为的动机，意识与无意识并非绝对对立。对某些事物，如果我们意会到了，那么就是意识的；如果失于意会，那么就是无意识的。意识的行为是人类主要的行为。</p>
-<p>阿德勒强调未来对人的行为的影响。他认为，人既然是有意识的，就能意识到未来的种种条件，制定某种计划用以指导自己的行为。阿德勒也承认过去的经验（特别是原始的经验）对人的行为有影响，但他认为不是决定性的。</p>
-<p>个体心理学认为性只是人类行为的动力因素之一。阿德勒并不完全否认性的作用，但他认为性的作用在决定人的行为方面只扮演一个极不重要的角色。他认为，真正对人的行为起作用的还是人的社会需要。</p>
-<p>阿德勒个体心理学思想主要概念包括以下方面：</p>
-<p>一是追求优越。阿德勒认为，追求优越是人们行为的根本动力，也是阿德勒个体心理学的核心。他认为人人都有一种向往权力意志这种天生的内驱力，力图做一个没有缺陷的、完善的人。因此羡慕别人、胜过别人、征服别人等都是这种追求优越的人格体现。阿德勒区分了追求优越的两种不同方法：一种是只追求个人优越，很少关心他人，其行为往往受过度夸张的自卑感驱使。另一种是追求一种优越、完善的社会，使每个人都获得益处。</p>
-<p>二是自卑与补偿。阿德勒把自卑与补偿看作是追求优越的动力根源。他指出，自卑与补偿是与生俱来的。因为人在婴幼儿时期，在生理、心理和社会三方面都处于劣势，需要依赖成年人才能生存，他们由此必然产生自卑和补偿心理。当然，这种自卑与补偿心理在大多数情况下是正常的健康的反应，可以驱使人们实现自己的潜能。但是，如果不能成功地进行补偿，就会产生自卑情结，导致心理疾病的发生。</p>
-<p>三是生活风格。阿德勒把个人追求优越的目标的生活方式称为生活风格。阿德勒认为儿童到5岁左右便形成了生活风格。其家庭关系、生活条件和经验决定了他今后一生的生活特点。他提出三种研究途径：出生顺序、早期记忆和梦的分析。</p>
-<p>他指出，在家庭中，父母对子女教养的方式或给予的关注会根据子女的出生顺序而变化，同胞兄弟姐妹之间也常常因要争取父母的爱而相互竞争。因此，长子的性格特征是聪明、有成就需要但害怕竞争；次子喜欢竞争、有强烈的反抗性；最小的孩子有雄心但懒散、难以实现抱负。独生子女的性格类似于长子，因为其竞争对手往往来自学校的同学。</p>
-<p>阿德勒根据人的记忆具有主观性、创造性和想象性的特点，认为个体对于自己早年生活的记忆往往为人们了解其独特的个性提供了线索。阿德勒认为意识和潜意识共同构成一个统一的整体，因此，梦能够显示一个人的生活风格。</p>
-<p>四是创造性自我。阿德勒认为，每个人在形成自己的生活风格时并不是消极被动的，人是有意识的个体，可以选择自己的生活道路，参与决定自己的命运。创造性自我能够使我们成为自己生活的主人，决定了人的心理健康与否、社会兴趣正确与否。影响人的成长有三个要素，即遗传、环境和创造能力。其中创造能力起重要作用，它与其他两个要素结合起来，才能克服人生障碍。阿德勒反对弗洛伊德的宿命论观点，他认为人从遗传与早期经验中获得的只是一些“砖块”。它追求经验，甚至创造经验以帮助个人完成他独特的生活作风。</p>
-<p>五是社会兴趣。社会兴趣是阿德勒个体心理学中的基本概念之一，是指对所有社会成员的一种情感，或指人具有一种为他人、为社会的先天思想准备和自然倾向。他认为人是社会性生物，人的本性具有社会兴趣的潜能。社会兴趣不仅是一种涉及与别人交往时的情感，它也是一种对生活的评价态度和认同能力。阿德勒还认为有无社会兴趣是衡量个体是否健康的主要标准，社会兴趣的水平决定一个人生活意义的大小和对社会贡献的程度。阿德勒认为社会兴趣是人类本性的一部分，植根于每个人的潜能之中，因此，必须先发展起社会兴趣，才能形成有用的生活风格。</p>
-<p>阿德勒指出，可以通过人们的职业选择、参与社会活动和爱情婚姻这三大任务的解决情况来衡量其社会兴趣的发展状况。三大任务的顺利解决反映了个体具有丰富的社会兴趣，反之则是缺乏社会兴趣。缺乏社会兴趣的人会产生两种错误的生活风格：一种是优越情结；另一种是自卑情结。他还根据人们所具有的社会兴趣表现的特点，把人划分为四种类型：一是统治——支配型；二是索取——依赖型；三是回避型；四是社会利益型。他认为，前三种类型的人的社会兴趣和生活风格都是错误的，只有第四种类型的人具有正确的社会兴趣和健康的生活风格。</p>
-<p>1927年，《阿德勒心理学讲义》（又译作《生活的科学》，The Science of Living）在英国首次出版，书中包括了个体心理学的主要原则。本书尤其有趣的是阿德勒的研究方法，他用大量的例子来说明他提出的理论观点。贯穿全书的主线是具有社会需要的理解和我们的意愿，有效地尽我们所能，为公共福利做出贡献的重要性。读者还会发现，常识在阿德勒的思维中起着重要作用。事实上，有一个故事，在一次心理学讲座上，有人评论他所说的一切都是些常识。“常识有什么不好？”他回答说。</p>
-<p>阿德勒致力于倡导与人直接相关的心理学，即生活的心理学，他教给我们生活的“常识”，帮助我们了解自己的人生目标，从而活出生命的意义。人与生俱来就有追求成功和幸福的意愿，但并非总能如愿以偿。阿德勒认为，人如果丧失了具有社会价值的人生目标，就会产生自卑情结，从而陷入无益的生活面向。</p>
-<p>阿德勒首创“自卑情结”一词，首度将“补偿作用”运用于心理学，开创了心理自助运动的先河——帮助人们与自卑感共存共荣，拥有有益的人生目标，进而活出生命的意义。</p>
-<p>阿德勒指出：“每个人都有自卑感。”他所创立的个体心理学，紧扣“自卑感的问题与力量”发展，形成一套阿德勒的不完美生活哲学。自卑感是人类努力与成就的基础，却也是一切心理问题的根源。因此，阿德勒深入分析自卑感，揭开其副产品——“自卑情结”与“优越情结”对人们的戕害，并提出过好生活该有的“常识”“社会兴趣”与“社会适应能力”，期盼能帮助人们与自卑感共存共荣，消除情结的障碍，设定有用与健全的人生目标，进而活出生命的意义。</p>
-<p>阿德勒主张，决定我们生活形态的“人生风格”（the style of life）在四五岁时就由“人生原型”决定。因此，对于孩童的教育要从小开始，而且方向必须正确。童年时期如果出了差错（如父母过于溺爱），未来就得付出很大的代价（如犯罪）。而对于行为出现偏差的人，最好的方法就是减低他们的自卑感（但无须完全根除，因为自卑感也是让人向上的力量），让他们发展出对人生有用的“社会兴趣”（social interest），进而导正他们的人生目标。</p>
-<p>《阿德勒心理学讲义》以社会兴趣为核心，从原型、人格、童年、家庭、梦境、教育、人际关系、爱情与婚姻等人生百景出发，论道说理，揭示重点，并用形形色色的临床故事，来阐释、佐证，非常具有可读性和教育意义。</p>
-<p>通过本书，你将能正确地认识自己，拥抱人人都有的自卑感，并将其化为养分，萌生勇气，面对一切挑战与逆境。</p>
-<p>人，因不完美而奋发向上，而人生会因不完美而更趋完美。</p>
-<p>阿德勒说：人，做得到任何事！他不在乎过去，不认同宿命论与天注定，主张事在人为，并如此相信：唯有你自己，能决定你人生的样貌；也唯有你自己，才能改写人生的剧本。阿德勒用一生观察并剖析“何而为人”，终得此结论。</p>
-<h1 id="生活的科学-The-Science-of-Living"><a href="#生活的科学-The-Science-of-Living" class="headerlink" title="生活的科学-The Science of Living"></a>生活的科学-The Science of Living</h1><p>以阿德勒来说，他对心理学的兴趣源于行医。行医让我明了目的论（又称目标论）的观点。如果想了解心理事实，目的论是不可或缺的</p>
-<p>在医学界，所有的器官都有明确的目标，并朝着该目标努力发展，等发展到一定的形态，就代表这些器官已发育成熟。此外，当器官出现缺陷时，自然会采取特别的方式来克服缺憾，或者改由其他器官承担缺损器官的功能。<strong>生命总会设法延续下去，而且在面对外来阻碍时，生命的力量绝不会还没挣扎就先高举白旗。</strong></p>
-<p>人类心理层面的活动也和生命的功能面向类似。<strong>每一个人心里都有一个类似目标或理想的概念，一心想要超越现状，并通过制订出具体的未来方向，来克服目前的缺憾和困难。通过这个具体目标，人们得以想象未来成功的样貌，进而感受并认定自己必能超越当下的困境。要是感受不到目标，个人的所作所为只是行礼如仪，毫无意义可言。</strong></p>
-]]></content>
-  </entry>
-  <entry>
     <title>非暴力沟通</title>
     <url>/uncategorized/%E9%9D%9E%E6%9A%B4%E5%8A%9B%E6%B2%9F%E9%80%9A/</url>
     <content><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本文是对《非暴力沟通-两性篇》的总结和记录</p>
@@ -1030,6 +990,46 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
 <h1 id="非暴力沟通对“爱”是如何理解的"><a href="#非暴力沟通对“爱”是如何理解的" class="headerlink" title="非暴力沟通对“爱”是如何理解的"></a>非暴力沟通对“爱”是如何理解的</h1><p>马歇尔：以上阐述可能会让你明白，非暴力沟通实际上来源于我在理解爱、表达爱和践行爱方面所做的尝试。我所得出的结论是，爱不只是我们所感受到的，还是我们所表达的、所做的和所拥有的。同时，爱还是我们能够给予别人的：我们通过某种方式奉献自己的时间和精力。任何时候，当你真诚地展示自己，敞开心扉，别无所求时，这本身就是一种恩赐。不指责，不批评，也不惩罚，只是告诉你自己：“这就是我，这就是我想要的，这就是我脆弱的地方。”而在我看来，这种给予就是爱的表现。</p>
 <p>我们对他人的倾听是我们奉献自己的另外一种方式。带着同理心去倾听他人，与他们的内心联系在一起，不做任何评判，这就是一份礼物。当我们尝试去倾听别人的心声和他们想要的东西时，这也是一种礼物。所以，非暴力沟通只是我所理解的爱的一种表现。这么看来，它就类似于“爱人如己”和“不论断人，就不受论断”的观念。</p>
 <p>当我们以这种方式与人交流时，不可思议的事情就会发生。这种美、这种力量将我们与一种神奇的能量联系在了一起。所以，非暴力沟通能够帮助我将这种美丽而神圣的能量长留在心中，让我能够通过这种能量与他人建立联系，而这就是我所经历过的最接近于“爱”的东西。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>阿德勒心理学讲义</title>
+    <url>/uncategorized/%E9%98%BF%E5%BE%B7%E5%8B%92%E5%BF%83%E7%90%86%E5%AD%A6%E8%AE%B2%E4%B9%89/</url>
+    <content><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本文是对《阿德勒心理学讲义》的总结和记录</p>
+<p><strong>子曰：“仁远乎哉？我欲仁，斯仁至矣。”</strong></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>阿尔弗雷德·阿德勒（Adler Alfred,1870-1937），奥地利心理学家，个体心理学派创始人，人本主义心理学先驱，现代自我心理学之父。阿德勒认为人们为得到满足和实现自我而一生努力奋斗，以补偿产生自童年时期的强烈自卑感。大部分人可以满意地实现补偿，而那些没有成功实现补偿的则发展为神经症。他与弗洛伊德和荣格并称为20世纪精神分析学派三大巨擘。</p>
+<p>阿德勒出生在奥地利维也纳郊区的一个犹太粮商家庭，家境富裕。他在家中六个孩子中排行老三。3岁时，睡在身旁的弟弟去世，他幼年又有两次被车撞的经历，使他十分畏惧死亡。5岁时得了肺炎，痊愈后他决定当医生。</p>
+<p>1895年，阿德勒进入维也纳大学学习，取得医学博士学位，成为一名眼科医师，他特别注意身体器官的自卑，认为它是驱使个人采取行动的真正动力。后转向精神病学研究，曾追随弗洛伊德探讨神经症问题。</p>
+<p>1896年4月到9月，他应征服役，在奥地利军队的一所医院工作。1897年到1898年，他又回到维也纳大学深造。期间，他和来自俄国的留学生罗莎（Raissa Timofeyewna Epstein）结婚。他们生育四个孩子，三女一男，其中亚历山德拉（Alexandra）和库尔特（Kurt）后来成为阿德勒学派的心理学家。</p>
+<p>1899年至1900年，他与弗洛伊德在同一个城市行医，两人结识并成为好友。不久，他又和威廉·斯特克尔一起从事《心理分析汇编》的编辑工作。1902年，阿德勒与精神分析创始人弗洛伊德成为当时精神分析学派的核心成员。他是第一个虔诚地对弗洛伊德理论产生兴趣的人，认识到其理论打开了精神病学和心理学一个新发展阶段。</p>
+<p>1908年在奥地利萨尔茨堡召开的第一次国际心理分析会议上，阿德勒发表了关于“好斗的冲动”的报告。1910年任维也纳精神分析学会主席。1911年因突出强调社会因素的作用，拒绝接受弗洛伊德将性作为人类行为的重要动机的观点，公开反对弗洛伊德的泛性论而两人关系破裂，阿德勒创立个体心理学（Individual Psychology），另建自由精神分析研究会。1912年改称个体心理学会，成为一个颇有影响的学派。1914年他创办《国际个体心理学杂志》。1920年后他任教于维也纳教育学院，并在学校系统中组织儿童指导临床活动，成立儿童指导中心。1922年至1930年期间，他主持召开了五次国际个体心理学会议。1926年任美国哥伦比亚大学客座教授。1932年他到长岛医学院主持美国医学心理学的第一个讲座。1934年定居纽约。1937年赴苏格兰亚伯丁做讲演旅行时病逝。</p>
+<p>阿德勒的学说以“自卑感”与“创造性自我”为中心，并强调“社会意识”。主要概念是创造性自我、生活风格、假想的目的论、追求优越、自卑感、补偿和社会兴趣。他继承了弗洛伊德的精神分析理念，但其基本观点与之大相径庭。</p>
+<p>个体心理学认为人的行为是由社会力量决定的。阿德勒认为人天生就是一种社会存在物，在社会生活中，人们进行交往，相互依赖，相互合作；而弗洛伊德则强调人的生物学本能，人的成长过程是本能的自然展开，其行为是先天决定的。</p>
+<p>个体心理学视人格为统一的整体，强调其不可分割。阿德勒认为每个人的人格都是内在各种动机、特质、兴趣、价值所构成的统一整体；弗洛伊德把人格分为本我、自我、超我这些不同的部分，各部分各司其职。</p>
+<p>阿德勒认为人是一个有意识的存在物。通常，人能意识到行为的动机，意识与无意识并非绝对对立。对某些事物，如果我们意会到了，那么就是意识的；如果失于意会，那么就是无意识的。意识的行为是人类主要的行为。</p>
+<p>阿德勒强调未来对人的行为的影响。他认为，人既然是有意识的，就能意识到未来的种种条件，制定某种计划用以指导自己的行为。阿德勒也承认过去的经验（特别是原始的经验）对人的行为有影响，但他认为不是决定性的。</p>
+<p>个体心理学认为性只是人类行为的动力因素之一。阿德勒并不完全否认性的作用，但他认为性的作用在决定人的行为方面只扮演一个极不重要的角色。他认为，真正对人的行为起作用的还是人的社会需要。</p>
+<p>阿德勒个体心理学思想主要概念包括以下方面：</p>
+<p>一是追求优越。阿德勒认为，追求优越是人们行为的根本动力，也是阿德勒个体心理学的核心。他认为人人都有一种向往权力意志这种天生的内驱力，力图做一个没有缺陷的、完善的人。因此羡慕别人、胜过别人、征服别人等都是这种追求优越的人格体现。阿德勒区分了追求优越的两种不同方法：一种是只追求个人优越，很少关心他人，其行为往往受过度夸张的自卑感驱使。另一种是追求一种优越、完善的社会，使每个人都获得益处。</p>
+<p>二是自卑与补偿。阿德勒把自卑与补偿看作是追求优越的动力根源。他指出，自卑与补偿是与生俱来的。因为人在婴幼儿时期，在生理、心理和社会三方面都处于劣势，需要依赖成年人才能生存，他们由此必然产生自卑和补偿心理。当然，这种自卑与补偿心理在大多数情况下是正常的健康的反应，可以驱使人们实现自己的潜能。但是，如果不能成功地进行补偿，就会产生自卑情结，导致心理疾病的发生。</p>
+<p>三是生活风格。阿德勒把个人追求优越的目标的生活方式称为生活风格。阿德勒认为儿童到5岁左右便形成了生活风格。其家庭关系、生活条件和经验决定了他今后一生的生活特点。他提出三种研究途径：出生顺序、早期记忆和梦的分析。</p>
+<p>他指出，在家庭中，父母对子女教养的方式或给予的关注会根据子女的出生顺序而变化，同胞兄弟姐妹之间也常常因要争取父母的爱而相互竞争。因此，长子的性格特征是聪明、有成就需要但害怕竞争；次子喜欢竞争、有强烈的反抗性；最小的孩子有雄心但懒散、难以实现抱负。独生子女的性格类似于长子，因为其竞争对手往往来自学校的同学。</p>
+<p>阿德勒根据人的记忆具有主观性、创造性和想象性的特点，认为个体对于自己早年生活的记忆往往为人们了解其独特的个性提供了线索。阿德勒认为意识和潜意识共同构成一个统一的整体，因此，梦能够显示一个人的生活风格。</p>
+<p>四是创造性自我。阿德勒认为，每个人在形成自己的生活风格时并不是消极被动的，人是有意识的个体，可以选择自己的生活道路，参与决定自己的命运。创造性自我能够使我们成为自己生活的主人，决定了人的心理健康与否、社会兴趣正确与否。影响人的成长有三个要素，即遗传、环境和创造能力。其中创造能力起重要作用，它与其他两个要素结合起来，才能克服人生障碍。阿德勒反对弗洛伊德的宿命论观点，他认为人从遗传与早期经验中获得的只是一些“砖块”。它追求经验，甚至创造经验以帮助个人完成他独特的生活作风。</p>
+<p>五是社会兴趣。社会兴趣是阿德勒个体心理学中的基本概念之一，是指对所有社会成员的一种情感，或指人具有一种为他人、为社会的先天思想准备和自然倾向。他认为人是社会性生物，人的本性具有社会兴趣的潜能。社会兴趣不仅是一种涉及与别人交往时的情感，它也是一种对生活的评价态度和认同能力。阿德勒还认为有无社会兴趣是衡量个体是否健康的主要标准，社会兴趣的水平决定一个人生活意义的大小和对社会贡献的程度。阿德勒认为社会兴趣是人类本性的一部分，植根于每个人的潜能之中，因此，必须先发展起社会兴趣，才能形成有用的生活风格。</p>
+<p>阿德勒指出，可以通过人们的职业选择、参与社会活动和爱情婚姻这三大任务的解决情况来衡量其社会兴趣的发展状况。三大任务的顺利解决反映了个体具有丰富的社会兴趣，反之则是缺乏社会兴趣。缺乏社会兴趣的人会产生两种错误的生活风格：一种是优越情结；另一种是自卑情结。他还根据人们所具有的社会兴趣表现的特点，把人划分为四种类型：一是统治——支配型；二是索取——依赖型；三是回避型；四是社会利益型。他认为，前三种类型的人的社会兴趣和生活风格都是错误的，只有第四种类型的人具有正确的社会兴趣和健康的生活风格。</p>
+<p>1927年，《阿德勒心理学讲义》（又译作《生活的科学》，The Science of Living）在英国首次出版，书中包括了个体心理学的主要原则。本书尤其有趣的是阿德勒的研究方法，他用大量的例子来说明他提出的理论观点。贯穿全书的主线是具有社会需要的理解和我们的意愿，有效地尽我们所能，为公共福利做出贡献的重要性。读者还会发现，常识在阿德勒的思维中起着重要作用。事实上，有一个故事，在一次心理学讲座上，有人评论他所说的一切都是些常识。“常识有什么不好？”他回答说。</p>
+<p>阿德勒致力于倡导与人直接相关的心理学，即生活的心理学，他教给我们生活的“常识”，帮助我们了解自己的人生目标，从而活出生命的意义。人与生俱来就有追求成功和幸福的意愿，但并非总能如愿以偿。阿德勒认为，人如果丧失了具有社会价值的人生目标，就会产生自卑情结，从而陷入无益的生活面向。</p>
+<p>阿德勒首创“自卑情结”一词，首度将“补偿作用”运用于心理学，开创了心理自助运动的先河——帮助人们与自卑感共存共荣，拥有有益的人生目标，进而活出生命的意义。</p>
+<p>阿德勒指出：“每个人都有自卑感。”他所创立的个体心理学，紧扣“自卑感的问题与力量”发展，形成一套阿德勒的不完美生活哲学。自卑感是人类努力与成就的基础，却也是一切心理问题的根源。因此，阿德勒深入分析自卑感，揭开其副产品——“自卑情结”与“优越情结”对人们的戕害，并提出过好生活该有的“常识”“社会兴趣”与“社会适应能力”，期盼能帮助人们与自卑感共存共荣，消除情结的障碍，设定有用与健全的人生目标，进而活出生命的意义。</p>
+<p>阿德勒主张，决定我们生活形态的“人生风格”（the style of life）在四五岁时就由“人生原型”决定。因此，对于孩童的教育要从小开始，而且方向必须正确。童年时期如果出了差错（如父母过于溺爱），未来就得付出很大的代价（如犯罪）。而对于行为出现偏差的人，最好的方法就是减低他们的自卑感（但无须完全根除，因为自卑感也是让人向上的力量），让他们发展出对人生有用的“社会兴趣”（social interest），进而导正他们的人生目标。</p>
+<p>《阿德勒心理学讲义》以社会兴趣为核心，从原型、人格、童年、家庭、梦境、教育、人际关系、爱情与婚姻等人生百景出发，论道说理，揭示重点，并用形形色色的临床故事，来阐释、佐证，非常具有可读性和教育意义。</p>
+<p>通过本书，你将能正确地认识自己，拥抱人人都有的自卑感，并将其化为养分，萌生勇气，面对一切挑战与逆境。</p>
+<p>人，因不完美而奋发向上，而人生会因不完美而更趋完美。</p>
+<p>阿德勒说：人，做得到任何事！他不在乎过去，不认同宿命论与天注定，主张事在人为，并如此相信：唯有你自己，能决定你人生的样貌；也唯有你自己，才能改写人生的剧本。阿德勒用一生观察并剖析“何而为人”，终得此结论。</p>
+<h1 id="生活的科学-The-Science-of-Living"><a href="#生活的科学-The-Science-of-Living" class="headerlink" title="生活的科学-The Science of Living"></a>生活的科学-The Science of Living</h1><p>以阿德勒来说，他对心理学的兴趣源于行医。行医让我明了目的论（又称目标论）的观点。如果想了解心理事实，目的论是不可或缺的</p>
+<p>在医学界，所有的器官都有明确的目标，并朝着该目标努力发展，等发展到一定的形态，就代表这些器官已发育成熟。此外，当器官出现缺陷时，自然会采取特别的方式来克服缺憾，或者改由其他器官承担缺损器官的功能。<strong>生命总会设法延续下去，而且在面对外来阻碍时，生命的力量绝不会还没挣扎就先高举白旗。</strong></p>
+<p>人类心理层面的活动也和生命的功能面向类似。<strong>每一个人心里都有一个类似目标或理想的概念，一心想要超越现状，并通过制订出具体的未来方向，来克服目前的缺憾和困难。通过这个具体目标，人们得以想象未来成功的样貌，进而感受并认定自己必能超越当下的困境。要是感受不到目标，个人的所作所为只是行礼如仪，毫无意义可言。</strong></p>
 ]]></content>
   </entry>
   <entry>
@@ -3521,6 +3521,15 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
 <p>内层循环：如果发现 pairs≥k，说明子数组符合要求，右移左端点 left，先把 cnt[nums[left]] 减少一，然后把 pairs 减少 cnt[nums[left]]。</p>
 <p>内层循环结束后，[left,right] 这个子数组是不满足题目要求的，但在退出循环之前的最后一轮循环，[left−1,right] 是满足题目要求的。由于子数组越长，越能满足题目要求，所以除了 [left−1,right]，还有 [left−2,right],[left−3,right],…,[0,right] 都是满足要求的。也就是说，当右端点固定在 right 时，左端点在 0,1,2,…,left−1 的所有子数组都是满足要求的，这一共有 left 个。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">long</span> <span class="hljs-title function_">countGood</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k)</span> &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        Map&lt;Integer, Integer&gt; cnt = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <span class="hljs-type">int</span> <span class="hljs-variable">pairs</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : nums) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> cnt.getOrDefault(x, <span class="hljs-number">0</span>);<br>            pairs += c; <span class="hljs-comment">// 进</span><br>            cnt.put(x, c + <span class="hljs-number">1</span>);<br>            <span class="hljs-keyword">while</span> (pairs &gt;= k) &#123;<br>                x = nums[left];<br>                c = cnt.get(x);<br>                pairs -= c - <span class="hljs-number">1</span>; <span class="hljs-comment">// 出</span><br>                cnt.put(x, c - <span class="hljs-number">1</span>);<br>                left++;<br>            &#125;<br>            ans += left;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+<h2 id="统计得分小于-K-的子数组数目"><a href="#统计得分小于-K-的子数组数目" class="headerlink" title="统计得分小于 K 的子数组数目"></a>统计得分小于 K 的子数组数目</h2><p>滑动窗口使用前提：</p>
+<ul>
+<li>连续子数组/子串。</li>
+<li>有单调性。本题元素均为正数，所以子数组越长，分数越高；子数组越短，分数越低。这意味着只要某个子数组的分数小于 k，在该子数组内的更短的子数组，分数也小于 k。</li>
+</ul>
+<p>为什么用滑动窗口的复杂度为 O（n）：虽然用了两个循环，但是内层循环的总循环次数不超过 n，所以总的时间复杂度为 O(n)。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-type">long</span>[] sum;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">long</span> <span class="hljs-title function_">countSubarrays</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">long</span> k)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        sum = <span class="hljs-keyword">new</span> <span class="hljs-title class_">long</span>[n + <span class="hljs-number">1</span>];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            sum[i] = sum[i - <span class="hljs-number">1</span>] + nums[i - <span class="hljs-number">1</span>];<br>        &#125;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; right &lt;= n; right++) &#123;<br>            <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; !check(left, right, k)) &#123;<br>                left++;<br>            &#125;<br>            ans += right - left;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">check</span><span class="hljs-params">(<span class="hljs-type">int</span> left, <span class="hljs-type">int</span> right, <span class="hljs-type">long</span> k)</span> &#123;<br>        <span class="hljs-keyword">return</span> (right - left) * (sum[right] - sum[left]) &lt; k;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="小优化"><a href="#小优化" class="headerlink" title="小优化"></a>小优化</h3><p>可以不用前缀和，把前缀和动态维护。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-type">long</span> <span class="hljs-variable">sum</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">long</span> <span class="hljs-title function_">countSubarrays</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">long</span> k)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; right &lt;= n; right++) &#123;<br>            sum += nums[right - <span class="hljs-number">1</span>];<br>            <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; !check(left, right, sum, k)) &#123;<br>                sum -= nums[left];<br>                left++;<br>            &#125;<br>            ans += right - left;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">check</span><span class="hljs-params">(<span class="hljs-type">int</span> left, <span class="hljs-type">int</span> right, <span class="hljs-type">long</span> sum, <span class="hljs-type">long</span> k)</span> &#123;<br>        <span class="hljs-keyword">return</span> (right - left) * sum &lt; k;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h1 id="区间"><a href="#区间" class="headerlink" title="区间"></a>区间</h1><h2 id="合并区间-1"><a href="#合并区间-1" class="headerlink" title="合并区间"></a>合并区间</h2><p>先排序，排序之后放入第一个元素，然后判断后续的开头是不是小于第一个元素的结尾，如果是的话就连起来，否则就形成新的区间。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[][] merge(<span class="hljs-type">int</span>[][] intervals) &#123;<br>        Arrays.sort(intervals, (a1, a2) -&gt; &#123;<br>            <span class="hljs-keyword">return</span> a1[<span class="hljs-number">0</span>] - a2[<span class="hljs-number">0</span>];<br>        &#125;);<br>        List&lt;<span class="hljs-type">int</span>[]&gt; ans = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        ans.add(intervals[<span class="hljs-number">0</span>]);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; intervals.length; i++) &#123;<br>            <span class="hljs-keyword">if</span> (intervals[i][<span class="hljs-number">0</span>] &gt; ans.get(ans.size() - <span class="hljs-number">1</span>)[<span class="hljs-number">1</span>]) &#123;<br>                ans.add(intervals[i]);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> ans.get(ans.size() - <span class="hljs-number">1</span>)[<span class="hljs-number">1</span>];<br>                right = Math.max(right, intervals[i][<span class="hljs-number">1</span>]);<br>                ans.get(ans.size() - <span class="hljs-number">1</span>)[<span class="hljs-number">1</span>] = right;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[ans.size()][]);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h2 id="区间列表的交集"><a href="#区间列表的交集" class="headerlink" title="区间列表的交集"></a>区间列表的交集</h2><p>因为两个列表里都为不相交且已经排序好的区间，我们可以使用双指针逐个检查重合区域</p>
