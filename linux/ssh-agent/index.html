@@ -179,7 +179,7 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>February 12, 2025</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1383</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1450</span>
     </div>
   </div>
 </section>
@@ -197,6 +197,8 @@
 <h1 id="在-Windows-上开启-SSH-Agent"><a href="#在-Windows-上开启-SSH-Agent" class="headerlink" title="在 Windows 上开启 SSH Agent"></a>在 Windows 上开启 SSH Agent</h1><p>根据微软帮助，我们能够通过以下方式开启 ssh-agent 并加入我们的私钥：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># By default the ssh-agent service is disabled. Configure it to start automatically.</span><br><span class="hljs-comment"># Make sure you&#x27;re running as an Administrator.</span><br>Get-Service ssh-agent | Set-Service -StartupType Automatic<br><br><span class="hljs-comment"># Start the service</span><br>Start-Service ssh-agent<br><br><span class="hljs-comment"># This should return a status of Running</span><br>Get-Service ssh-agent<br><br><span class="hljs-comment"># Now load your key files into ssh-agent</span><br>ssh-add <span class="hljs-variable">$env</span>:USERPROFILE\.ssh\id_ecdsa<br><br><span class="hljs-comment"># Check that it worked</span><br>ssh-add -l<br></code></pre></td></tr></table></figure></p>
 <h1 id="vscode-中启用-SSH-Agent"><a href="#vscode-中启用-SSH-Agent" class="headerlink" title="vscode 中启用 SSH Agent"></a>vscode 中启用 SSH Agent</h1><p>首先要在 ssh 中开启 <code>ForwardAgent</code>，具体方法是编辑 ssh config：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">Host <span class="hljs-keyword">async</span><span class="hljs-number">-004</span><br>    HostName IP<br>    ForwardAgent <span class="hljs-literal">yes</span><br></code></pre></td></tr></table></figure><br>之后在本地的 vsocde 设置中搜索 <code>Enable Agent Forwarding</code> 并开启。</p>
 <p>之后 F1 搜索 Kill，关闭远程 vscode server，之后重新连接远程服务器，这个时候远程服务器上输入 <code>ssh-add -l</code> 应该能看到我们之前在 Windows 上添加的私钥，就实现了密钥的安全转发。</p>
+<h1 id="检查错误"><a href="#检查错误" class="headerlink" title="检查错误"></a>检查错误</h1><p>执行以下命令查看转发是否会出现错误</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -v -o ForwardAgent=<span class="hljs-built_in">yes</span> user@remote_host<br></code></pre></td></tr></table></figure>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_keymanagement">https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_keymanagement</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/394555196">https://zhuanlan.zhihu.com/p/394555196</a></li>
@@ -231,7 +233,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-text">动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SSH-Agent"><span class="toc-text">SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8-Windows-%E4%B8%8A%E5%BC%80%E5%90%AF-SSH-Agent"><span class="toc-text">在 Windows 上开启 SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#vscode-%E4%B8%AD%E5%90%AF%E7%94%A8-SSH-Agent"><span class="toc-text">vscode 中启用 SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-text">动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SSH-Agent"><span class="toc-text">SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8-Windows-%E4%B8%8A%E5%BC%80%E5%90%AF-SSH-Agent"><span class="toc-text">在 Windows 上开启 SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#vscode-%E4%B8%AD%E5%90%AF%E7%94%A8-SSH-Agent"><span class="toc-text">vscode 中启用 SSH Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E9%94%99%E8%AF%AF"><span class="toc-text">检查错误</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
   </aside>
 
         
