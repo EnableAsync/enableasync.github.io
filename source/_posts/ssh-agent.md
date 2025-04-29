@@ -53,6 +53,20 @@ Host async-004
 
 之后 F1 搜索 Kill，关闭远程 vscode server，之后重新连接远程服务器，这个时候远程服务器上输入 `ssh-add -l` 应该能看到我们之前在 Windows 上添加的私钥，就实现了密钥的安全转发。
 
+
+
+# 检查错误
+
+执行以下命令查看转发是否会出现错误
+
+```bash
+ssh -v -o ForwardAgent=yes user@remote_host
+```
+
+
+
+
+
 # 参考
 
 1. https://learn.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_keymanagement
