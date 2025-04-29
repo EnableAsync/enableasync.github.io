@@ -539,7 +539,7 @@ class Solution {
 
 # 滑动窗口
 
-### 滑动窗口模板
+## 滑动窗口模板
 
 ```java
 // 外层循环扩展右边界，内层循环扩展左边界
@@ -688,6 +688,8 @@ class Solution {
 
 ## 统计得分小于 K 的子数组数目
 
+越短越合理。
+
 滑动窗口使用前提：
 
 - 连续子数组/子串。
@@ -751,6 +753,67 @@ class Solution {
 
     private boolean check(int left, int right, long sum, long k) {
         return (right - left) * sum < k;
+    }
+}
+```
+
+
+
+## 统计最大元素出现至少 K 次的子数组
+
+给你一个整数数组 `nums` 和一个 **正整数** `k` 。
+
+请你统计有多少满足 「 `nums` 中的 **最大** 元素」至少出现 `k` 次的子数组，并返回满足这一条件的子数组的数目。
+
+子数组是数组中的一个连续元素序列。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [1,3,2,3,3], k = 2
+输出：6
+解释：包含元素 3 至少 2 次的子数组为：[1,3,2,3]、[1,3,2,3,3]、[3,2,3]、[3,2,3,3]、[2,3,3] 和 [3,3] 。
+```
+
+**示例 2：**
+
+```
+输入：nums = [1,4,2,1], k = 3
+输出：0
+解释：没有子数组包含元素 4 至少 3 次。
+```
+
+ 
+
+
+
+越长越合法。
+
+内层循环结束后，[left,right] 这个子数组是不满足题目要求的，但在退出循环之前的最后一轮循环，[left−1,right] 是满足题目要求的。由于子数组越长，越能满足题目要求，所以除了 [left−1,right]，还有 [left−2,right],[left−3,right],…,[0,right] 都是满足要求的。也就是说，当右端点固定在 right 时，左端点在 0,1,2,…,left−1 的所有子数组都是满足要求的，这一共有 left 个，加到答案中。
+
+```java
+class Solution {
+    // 子数组越长越好
+    public long countSubarrays(int[] nums, int k) {
+        long ans = 0;
+        int left = 0, n = nums.length, count = 0;
+        int max = nums[0];
+        for (int i = 1; i < n; i++) {
+            max = Math.max(max, nums[i]);
+        }
+        for (int right = 0; right < n; right++) {
+            if (nums[right] == max) count++;
+            while (count == k) {
+                if (nums[left] == max) {
+                    count--;
+                }
+                left++;
+            }
+            ans += left;
+        }
+        return ans;
     }
 }
 ```
