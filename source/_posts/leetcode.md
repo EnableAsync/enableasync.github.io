@@ -805,13 +805,13 @@ class Solution {
         }
         for (int right = 0; right < n; right++) {
             if (nums[right] == max) count++;
-            while (count == k) {
+            while (count == k) { // 也可以是 >=
                 if (nums[left] == max) {
                     count--;
                 }
                 left++;
-            }
-            ans += left;
+            } // 这个循环结束之后 [left, right] 不满足条件
+            ans += left; // 但是 [left−1,right]，还有 [left−2,right],[left−3,right],…,[0,right] 满足条件
         }
         return ans;
     }
