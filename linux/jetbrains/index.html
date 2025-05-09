@@ -6,12 +6,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>data structure, algorithm - EnableAsync&#39;s Blog</title>
+  <title>Jetbrains 使用指南 - EnableAsync&#39;s Blog</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   <meta name="keywords" content="golang,java">
-  <meta name="description" content="用来记录、分享一些内容">
+  <meta name="description" content="动机Jetbrains 会需要我们激活，怎么办呢？
+步...">
   <meta name="author" content="EnableAsync">
   <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
@@ -139,7 +140,7 @@
         <i class="iconfont iconsearch j-navbar-search"></i>
       
     </div>
-    <div class="center">标签</div>
+    <div class="center">Jetbrains 使用指南</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -167,35 +168,70 @@
   </div>
 </nav>
   <main id="main">
-  <section class="archive">
-    <div class="archive-container">
-      <div class="archive-post">
-        <h2 class="archive-total"># data structure, algorithm</h2>
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Jetbrains 使用指南</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>May 09, 2025</span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>438</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>Jetbrains 会需要我们激活，怎么办呢？</p>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="卸载-Jetbrains"><a href="#卸载-Jetbrains" class="headerlink" title="卸载 Jetbrains"></a>卸载 Jetbrains</h2><p><strong>注意要卸载干净</strong></p>
+<p><img    class="lazyload" data-original="172264713794725.jpeg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">卸载老版本的 IDEA</span></p>
+<h2 id="安装新版"><a href="#安装新版" class="headerlink" title="安装新版"></a>安装新版</h2><p><img    class="lazyload" data-original="174502512804671.jpeg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">IDEA 2025.1 安装步骤</span></p>
+<h2 id="激活步骤"><a href="#激活步骤" class="headerlink" title="激活步骤"></a>激活步骤</h2><p>运行 jetbra 中的 <code>scripts/install-all-users.vbs</code></p>
+<p><strong>记得地区不要选择中国。</strong></p>
+<p>jetbra/ja-netfaliter激活的原理是拦截并重定向与Jetbrains账号验证服务器的数据。<br>2024.2后jetbrains新的安装程序自带了三个区域语言包，其中若选择中文大陆区域语言包，会将激活验证服务器地址修改为国内新验证地址。而jetbra/ja-netfaliter的拦截是黑名单制度，该新服务器地址并不在原本的拦截列表中。</p>
+<p>如果要拦截中国的话，修改jetbra/ja-netfaliter的配置文件，在<strong>URL</strong>配置文件中添加：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">PREFIX,https:<span class="hljs-regexp">//</span>account.jetbrains.com.cn<span class="hljs-regexp">/lservice/</span>rpc/validateKey.action<br></code></pre></td></tr></table></figure>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>EnableAsync</li>
+    <li><strong>本文链接：</strong><a href="https://enableasync.github.io/linux/jetbrains/index.html" title="https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;jetbrains&#x2F;index.html">https:&#x2F;&#x2F;enableasync.github.io&#x2F;linux&#x2F;jetbrains&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
         
         
-          
-            <h3 class="archive-year">2025 年</h3>
-          
-          <div class="archive-item">
-            <a class="archive-date" href="/uncategorized/leetcode/">05/09</a>
-            <a class="archive-title" href="/uncategorized/leetcode/">算法整理</a>
-          </div>
+        
+        
+  <nav class="nav">
+    <a href="/uncategorized/leetcode/"><i class="iconfont iconleft"></i>算法整理</a>
+    <a href="/uncategorized/Few-Shot-Fine-Tuning/">小样本微调研究综述<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
         
           
-          <div class="archive-item">
-            <a class="archive-date" href="/uncategorized/DDPM/">04/03</a>
-            <a class="archive-title" href="/uncategorized/DDPM/">Diffusion 学习</a>
-          </div>
-        
-          
-          <div class="archive-item">
-            <a class="archive-date" href="/uncategorized/%E9%9D%A2%E7%BB%8F%E6%95%B4%E7%90%86/">02/12</a>
-            <a class="archive-title" href="/uncategorized/%E9%9D%A2%E7%BB%8F%E6%95%B4%E7%90%86/">面经整理</a>
-          </div>
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-text">动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD-Jetbrains"><span class="toc-text">卸载 Jetbrains</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%96%B0%E7%89%88"><span class="toc-text">安装新版</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BF%80%E6%B4%BB%E6%AD%A5%E9%AA%A4"><span class="toc-text">激活步骤</span></a></li></ol></li></ol>
+  </aside>
+
         
       </div>
     </div>
-  </section>
+  </div>
 </main>
   
 

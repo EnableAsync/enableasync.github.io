@@ -315,6 +315,23 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
       </categories>
   </entry>
   <entry>
+    <title>Jetbrains 使用指南</title>
+    <url>/linux/jetbrains/</url>
+    <content><![CDATA[<h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>Jetbrains 会需要我们激活，怎么办呢？</p>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="卸载-Jetbrains"><a href="#卸载-Jetbrains" class="headerlink" title="卸载 Jetbrains"></a>卸载 Jetbrains</h2><p><strong>注意要卸载干净</strong></p>
+<p><img  src="172264713794725.jpeg"  ><span class="image-caption">卸载老版本的 IDEA</span></p>
+<h2 id="安装新版"><a href="#安装新版" class="headerlink" title="安装新版"></a>安装新版</h2><p><img  src="174502512804671.jpeg"  ><span class="image-caption">IDEA 2025.1 安装步骤</span></p>
+<h2 id="激活步骤"><a href="#激活步骤" class="headerlink" title="激活步骤"></a>激活步骤</h2><p>运行 jetbra 中的 <code>scripts/install-all-users.vbs</code></p>
+<p><strong>记得地区不要选择中国。</strong></p>
+<p>jetbra/ja-netfaliter激活的原理是拦截并重定向与Jetbrains账号验证服务器的数据。<br>2024.2后jetbrains新的安装程序自带了三个区域语言包，其中若选择中文大陆区域语言包，会将激活验证服务器地址修改为国内新验证地址。而jetbra/ja-netfaliter的拦截是黑名单制度，该新服务器地址并不在原本的拦截列表中。</p>
+<p>如果要拦截中国的话，修改jetbra/ja-netfaliter的配置文件，在<strong>URL</strong>配置文件中添加：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">PREFIX,https:<span class="hljs-regexp">//</span>account.jetbrains.com.cn<span class="hljs-regexp">/lservice/</span>rpc/validateKey.action<br></code></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Kind 的一些使用心得</title>
     <url>/uncategorized/kind/</url>
     <content><![CDATA[<h1 id="Kind-的一些使用心得"><a href="#Kind-的一些使用心得" class="headerlink" title="Kind 的一些使用心得"></a>Kind 的一些使用心得</h1><p>因为 Kind 启动相比于 Minikube 更快，而且支持多 Node，所以现在换成了 Kind，这里记录一些 Kind 的使用心得。</p>
