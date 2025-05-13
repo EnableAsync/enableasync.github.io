@@ -26,6 +26,8 @@ Jetbrains 会需要我们激活，怎么办呢？
 
 ## 激活步骤
 
+从 [jetba](https://3.jetbra.in/) 下载激活脚本。
+
 运行 jetbra 中的 `scripts/install-all-users.vbs`
 
 **记得地区不要选择中国。**
