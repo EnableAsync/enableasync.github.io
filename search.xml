@@ -234,39 +234,6 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
       </tags>
   </entry>
   <entry>
-    <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
-    <url>/internlm/internlm-01/</url>
-    <content><![CDATA[<h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
-<p><img  src="image.png"  ><span class="image-caption">大模型成为热门关键词</span></p>
-<h3 id="大模型成为了发展通用人工智能的重要途径"><a href="#大模型成为了发展通用人工智能的重要途径" class="headerlink" title="大模型成为了发展通用人工智能的重要途径"></a>大模型成为了发展通用人工智能的重要途径</h3><p><img  src="image-20240104194412083.png"  ><span class="image-caption">大模型成为了发展通用人工智能的重要途径</span></p>
-<h2 id="书生·浦语大模型"><a href="#书生·浦语大模型" class="headerlink" title="书生·浦语大模型"></a>书生·浦语大模型</h2><h3 id="开源历程"><a href="#开源历程" class="headerlink" title="开源历程"></a>开源历程</h3><p><img  src="image-20240104194442165.png"  ><span class="image-caption">书生·浦语的开源历程</span></p>
-<p>书生·浦语大模型从 6.7 开始，开源了 InternLM-7B、InternLM-Chat-7B、Lagent、InternLM-20B 等项目。</p>
-<h3 id="系列模型"><a href="#系列模型" class="headerlink" title="系列模型"></a>系列模型</h3><p><img  src="image-20240104194623711.png"  ><span class="image-caption">书生·浦语系列模型</span></p>
-<h3 id="性能比较"><a href="#性能比较" class="headerlink" title="性能比较"></a>性能比较</h3><p><img  src="image-20240104194715248.png"  ><span class="image-caption">性能比较</span></p>
-<p>可以看出，书生·浦语 20B 模型全面领先相近量级的开源模型，并且达到了和 Llama2-70B 相近的水平。</p>
-<h2 id="书生·浦语全链条开源体系"><a href="#书生·浦语全链条开源体系" class="headerlink" title="书生·浦语全链条开源体系"></a>书生·浦语全链条开源体系</h2><h3 id="体系概述"><a href="#体系概述" class="headerlink" title="体系概述"></a>体系概述</h3><p><strong><a href="https://github.com/orgs/InternLM/repositories?type=all">InternLM (github.com)</a></strong></p>
-<p><img  src="image-20240104194911061.png"  ><span class="image-caption">体系概述</span></p>
-<h3 id="数据开源"><a href="#数据开源" class="headerlink" title="数据开源"></a>数据开源</h3><p><img  src="image-20240104194948553.png"  ><span class="image-caption">数据开源</span></p>
-<h3 id="预训练开源"><a href="#预训练开源" class="headerlink" title="预训练开源"></a>预训练开源</h3><p><img  src="image-20240104195041865.png"  ><span class="image-caption">预训练开源</span></p>
-<h3 id="微调开源"><a href="#微调开源" class="headerlink" title="微调开源"></a>微调开源</h3><p><strong><a href="https://github.com/InternLM/xtuner">InternLM/xtuner: A toolkit for efficiently fine-tuning LLM (InternLM, Llama, Baichuan, Qwen, ChatGLM) (github.com)</a></strong></p>
-<p><img  src="image-20240104195250624.png"  ><span class="image-caption">微调开源</span></p>
-<h3 id="评测开源"><a href="#评测开源" class="headerlink" title="评测开源"></a>评测开源</h3><p><strong><a href="https://github.com/open-compass/OpenCompass/">open-compass/opencompass: OpenCompass is an LLM evaluation platform, supporting a wide range of models (LLaMA, LLaMa2, ChatGLM2, ChatGPT, Claude, etc) over 50+ datasets. (github.com)</a></strong></p>
-<p><img  src="image-20240104195322676.png"  ><span class="image-caption">评测开源-题目类型</span></p>
-<p><img  src="image-20240104195342281.png"  ><span class="image-caption">评测开源-OpenCompass</span></p>
-<p><img  src="image-20240104195354357.png"  ><span class="image-caption">OpenCompass 架构</span></p>
-<h3 id="部署开源"><a href="#部署开源" class="headerlink" title="部署开源"></a>部署开源</h3><p><strong><a href="https://github.com/InternLM/lmdeploy">InternLM/lmdeploy: LMDeploy is a toolkit for compressing, deploying, and serving LLMs. (github.com)</a></strong></p>
-<p><img  src="image-20240104195614821.png"  ><span class="image-caption">部署开源</span></p>
-<h3 id="智能体开源"><a href="#智能体开源" class="headerlink" title="智能体开源"></a>智能体开源</h3><p><strong><a href="https://github.com/InternLM/lagent">InternLM/lagent: A lightweight framework for building LLM-based agents (github.com)</a></strong></p>
-<p><img  src="image-20240104195658280.png"  ><span class="image-caption">智能体开源</span></p>
-<h3 id="智能体工具箱"><a href="#智能体工具箱" class="headerlink" title="智能体工具箱"></a>智能体工具箱</h3><p><strong><a href="https://github.com/InternLM/agentlego">InternLM/agentlego: Enhance LLM agents with versatile tool APIs (github.com)</a></strong></p>
-<p><img  src="image-20240104195750076.png"  ><span class="image-caption">智能体工具箱</span></p>
-<h2 id="从模型到应用"><a href="#从模型到应用" class="headerlink" title="从模型到应用"></a>从模型到应用</h2><p><img  src="image-20240104194844022.png"  ><span class="image-caption">如何从模型到应用</span></p>
-]]></content>
-      <categories>
-        <category>internlm</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Internlm-02-浦语大模型趣味 Demo</title>
     <url>/internlm/internlm-02/</url>
     <content><![CDATA[<h1 id="浦语大模型趣味-Demo"><a href="#浦语大模型趣味-Demo" class="headerlink" title="浦语大模型趣味 Demo"></a>浦语大模型趣味 Demo</h1><h2 id="大模型及-InternLM-模型简介"><a href="#大模型及-InternLM-模型简介" class="headerlink" title="大模型及 InternLM 模型简介"></a>大模型及 InternLM 模型简介</h2><h3 id="什么是大模型"><a href="#什么是大模型" class="headerlink" title="什么是大模型"></a>什么是大模型</h3><p>大模型是指在机器学习或人工智能领域中具有巨大参数数量和强大计算能力的模型。它们利用海量数据进行训练，拥有数十亿甚至数千亿个参数。大模型的崛起归因于数据量增长、计算能力提升和算法优化等因素。它们在自然语言处理、计算机视觉、语音识别等任务中展现出惊人性能，常采用深度神经网络结构，如Transformer、BERT、GPT等。</p>
@@ -309,6 +276,39 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
 <p><img  src="灵笔-2.png"  ><span class="image-caption">浦语·灵笔效果展示2</span></p>
 <p><img  src="灵笔-3.png"  ><span class="image-caption">浦语·灵笔效果展示3</span></p>
 <h2 id="huggingface-hub-下载文件"><a href="#huggingface-hub-下载文件" class="headerlink" title="huggingface_hub 下载文件"></a>huggingface_hub 下载文件</h2><p><img  src="huggingface_hub_download.png"  ><span class="image-caption">使用 huggingface_hub 库下载文件</span></p>
+]]></content>
+      <categories>
+        <category>internlm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Internlm-01-书生·浦语大模型全链路开源体系</title>
+    <url>/internlm/internlm-01/</url>
+    <content><![CDATA[<h1 id="书生·浦语大模型全链路开源体系"><a href="#书生·浦语大模型全链路开源体系" class="headerlink" title="书生·浦语大模型全链路开源体系"></a>书生·浦语大模型全链路开源体系</h1><h2 id="大模型概述"><a href="#大模型概述" class="headerlink" title="大模型概述"></a>大模型概述</h2><h3 id="大模型成为了热门关键词"><a href="#大模型成为了热门关键词" class="headerlink" title="大模型成为了热门关键词"></a>大模型成为了热门关键词</h3><p>大模型成为发展通用人工智能的重要途经，图中展示了大模型的热度增长和 OpenAI GPT 系列的迭代过程。</p>
+<p><img  src="image.png"  ><span class="image-caption">大模型成为热门关键词</span></p>
+<h3 id="大模型成为了发展通用人工智能的重要途径"><a href="#大模型成为了发展通用人工智能的重要途径" class="headerlink" title="大模型成为了发展通用人工智能的重要途径"></a>大模型成为了发展通用人工智能的重要途径</h3><p><img  src="image-20240104194412083.png"  ><span class="image-caption">大模型成为了发展通用人工智能的重要途径</span></p>
+<h2 id="书生·浦语大模型"><a href="#书生·浦语大模型" class="headerlink" title="书生·浦语大模型"></a>书生·浦语大模型</h2><h3 id="开源历程"><a href="#开源历程" class="headerlink" title="开源历程"></a>开源历程</h3><p><img  src="image-20240104194442165.png"  ><span class="image-caption">书生·浦语的开源历程</span></p>
+<p>书生·浦语大模型从 6.7 开始，开源了 InternLM-7B、InternLM-Chat-7B、Lagent、InternLM-20B 等项目。</p>
+<h3 id="系列模型"><a href="#系列模型" class="headerlink" title="系列模型"></a>系列模型</h3><p><img  src="image-20240104194623711.png"  ><span class="image-caption">书生·浦语系列模型</span></p>
+<h3 id="性能比较"><a href="#性能比较" class="headerlink" title="性能比较"></a>性能比较</h3><p><img  src="image-20240104194715248.png"  ><span class="image-caption">性能比较</span></p>
+<p>可以看出，书生·浦语 20B 模型全面领先相近量级的开源模型，并且达到了和 Llama2-70B 相近的水平。</p>
+<h2 id="书生·浦语全链条开源体系"><a href="#书生·浦语全链条开源体系" class="headerlink" title="书生·浦语全链条开源体系"></a>书生·浦语全链条开源体系</h2><h3 id="体系概述"><a href="#体系概述" class="headerlink" title="体系概述"></a>体系概述</h3><p><strong><a href="https://github.com/orgs/InternLM/repositories?type=all">InternLM (github.com)</a></strong></p>
+<p><img  src="image-20240104194911061.png"  ><span class="image-caption">体系概述</span></p>
+<h3 id="数据开源"><a href="#数据开源" class="headerlink" title="数据开源"></a>数据开源</h3><p><img  src="image-20240104194948553.png"  ><span class="image-caption">数据开源</span></p>
+<h3 id="预训练开源"><a href="#预训练开源" class="headerlink" title="预训练开源"></a>预训练开源</h3><p><img  src="image-20240104195041865.png"  ><span class="image-caption">预训练开源</span></p>
+<h3 id="微调开源"><a href="#微调开源" class="headerlink" title="微调开源"></a>微调开源</h3><p><strong><a href="https://github.com/InternLM/xtuner">InternLM/xtuner: A toolkit for efficiently fine-tuning LLM (InternLM, Llama, Baichuan, Qwen, ChatGLM) (github.com)</a></strong></p>
+<p><img  src="image-20240104195250624.png"  ><span class="image-caption">微调开源</span></p>
+<h3 id="评测开源"><a href="#评测开源" class="headerlink" title="评测开源"></a>评测开源</h3><p><strong><a href="https://github.com/open-compass/OpenCompass/">open-compass/opencompass: OpenCompass is an LLM evaluation platform, supporting a wide range of models (LLaMA, LLaMa2, ChatGLM2, ChatGPT, Claude, etc) over 50+ datasets. (github.com)</a></strong></p>
+<p><img  src="image-20240104195322676.png"  ><span class="image-caption">评测开源-题目类型</span></p>
+<p><img  src="image-20240104195342281.png"  ><span class="image-caption">评测开源-OpenCompass</span></p>
+<p><img  src="image-20240104195354357.png"  ><span class="image-caption">OpenCompass 架构</span></p>
+<h3 id="部署开源"><a href="#部署开源" class="headerlink" title="部署开源"></a>部署开源</h3><p><strong><a href="https://github.com/InternLM/lmdeploy">InternLM/lmdeploy: LMDeploy is a toolkit for compressing, deploying, and serving LLMs. (github.com)</a></strong></p>
+<p><img  src="image-20240104195614821.png"  ><span class="image-caption">部署开源</span></p>
+<h3 id="智能体开源"><a href="#智能体开源" class="headerlink" title="智能体开源"></a>智能体开源</h3><p><strong><a href="https://github.com/InternLM/lagent">InternLM/lagent: A lightweight framework for building LLM-based agents (github.com)</a></strong></p>
+<p><img  src="image-20240104195658280.png"  ><span class="image-caption">智能体开源</span></p>
+<h3 id="智能体工具箱"><a href="#智能体工具箱" class="headerlink" title="智能体工具箱"></a>智能体工具箱</h3><p><strong><a href="https://github.com/InternLM/agentlego">InternLM/agentlego: Enhance LLM agents with versatile tool APIs (github.com)</a></strong></p>
+<p><img  src="image-20240104195750076.png"  ><span class="image-caption">智能体工具箱</span></p>
+<h2 id="从模型到应用"><a href="#从模型到应用" class="headerlink" title="从模型到应用"></a>从模型到应用</h2><p><img  src="image-20240104194844022.png"  ><span class="image-caption">如何从模型到应用</span></p>
 ]]></content>
       <categories>
         <category>internlm</category>
@@ -370,6 +370,86 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
       <tags>
         <tag>k8s, kind</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Linux 的一些使用心得</title>
+    <url>/linux/linux/</url>
+    <content><![CDATA[<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
+<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
+<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
+<p>如果网络不稳定，容易断开连接，用以下命令将该连接只用作隧道（-N），同时增加心跳<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -R 0.0.0.0:10800:127.0.0.1:10800 kdzlys@117.139.126.36 -p 2224<br></code></pre></td></tr></table></figure></p>
+<h1 id="conda-init-fish-之后-fish-崩溃"><a href="#conda-init-fish-之后-fish-崩溃" class="headerlink" title="conda init fish 之后 fish 崩溃"></a>conda init fish 之后 fish 崩溃</h1><p>原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo apt-add-repository ppa:fish-shell/release-3<br>sudo apt update<br>sudo apt install fish<br></code></pre></td></tr></table></figure></p>
+<h1 id="关闭-kde-文件索引程序"><a href="#关闭-kde-文件索引程序" class="headerlink" title="关闭 kde 文件索引程序"></a>关闭 kde 文件索引程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">balooctl <span class="hljs-built_in">suspend</span><br>balooctl <span class="hljs-built_in">disable</span><br></code></pre></td></tr></table></figure>
+<h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
+<li>运行 MITMProxy</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">docker run --<span class="hljs-built_in">rm</span> -it -p 18080:8080 -p 127.0.0.1:8081:8081 -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy  mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0 --<span class="hljs-built_in">set</span> block_global=<span class="hljs-literal">false</span> --<span class="hljs-built_in">set</span> ssl_insecure=<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>导入证书至浏览器或其他工具</li>
+<li>使用代理访问 HTTPS 页面</li>
+</ol>
+<h1 id="更新-ubuntu-22-04-之后网易云音乐无法使用"><a href="#更新-ubuntu-22-04-之后网易云音乐无法使用" class="headerlink" title="更新 ubuntu 22.04 之后网易云音乐无法使用"></a>更新 ubuntu 22.04 之后网易云音乐无法使用</h1><p>修改 <code>/opt/netease/netease-cloud-music/netease-cloud-music.bash</code> 为以下内容<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br>HERE=<span class="hljs-string">&quot;<span class="hljs-subst">$(dirname <span class="hljs-string">&quot;<span class="hljs-subst">$(readlink -f <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;0&#125;</span>&quot;</span>)</span>&quot;</span>)</span>&quot;</span><br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/libs<br><span class="hljs-built_in">export</span> QT_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins <br><span class="hljs-built_in">export</span> QT_QPA_PLATFORM_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins/platforms<br><span class="hljs-built_in">cd</span> /lib/x86_64-linux-gnu/<br><span class="hljs-built_in">exec</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/netease-cloud-music <span class="hljs-variable">$@</span><br><br></code></pre></td></tr></table></figure></p>
+<h1 id="关闭无用启动项"><a href="#关闭无用启动项" class="headerlink" title="关闭无用启动项"></a>关闭无用启动项</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看启动项</span><br><span class="hljs-built_in">ls</span> -l /etc/xdg/autostart<br><br><span class="hljs-comment"># 重命名</span><br>sudo <span class="hljs-built_in">mv</span> something something.bak<br></code></pre></td></tr></table></figure>
+<h1 id="Vmware-更新内核失败"><a href="#Vmware-更新内核失败" class="headerlink" title="Vmware 更新内核失败"></a>Vmware 更新内核失败</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/mkubecek/vmware-host-modules.git<br>git checkout &lt;your_version&gt;<br>sudo make<br>sudo make install<br></code></pre></td></tr></table></figure>
+<h1 id="双系统-Windows-更新失败"><a href="#双系统-Windows-更新失败" class="headerlink" title="双系统 Windows 更新失败"></a>双系统 Windows 更新失败</h1><p>我这里双系统 Windows 更新失败的原因是 Windows 引导出现了问题，可以进入 Windows 输入 <code>msconfig</code> 查看引导选项卡下是否有内容，我是用过 systemd boot 来引导的 Windows，所以没有出现内容。</p>
+<p>在 BIOS 中更改成直接引导 Windows 之后便可以正常更新了。</p>
+<h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">ls</span> -1t /var/log/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |<span class="hljs-built_in">tac</span> |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
+<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="Unite"><a href="#Unite" class="headerlink" title="Unite"></a>Unite</h2><p>最大化时隐藏标题栏</p>
+<h2 id="Clear-Top-Bar"><a href="#Clear-Top-Bar" class="headerlink" title="Clear Top Bar"></a>Clear Top Bar</h2><p>状态栏变成透明的</p>
+<h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><p>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</p>
+<h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
+<h2 id="Lock-Keys"><a href="#Lock-Keys" class="headerlink" title="Lock Keys"></a>Lock Keys</h2><p>可以显示当前大小写状况</p>
+<h2 id="NetSpeed"><a href="#NetSpeed" class="headerlink" title="NetSpeed"></a>NetSpeed</h2><p>显示当前网速</p>
+<h2 id="TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）"><a href="#TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）" class="headerlink" title="TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）"></a>TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</h2><p>在顶部显示图标</p>
+<h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
+<h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
+<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
+<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ul>
+<li><p>使用 im-config 修复</p>
+</li>
+<li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
+</li>
+<li><p>使用 <code>fcitx5-diagnose</code> 命令根据提示设置环境变量</p>
+</li>
+<li><p>删除 <code>/etc/profile.d/pop-im-ibus.sh</code> （pop os）</p>
+<p> <code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
+ <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+<p> 因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
+<p> <code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
+<p> 相关 issue，<a href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
+</li>
+</ul>
+<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
+   <figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
+<p>   之后重启 gnome 即可解决</p>
+<h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
+<p>参考：<a href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
+<h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
+<p>执行上述命令后再运行 fluxion 即可。</p>
+<h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
+<li>先停用 systemd-resolved 服务</li>
+</ol>
+<figure class="highlight nsis"><table><tr><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl stop <span class="hljs-params">system</span>d-resolved<br></code></pre></td></tr></table></figure>
+<ol>
+<li>编辑 /etc/systemd/resolved.conf 文件</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
+<ol>
+<li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
+</ol>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>最后运行下面命令即可。</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
   </entry>
   <entry>
     <title>Linux 多用户管理</title>
@@ -494,86 +574,6 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
 <p>我们还提供了一些用户管理的最佳实践，如最小化权限原则、定期审查用户账户、使用复杂密码和启用登录审计。这些实践有助于提高系统的安全性和管理效率。</p>
 <p>通过本指南，读者可以获得关于Linux用户管理的全面了解，并学习如何在Linux操作系统中高效管理用户账户和权限。</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>Linux 的一些使用心得</title>
-    <url>/linux/linux/</url>
-    <content><![CDATA[<h1 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h1><h2 id="本地访问远程端口"><a href="#本地访问远程端口" class="headerlink" title="本地访问远程端口"></a>本地访问远程端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<h2 id="远程访问本地的端口"><a href="#远程访问本地的端口" class="headerlink" title="远程访问本地的端口"></a>远程访问本地的端口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT [USER@]SSH_SERVER<br></code></pre></td></tr></table></figure>
-<p>比如要把本机的代理 <code>http://127.0.0.1:10800</code> 端口共享到远程的所有 IP 上的 10801 端口，则是</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -R 0.0.0.0:10801:127.0.0.1:10800 username@ip -p port<br></code></pre></td></tr></table></figure>
-<p>注意，默认是无法在远程服务器上监听 <code>0.0.0.0</code> 的，如果想要监听，需要修改 <code>/etc/ssh/sshd_config</code> 中的 <code>GatewayPorts yes</code> 才行。</p>
-<p>如果网络不稳定，容易断开连接，用以下命令将该连接只用作隧道（-N），同时增加心跳<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -N -R 0.0.0.0:10800:127.0.0.1:10800 kdzlys@117.139.126.36 -p 2224<br></code></pre></td></tr></table></figure></p>
-<h1 id="conda-init-fish-之后-fish-崩溃"><a href="#conda-init-fish-之后-fish-崩溃" class="headerlink" title="conda init fish 之后 fish 崩溃"></a>conda init fish 之后 fish 崩溃</h1><p>原因是 ubuntu 默认的 fish 是 2.x 版本，而 conda init fish 对应的脚本对应 fish 3.x 版本，所以在安装 fish 的时候需要安装 fish 3 版本。<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo apt-add-repository ppa:fish-shell/release-3<br>sudo apt update<br>sudo apt install fish<br></code></pre></td></tr></table></figure></p>
-<h1 id="关闭-kde-文件索引程序"><a href="#关闭-kde-文件索引程序" class="headerlink" title="关闭 kde 文件索引程序"></a>关闭 kde 文件索引程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">balooctl <span class="hljs-built_in">suspend</span><br>balooctl <span class="hljs-built_in">disable</span><br></code></pre></td></tr></table></figure>
-<h1 id="Linux-下抓-HTTPS-包"><a href="#Linux-下抓-HTTPS-包" class="headerlink" title="Linux 下抓 HTTPS 包"></a>Linux 下抓 HTTPS 包</h1><h2 id="使用-MITMProxy"><a href="#使用-MITMProxy" class="headerlink" title="使用 MITMProxy"></a>使用 MITMProxy</h2><ol>
-<li>运行 MITMProxy</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">docker run --<span class="hljs-built_in">rm</span> -it -p 18080:8080 -p 127.0.0.1:8081:8081 -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy  mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0 --<span class="hljs-built_in">set</span> block_global=<span class="hljs-literal">false</span> --<span class="hljs-built_in">set</span> ssl_insecure=<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
-<ol>
-<li>导入证书至浏览器或其他工具</li>
-<li>使用代理访问 HTTPS 页面</li>
-</ol>
-<h1 id="更新-ubuntu-22-04-之后网易云音乐无法使用"><a href="#更新-ubuntu-22-04-之后网易云音乐无法使用" class="headerlink" title="更新 ubuntu 22.04 之后网易云音乐无法使用"></a>更新 ubuntu 22.04 之后网易云音乐无法使用</h1><p>修改 <code>/opt/netease/netease-cloud-music/netease-cloud-music.bash</code> 为以下内容<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br>HERE=<span class="hljs-string">&quot;<span class="hljs-subst">$(dirname <span class="hljs-string">&quot;<span class="hljs-subst">$(readlink -f <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;0&#125;</span>&quot;</span>)</span>&quot;</span>)</span>&quot;</span><br><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/libs<br><span class="hljs-built_in">export</span> QT_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins <br><span class="hljs-built_in">export</span> QT_QPA_PLATFORM_PLUGIN_PATH=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/plugins/platforms<br><span class="hljs-built_in">cd</span> /lib/x86_64-linux-gnu/<br><span class="hljs-built_in">exec</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;HERE&#125;</span>&quot;</span>/netease-cloud-music <span class="hljs-variable">$@</span><br><br></code></pre></td></tr></table></figure></p>
-<h1 id="关闭无用启动项"><a href="#关闭无用启动项" class="headerlink" title="关闭无用启动项"></a>关闭无用启动项</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看启动项</span><br><span class="hljs-built_in">ls</span> -l /etc/xdg/autostart<br><br><span class="hljs-comment"># 重命名</span><br>sudo <span class="hljs-built_in">mv</span> something something.bak<br></code></pre></td></tr></table></figure>
-<h1 id="Vmware-更新内核失败"><a href="#Vmware-更新内核失败" class="headerlink" title="Vmware 更新内核失败"></a>Vmware 更新内核失败</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/mkubecek/vmware-host-modules.git<br>git checkout &lt;your_version&gt;<br>sudo make<br>sudo make install<br></code></pre></td></tr></table></figure>
-<h1 id="双系统-Windows-更新失败"><a href="#双系统-Windows-更新失败" class="headerlink" title="双系统 Windows 更新失败"></a>双系统 Windows 更新失败</h1><p>我这里双系统 Windows 更新失败的原因是 Windows 引导出现了问题，可以进入 Windows 输入 <code>msconfig</code> 查看引导选项卡下是否有内容，我是用过 systemd boot 来引导的 Windows，所以没有出现内容。</p>
-<p>在 BIOS 中更改成直接引导 Windows 之后便可以正常更新了。</p>
-<h1 id="按时间降序最近安装的程序"><a href="#按时间降序最近安装的程序" class="headerlink" title="按时间降序最近安装的程序"></a>按时间降序最近安装的程序</h1><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">ls</span> -1t /var/log/dpkg.log*); <span class="hljs-keyword">do</span> <br>      zcat -f <span class="hljs-variable">$x</span> |<span class="hljs-built_in">tac</span> |grep -e <span class="hljs-string">&quot; install &quot;</span> -e <span class="hljs-string">&quot; upgrade &quot;</span>; <br><span class="hljs-keyword">done</span> | awk -F <span class="hljs-string">&quot;:a&quot;</span> <span class="hljs-string">&#x27;&#123;print $1 &quot; :a&quot; $2&#125;&#x27;</span> |column -t<br></code></pre></td></tr></table></figure>
-<h1 id="常用的一些-gnome-extensions"><a href="#常用的一些-gnome-extensions" class="headerlink" title="常用的一些 gnome extensions"></a>常用的一些 gnome extensions</h1><h2 id="Unite"><a href="#Unite" class="headerlink" title="Unite"></a>Unite</h2><p>最大化时隐藏标题栏</p>
-<h2 id="Clear-Top-Bar"><a href="#Clear-Top-Bar" class="headerlink" title="Clear Top Bar"></a>Clear Top Bar</h2><p>状态栏变成透明的</p>
-<h2 id="ddterm"><a href="#ddterm" class="headerlink" title="ddterm"></a>ddterm</h2><p>按 <code>F10</code> 快速启动命令行，再按 <code>F10</code> 隐藏，十分方便</p>
-<h2 id="Desktop-Icons-NG-DING"><a href="#Desktop-Icons-NG-DING" class="headerlink" title="Desktop Icons NG(DING)"></a>Desktop Icons NG(DING)</h2><p>在桌面上显示图标</p>
-<h2 id="Lock-Keys"><a href="#Lock-Keys" class="headerlink" title="Lock Keys"></a>Lock Keys</h2><p>可以显示当前大小写状况</p>
-<h2 id="NetSpeed"><a href="#NetSpeed" class="headerlink" title="NetSpeed"></a>NetSpeed</h2><p>显示当前网速</p>
-<h2 id="TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）"><a href="#TopIcons-Plus（在-gnome-40-之后使用-Ubuntu-Appindicators-替代）" class="headerlink" title="TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）"></a>TopIcons Plus（在 gnome 40 之后使用 Ubuntu Appindicators 替代）</h2><p>在顶部显示图标</p>
-<h2 id="Dash-to-Dock"><a href="#Dash-to-Dock" class="headerlink" title="Dash to Dock"></a>Dash to Dock</h2><p>在底部智能显示一个 Dock</p>
-<h1 id="换-MAC-地址"><a href="#换-MAC-地址" class="headerlink" title="换 MAC 地址"></a>换 MAC 地址</h1><p>有的时候需要更换 linux 的 ip 地址：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo ifconfig eth0 down<br>sudo ifconfig wlo1 hw ether 02:42:41:7d:b7:6e<br>sudo ifconfig wlo1 up<br></code></pre></td></tr></table></figure>
-<p>这里 <code>eth0</code> 是网络 interface，ether 之后的参数就是 MAC 地址</p>
-<h1 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h1><h2 id="Fcitx-失效"><a href="#Fcitx-失效" class="headerlink" title="Fcitx 失效"></a>Fcitx 失效</h2><ul>
-<li><p>使用 im-config 修复</p>
-</li>
-<li><p>可能是 fcitx 没有正常启动，即还是 ibus，可以修改 ~/.pam_environment</p>
-</li>
-<li><p>使用 <code>fcitx5-diagnose</code> 命令根据提示设置环境变量</p>
-</li>
-<li><p>删除 <code>/etc/profile.d/pop-im-ibus.sh</code> （pop os）</p>
-<p> <code>/etc/profile.d/pop-im-ibus.sh</code> （源文件： /etc/gdm3/Xsession ）设置了环境变量 <code>XMODIFIERS</code> ，在 <code>/etc/X11/Xsession.d/70im-config_launch</code> 中有如下代码：</p>
- <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$XMODIFIERS</span>&quot;</span> ] &amp;&amp; \  <span class="hljs-comment"># 如果环境变量 XMODIFIERS 没有被设置</span><br>   ...<br>   <span class="hljs-comment"># 设置环境变量以启动用户指定的输入法</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
-<p> 因为 <code>XMODIFIERS</code> 被设置了，所以 <code>设置环境变量以启动用户指定的输入法</code> 没有执行，所以 fcitx 没有被启动。</p>
-<p> <code>/etc/profile.d/pop-im-ibus.sh</code> 第一次出现于 <code>pop-os_20.10_amd64_intel_4.iso</code> （发布于 2020 年 12 月中旬）</p>
-<p> 相关 issue，<a href="https://github.com/pop-os/pop/issues/1445">https://github.com/pop-os/pop/issues/1445</a></p>
-</li>
-</ul>
-<h1 id="Dash-to-dock"><a href="#Dash-to-dock" class="headerlink" title="Dash to dock"></a>Dash to dock</h1><h2 id="Dash-to-dock-重叠问题"><a href="#Dash-to-dock-重叠问题" class="headerlink" title="Dash to dock 重叠问题"></a>Dash to dock 重叠问题</h2><p>   Pop os 自带的 Dock 与 Dash to dock 发生了重叠</p>
-   <figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">cd /usr/share/gnome-shell/extensions<br>sudo mv cosmic-dock@system76.com cosmic-dock@system76.com.bak # 关闭自带的 dock<br></code></pre></td></tr></table></figure>
-<p>   之后重启 gnome 即可解决</p>
-<h1 id="Alt-Tab-时阻止相同应用叠加"><a href="#Alt-Tab-时阻止相同应用叠加" class="headerlink" title="Alt + Tab 时阻止相同应用叠加"></a>Alt + Tab 时阻止相同应用叠加</h1><p>在 gnome 设置中，打开 keyboard shortcut，将 <code>Switch windows</code> 设置为 <code>Alt + Tab</code> ，而不是默认的 <code>Switch applications</code>。</p>
-<p>参考：<a href="https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps">https://superuser.com/questions/394376/how-to-prevent-gnome-shells-alttab-from-grouping-windows-from-similar-apps</a></p>
-<h1 id="fluxion"><a href="#fluxion" class="headerlink" title="fluxion"></a>fluxion</h1><h2 id="扫描不到热点"><a href="#扫描不到热点" class="headerlink" title="扫描不到热点"></a>扫描不到热点</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sudo airmon-ng<br>sudo airmon-ng start fluxwl0<br></code></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> FLUXIONAirmonNG=1<br></code></pre></td></tr></table></figure>
-<p>执行上述命令后再运行 fluxion 即可。</p>
-<h2 id="解除-53-端口被-systemd-resolved-占用"><a href="#解除-53-端口被-systemd-resolved-占用" class="headerlink" title="解除 53 端口被 systemd-resolved 占用"></a>解除 53 端口被 systemd-resolved 占用</h2><ol>
-<li>先停用 systemd-resolved 服务</li>
-</ol>
-<figure class="highlight nsis"><table><tr><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl stop <span class="hljs-params">system</span>d-resolved<br></code></pre></td></tr></table></figure>
-<ol>
-<li>编辑 /etc/systemd/resolved.conf 文件</li>
-</ol>
-<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>systemd/resolved.conf<br></code></pre></td></tr></table></figure>
-<ol>
-<li>换下面说明更改，然后按一下“esc”键，再输入“:wq”（不要输入引号），回车保存即可。</li>
-</ol>
-<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Resolve]</span><br><span class="hljs-attr">DNS</span>=<span class="hljs-number">8.8</span>.<span class="hljs-number">8.8</span>  <span class="hljs-comment">#取消注释，增加dns</span><br><span class="hljs-comment">#FallbackDNS=</span><br><span class="hljs-comment">#Domains=</span><br><span class="hljs-comment">#LLMNR=no</span><br><span class="hljs-comment">#MulticastDNS=no</span><br><span class="hljs-comment">#DNSSEC=no</span><br><span class="hljs-comment">#Cache=yes</span><br><span class="hljs-attr">DNSStubListener</span>=<span class="hljs-literal">no</span>  <span class="hljs-comment">#取消注释，把yes改为no</span><br></code></pre></td></tr></table></figure>
-<ol>
-<li>最后运行下面命令即可。</li>
-</ol>
-<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">ln -sf <span class="hljs-regexp">/run/</span>systemd<span class="hljs-regexp">/resolve/</span>resolv.conf <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
   </entry>
   <entry>
     <title>MCP 协议学习</title>
@@ -2076,7 +2076,8 @@ q(y | x_t, x_{t-1}) = \frac{ \hat{q}(x_0 | y, x_{t-1}) \hat{q}(y | x_{t-1}) }{ \
 <h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="卸载-Jetbrains"><a href="#卸载-Jetbrains" class="headerlink" title="卸载 Jetbrains"></a>卸载 Jetbrains</h2><p><strong>注意要卸载干净</strong></p>
 <p><img  src="172264713794725.jpeg"  ><span class="image-caption">卸载老版本的 IDEA</span></p>
 <h2 id="安装新版"><a href="#安装新版" class="headerlink" title="安装新版"></a>安装新版</h2><p><img  src="174502512804671.jpeg"  ><span class="image-caption">IDEA 2025.1 安装步骤</span></p>
-<h2 id="激活步骤"><a href="#激活步骤" class="headerlink" title="激活步骤"></a>激活步骤</h2><p>运行 jetbra 中的 <code>scripts/install-all-users.vbs</code></p>
+<h2 id="激活步骤"><a href="#激活步骤" class="headerlink" title="激活步骤"></a>激活步骤</h2><p>从 <a href="https://3.jetbra.in/">jetba</a> 下载激活脚本。</p>
+<p>运行 jetbra 中的 <code>scripts/install-all-users.vbs</code></p>
 <p><strong>记得地区不要选择中国。</strong></p>
 <p>jetbra/ja-netfaliter激活的原理是拦截并重定向与Jetbrains账号验证服务器的数据。<br>2024.2后jetbrains新的安装程序自带了三个区域语言包，其中若选择中文大陆区域语言包，会将激活验证服务器地址修改为国内新验证地址。而jetbra/ja-netfaliter的拦截是黑名单制度，该新服务器地址并不在原本的拦截列表中。</p>
 <p>如果要拦截中国的话，修改jetbra/ja-netfaliter的配置文件，在<strong>URL</strong>配置文件中添加：</p>
