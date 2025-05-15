@@ -186,7 +186,7 @@
 </section>
     <section class="main">
       <section class="content">
-        <h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><h2 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h2><h3 id="TCP-IP-网络层"><a href="#TCP-IP-网络层" class="headerlink" title="TCP/IP 网络层"></a>TCP/IP 网络层</h3><p><img    class="lazyload" data-original="/封装.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">img</span></p>
+        <h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><h2 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h2><h3 id="TCP-IP-网络层"><a href="#TCP-IP-网络层" class="headerlink" title="TCP/IP 网络层"></a>TCP/IP 网络层</h3><p><img    class="lazyload" data-original="封装.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">img</span></p>
 <h4 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h4><p>HTTP、FTP、Telnet、DNS、SMTP等。</p>
 <p>应用层是工作在操作系统中的用户态，传输层及以下则工作在内核态。</p>
 <h4 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h4><p>有 TCP、UDP 协议等。</p>
@@ -199,39 +199,39 @@
 <h4 id="网络接口层"><a href="#网络接口层" class="headerlink" title="网络接口层"></a>网络接口层</h4><p>生成了 IP 头部之后，接下来要交给网络接口层，在 IP 头部的前面加上 MAC 头部，并封装成数据帧（Data frame）发送到网络上。</p>
 <p>MAC 头部是以太网使用的头部，它包含了接收方和发送方的 MAC 地址等信息，我们可以通过 ARP 协议获取对方的 MAC 地址。</p>
 <h3 id="输入网址到网页显示的全过程"><a href="#输入网址到网页显示的全过程" class="headerlink" title="输入网址到网页显示的全过程"></a>输入网址到网页显示的全过程</h3><h4 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h4><p>浏览器解析 url，生成发送给 web 服务器的请求信息。</p>
-<p><img    class="lazyload" data-original="/4.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">HTTP 的消息格式</span></p>
+<p><img    class="lazyload" data-original="4.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">HTTP 的消息格式</span></p>
 <h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h4><p>查询服务器域名对应的 IP 地址。</p>
 <ul>
 <li>根 DNS 服务器（.）</li>
 <li>顶级域 DNS 服务器（.com）</li>
 <li>权威 DNS 服务器（server.com）</li>
 </ul>
-<p><img    class="lazyload" data-original="/6.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">域名解析的工作流程</span></p>
+<p><img    class="lazyload" data-original="6.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">域名解析的工作流程</span></p>
 <p>浏览器会先看自身有没有对这个域名的缓存，如果有，就直接返回，如果没有，就去问操作系统，操作系统也会去看自己的缓存，如果有，就直接返回，如果没有，再去 hosts 文件看，也没有，才会去问「本地 DNS 服务器」。</p>
-<h4 id="协议栈"><a href="#协议栈" class="headerlink" title="协议栈"></a>协议栈</h4><p><img    class="lazyload" data-original="/7.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<h4 id="协议栈"><a href="#协议栈" class="headerlink" title="协议栈"></a>协议栈</h4><p><img    class="lazyload" data-original="7.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h4><p>tcp 报文头部：</p>
-<p><img    class="lazyload" data-original="/8.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">TCP 包头格式</span></p>
+<p><img    class="lazyload" data-original="8.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">TCP 包头格式</span></p>
 <p>首先，<strong>源端口号</strong>和<strong>目标端口</strong>号是不可少的，如果没有这两个端口号，数据就不知道应该发给哪个应用。</p>
 <p>接下来有包的<strong>序</strong>号，这个是为了解决包乱序的问题。</p>
 <p>还有应该有的是<strong>确认号</strong>，目的是确认发出去对方是否有收到。如果没有收到就应该重新发送，直到送达，这个是为了解决丢包的问题。</p>
 <p>接下来还有一些<strong>状态位</strong>。例如 <code>SYN</code> 是发起一个连接，<code>ACK</code> 是回复，<code>RST</code> 是重新连接，<code>FIN</code> 是结束连接等。TCP 是面向连接的，因而双方要维护连接的状态，这些带状态位的包的发送，会引起双方的状态变更。</p>
 <p>还有一个重要的就是<strong>窗口大小</strong>。TCP 要做<strong>流量控制</strong>，通信双方各声明一个窗口（缓存大小），标识自己当前能够的处理能力，别发送的太快，撑死我，也别发的太慢，饿死我。</p>
 <p>除了做流量控制以外，TCP还会做<strong>拥塞控制</strong>，对于真正的通路堵车不堵车，它无能为力，唯一能做的就是控制自己，也即控制发送的速度。不能改变世界，就改变自己嘛。</p>
-<h5 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h5><p><img    class="lazyload" data-original="/TCP三次握手.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">TCP 三次握手</span></p>
+<h5 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h5><p><img    class="lazyload" data-original="TCP三次握手.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">TCP 三次握手</span></p>
 <p>三次握手目的是<strong>保证双方都有发送和接收的能力</strong>。</p>
 <p>TCP 的连接状态查看，在 Linux 可以通过 <code>netstat -napt</code> 命令查看。</p>
-<p><img    class="lazyload" data-original="/10.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">TCP 连接状态查看</span></p>
-<p><img    class="lazyload" data-original="/11.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MTU 与 MSS</span></p>
+<p><img    class="lazyload" data-original="10.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">TCP 连接状态查看</span></p>
+<p><img    class="lazyload" data-original="11.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MTU 与 MSS</span></p>
 <h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h4><p>IP 报文头部：</p>
-<p><img    class="lazyload" data-original="/14.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">IP 包头格式</span></p>
+<p><img    class="lazyload" data-original="14.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">IP 包头格式</span></p>
 <p>因为 HTTP 是经过 TCP 传输的，所以在 IP 包头的<strong>协议号</strong>，要填写为 <code>06</code>（十六进制），表示协议为 TCP。</p>
 <h5 id="假设客户端有多个网卡，就会有多个-IP-地址，那-IP-头部的源地址应该选择哪个-IP-呢？"><a href="#假设客户端有多个网卡，就会有多个-IP-地址，那-IP-头部的源地址应该选择哪个-IP-呢？" class="headerlink" title="假设客户端有多个网卡，就会有多个 IP 地址，那 IP 头部的源地址应该选择哪个 IP 呢？"></a>假设客户端有多个网卡，就会有多个 IP 地址，那 IP 头部的源地址应该选择哪个 IP 呢？</h5><p>当存在多个网卡时，在填写源地址 IP 时，就需要判断到底应该填写哪个地址。这个判断相当于在多块网卡中判断应该使用哪个一块网卡来发送包。</p>
 <p>这个时候就需要根据<strong>路由表</strong>规则，来判断哪一个网卡作为源地址 IP。</p>
 <p>在 Linux 操作系统，我们可以使用 <code>route -n</code> 命令查看当前系统的路由表。</p>
-<p><img    class="lazyload" data-original="/15.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">路由表</span></p>
-<p><img    class="lazyload" data-original="/16.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">路由规则判断</span></p>
+<p><img    class="lazyload" data-original="15.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">路由表</span></p>
+<p><img    class="lazyload" data-original="16.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">路由规则判断</span></p>
 <p>第三条目比较特殊，它目标地址和子网掩码都是 <code>0.0.0.0</code>，这表示<strong>默认网关</strong>，如果其他所有条目都无法匹配，就会自动匹配这一行。并且后续就把包发给路由器，<code>Gateway</code> 即是路由器的 IP 地址。</p>
-<h4 id="MAC"><a href="#MAC" class="headerlink" title="MAC"></a>MAC</h4><p><img    class="lazyload" data-original="/18.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MAC 包头格式</span></p>
+<h4 id="MAC"><a href="#MAC" class="headerlink" title="MAC"></a>MAC</h4><p><img    class="lazyload" data-original="18.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MAC 包头格式</span></p>
 <p>一般在 TCP/IP 通信里，MAC 包头的<strong>协议类型</strong>只使用：</p>
 <ul>
 <li><code>0800</code> ： IP 协议</li>
@@ -240,22 +240,22 @@
 <p>发送方的 MAC 地址获取就比较简单了，MAC 地址是在网卡生产时写入到 ROM 里的，只要将这个值读取出来写入到 MAC 头部就可以了。</p>
 <p>接收方的 MAC 地址就有点复杂了，只要告诉以太网对方的 MAC 的地址，以太网就会帮我们把包发送过去，那么很显然这里应该填写对方的 MAC 地址。</p>
 <p>所以先得搞清楚应该把包发给谁，这个只要查一下路由表就知道了。在路由表中找到相匹配的条目，然后把包发给 GateWay  列中的 IP 地址就可以了。</p>
-<h5 id="既然知道要发给谁，按如何获取对方的-MAC-地址呢？"><a href="#既然知道要发给谁，按如何获取对方的-MAC-地址呢？" class="headerlink" title="既然知道要发给谁，按如何获取对方的 MAC 地址呢？"></a>既然知道要发给谁，按如何获取对方的 MAC 地址呢？</h5><p><img    class="lazyload" data-original="/19.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">ARP 广播</span></p>
+<h5 id="既然知道要发给谁，按如何获取对方的-MAC-地址呢？"><a href="#既然知道要发给谁，按如何获取对方的-MAC-地址呢？" class="headerlink" title="既然知道要发给谁，按如何获取对方的 MAC 地址呢？"></a>既然知道要发给谁，按如何获取对方的 MAC 地址呢？</h5><p><img    class="lazyload" data-original="19.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">ARP 广播</span></p>
 <p>ARP 协议会在以太网中以<strong>广播</strong>的形式，对以太网所有的设备喊出：“这个 IP 地址是谁的？请把你的 MAC 地址告诉我”。</p>
 <p>在后续操作系统会把本次查询结果放到一块叫做 <strong>ARP 缓存</strong>的内存空间留着以后用，不过缓存的时间就几分钟。</p>
 <p>在 Linux 系统中，我们可以使用 <code>arp -a</code> 命令来查看 ARP 缓存的内容。</p>
-<p><img    class="lazyload" data-original="/20.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">ARP 缓存内容</span></p>
+<p><img    class="lazyload" data-original="20.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">ARP 缓存内容</span></p>
 <h4 id="网卡"><a href="#网卡" class="headerlink" title="网卡"></a>网卡</h4><p>我们需要将<strong>数字信息转换为电信号</strong>，才能在网线上传输，也就是说，这才是真正的数据发送过程。</p>
 <p>负责执行这一操作的是<strong>网卡</strong>，要控制网卡还需要靠<strong>网卡驱动程序</strong>。</p>
 <p>网卡驱动获取网络包之后，会将其<strong>复制</strong>到网卡内的缓存区中，接着会在其<strong>开头加上报头和起始帧分界符，在末尾加上用于检测错误的帧校验序列</strong>。</p>
-<p><img    class="lazyload" data-original="/数据包.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">数据包</span></p>
+<p><img    class="lazyload" data-original="数据包.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">数据包</span></p>
 <ul>
 <li>起始帧分界符是一个用来表示包起始位置的标记</li>
 <li>末尾的 <code>FCS</code>（帧校验序列）用来检查包传输过程是否有损坏</li>
 </ul>
 <h4 id="交换机"><a href="#交换机" class="headerlink" title="交换机"></a>交换机</h4><p>交换机的设计是将网络包<strong>原样</strong>转发到目的地。交换机工作在 MAC 层，也称为<strong>二层网络设备</strong>。</p>
 <p>计算机的网卡本身具有 MAC 地址，并通过核对收到的包的接收方 MAC 地址判断是不是发给自己的，如果不是发给自己的则丢弃；相对地，交换机的端口不核对接收方 MAC 地址，而是直接接收所有的包并存放到缓冲区中。因此，和网卡不同，交换机的端口不具有 MAC 地址。</p>
-<p><img    class="lazyload" data-original="/23.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 67%;" /><span class="image-caption">交换机的 MAC 地址表</span></p>
+<p><img    class="lazyload" data-original="23.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 67%;" /><span class="image-caption">交换机的 MAC 地址表</span></p>
 <p>所以，<strong>交换机根据 MAC 地址表查找 MAC 地址，然后将信号发送到相应的端口</strong>。</p>
 <p>交换机无法判断应该把包转发到哪个端口，只能将包转发到除了源端口之外的所有端口上，无论该设备连接在哪个端口上都能收到这个包。</p>
 <p><strong>只有相应的接收者才接收包，而其他设备则会忽略这个包</strong>。</p>
@@ -267,9 +267,9 @@
 <h4 id="路由器"><a href="#路由器" class="headerlink" title="路由器"></a>路由器</h4><p>因为<strong>路由器</strong>是基于 IP 设计的，俗称<strong>三层</strong>网络设备，路由器的各个端口都具有 MAC 地址和 IP 地址；</p>
 <p>而<strong>交换机</strong>是基于以太网设计的，俗称<strong>二层</strong>网络设备，交换机的端口不具有 MAC 地址。</p>
 <p>当转发包时，首先路由器端口会接收发给自己的以太网包，然后<strong>路由表</strong>查询转发目标，再由相应的端口作为发送方将以太网包发送出去。</p>
-<p><img    class="lazyload" data-original="/24.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">路由器转发</span></p>
-<h4 id="服务端与客户端"><a href="#服务端与客户端" class="headerlink" title="服务端与客户端"></a>服务端与客户端</h4><p><img    class="lazyload" data-original="/25.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">网络分层模型</span></p>
-<h3 id="Linux-协议栈"><a href="#Linux-协议栈" class="headerlink" title="Linux 协议栈"></a>Linux 协议栈</h3><p><img    class="lazyload" data-original="/协议栈.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="24.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">路由器转发</span></p>
+<h4 id="服务端与客户端"><a href="#服务端与客户端" class="headerlink" title="服务端与客户端"></a>服务端与客户端</h4><p><img    class="lazyload" data-original="25.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">网络分层模型</span></p>
+<h3 id="Linux-协议栈"><a href="#Linux-协议栈" class="headerlink" title="Linux 协议栈"></a>Linux 协议栈</h3><p><img    class="lazyload" data-original="协议栈.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p>网卡是计算机里的一个硬件，专门负责接收和发送网络包，当网卡接收到一个网络包后，会通过 DMA 技术，将网络包写入到指定的内存地址，也就是写入到 Ring Buffer ，这个是一个环形缓冲区，接着就会告诉操作系统这个网络包已经到达。</p>
 <h3 id="Linux-接受包"><a href="#Linux-接受包" class="headerlink" title="Linux 接受包"></a>Linux 接受包</h3><p>那应该怎么告诉操作系统这个网络包已经到达了呢？</p>
 <p>最简单的一种方式就是触发中断，也就是每当网卡收到一个网络包，就触发一个中断告诉操作系统。</p>
@@ -295,7 +295,7 @@
 <li>当接收报文时，从网卡驱动开始，通过协议栈层层往上传送数据报，通过增加 skb-&gt;data 的值，来逐步剥离协议首部。</li>
 <li>当要发送报文时，创建 sk_buff 结构体，数据缓存区的头部预留足够的空间，用来填充各层首部，在经过各下层协议时，通过减少 skb-&gt;data 的值来增加协议首部。</li>
 </ul>
-<p><img    class="lazyload" data-original="/sk_buff.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="sk_buff.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <h4 id="发送网络数据的时候，涉及几次内存拷贝操作？"><a href="#发送网络数据的时候，涉及几次内存拷贝操作？" class="headerlink" title="发送网络数据的时候，涉及几次内存拷贝操作？"></a>发送网络数据的时候，涉及几次内存拷贝操作？</h4><p>第一次，调用发送数据的系统调用的时候，内核会申请一个内核态的 sk_buff 内存，将用户待发送的数据拷贝到 sk_buff 内存，并将其加入到发送缓冲区。</p>
 <p>第二次，在使用 TCP 传输协议的情况下，从传输层进入网络层的时候，每一个 sk_buff 都会被克隆一个新的副本出来。副本 sk_buff 会被送往网络层，等它发送完的时候就会释放掉，然后原始的 sk_buff 还保留在传输层，目的是为了实现 TCP 的可靠传输，等收到这个数据包的 ACK 时，才会释放原始的 sk_buff 。</p>
 <p>第三次，当 IP 层发现 sk_buff 大于 MTU 时才需要进行。会再申请额外的 sk_buff，并将原来的 sk_buff 拷贝为多个小的 sk_buff。</p>
@@ -359,7 +359,7 @@
 <h3 id="HTTP-缓存"><a href="#HTTP-缓存" class="headerlink" title="HTTP 缓存"></a>HTTP 缓存</h3><p>HTTP 缓存有两种实现方式，分别是<strong>强制缓存和协商缓存</strong>。</p>
 <h4 id="强制缓存"><a href="#强制缓存" class="headerlink" title="强制缓存"></a>强制缓存</h4><p>强制缓存指的是只要浏览器判断缓存没有过期，则直接使用浏览器的本地缓存，决定是否使用缓存的主动性在于浏览器这边。</p>
 <p>如下图中，返回的是 200 状态码，但在 size 项中标识的是 from disk cache，就是使用了强制缓存。</p>
-<p><img    class="lazyload" data-original="/1cb6bc37597e4af8adfef412bfc57a42.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="1cb6bc37597e4af8adfef412bfc57a42.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p>强缓存是利用下面这两个 HTTP 响应头部（Response Header）字段实现的，它们都用来表示资源在客户端缓存的有效期：</p>
 <ul>
 <li><code>Cache-Control</code>， 是一个相对时间；</li>
@@ -372,7 +372,7 @@
 <li>服务器再次收到请求后，会再次更新 Response 头部的 Cache-Control。</li>
 </ul>
 <h4 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h4><p>当我们在浏览器使用开发者工具的时候，你可能会看到过某些请求的响应码是 <code>304</code>，这个是告诉浏览器可以使用本地缓存的资源，通常这种通过服务端告知客户端是否可以使用缓存的方式被称为协商缓存。</p>
-<p><img    class="lazyload" data-original="/缓存etag.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 67%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="缓存etag.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 67%;" /><span class="image-caption">img</span></p>
 <p>协商缓存可以基于两种头部来实现。</p>
 <p>第一种：请求头部中的 <code>If-Modified-Since</code> 字段与响应头部中的 <code>Last-Modified</code> 字段实现，这两个字段的意思是：</p>
 <ul>
@@ -392,7 +392,7 @@
 <li>有些服务器不能精确获取文件的最后修改时间。</li>
 </ol>
 <p>注意，<strong>协商缓存这两个字段都需要配合强制缓存中 Cache-Control 字段来使用，只有在未能命中强制缓存的时候，才能发起带有协商缓存字段的请求</strong>。</p>
-<p><img    class="lazyload" data-original="/http缓存.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="http缓存.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
 <p>当使用 ETag 字段实现的协商缓存的过程：</p>
 <ul>
 <li><p>当浏览器第一次请求访问服务器资源时，服务器会在返回这个资源的同时，在 Response 头部加上 ETag 唯一标识，这个唯一标识的值是根据当前请求的资源生成的；</p>
@@ -595,7 +595,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="HTTPS-如何优化？"><a href="#HTTPS-如何优化？" class="headerlink" title="HTTPS 如何优化？"></a>HTTPS 如何优化？</h3><p><img    class="lazyload" data-original="/优化https提纲.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<h3 id="HTTPS-如何优化？"><a href="#HTTPS-如何优化？" class="headerlink" title="HTTPS 如何优化？"></a>HTTPS 如何优化？</h3><p><img    class="lazyload" data-original="优化https提纲.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <h3 id="HTTP-和-RPC-有什么区别"><a href="#HTTP-和-RPC-有什么区别" class="headerlink" title="HTTP 和 RPC 有什么区别"></a>HTTP 和 RPC 有什么区别</h3><ul>
 <li>服务发现</li>
 <li>底层连接形式<ul>
@@ -615,7 +615,7 @@
 <p>这些 header 头的意思是，浏览器想<strong>升级协议（Connection: Upgrade）</strong>，并且<strong>想升级成 WebSocket 协议（Upgrade: WebSocket）</strong>。同时带上一段<strong>随机生成的 base64 码（Sec-WebSocket-Key）</strong>，发给服务器。</p>
 <p>如果服务器正好支持升级成 WebSocket 协议。就会走 WebSocket 握手流程，同时根据客户端生成的 base64 码，用某个<strong>公开的</strong>算法变成另一段字符串，放在 HTTP 响应的 <code>Sec-WebSocket-Accept</code> 头里，同时带上<code>101状态码</code>，发回给浏览器。HTTP 的响应如下：</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">101</span> Switching Protocols\r\n<br><span class="hljs-attribute">Sec-WebSocket-Accept</span><span class="hljs-punctuation">: </span>iBJKv/ALIW2DobfoA4dmr3JHBCY=\r\n<br><span class="hljs-attribute">Upgrade</span><span class="hljs-punctuation">: </span>WebSocket\r\n<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>Upgrade\r\n<br></code></pre></td></tr></table></figure>
-<h4 id="WebSocket-消息格式"><a href="#WebSocket-消息格式" class="headerlink" title="WebSocket 消息格式"></a>WebSocket 消息格式</h4><p><img    class="lazyload" data-original="/3a63a86e5d7e72a37b9828fc6e65c21f.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">图片</span></p>
+<h4 id="WebSocket-消息格式"><a href="#WebSocket-消息格式" class="headerlink" title="WebSocket 消息格式"></a>WebSocket 消息格式</h4><p><img    class="lazyload" data-original="3a63a86e5d7e72a37b9828fc6e65c21f.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">图片</span></p>
 <p><strong>opcode字段</strong>：这个是用来标志这是个<strong>什么类型</strong>的数据帧。比如。</p>
 <ul>
 <li>等于 1 ，是指text类型（<code>string</code>）的数据包</li>
@@ -626,7 +626,7 @@
 <h4 id="WS-适用场景"><a href="#WS-适用场景" class="headerlink" title="WS 适用场景"></a>WS 适用场景</h4><p>WebSocket完美继承了 TCP 协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。</p>
 <p>它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景，比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
 <h2 id="TCP-篇"><a href="#TCP-篇" class="headerlink" title="TCP 篇"></a>TCP 篇</h2><p>TCP 是<strong>面向连接的、可靠的、基于字节流</strong>的传输层通信协议。</p>
-<h3 id="协议头"><a href="#协议头" class="headerlink" title="协议头"></a>协议头</h3><p><img    class="lazyload" data-original="/format,png-20230309230534096.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">TCP 头格式</span></p>
+<h3 id="协议头"><a href="#协议头" class="headerlink" title="协议头"></a>协议头</h3><p><img    class="lazyload" data-original="format,png-20230309230534096.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">TCP 头格式</span></p>
 <p><strong>序列号</strong>：在建立连接时由计算机生成的随机数作为其初始值，通过 SYN 包传给接收端主机，每发送一次数据，就「累加」一次该「数据字节数」的大小。<strong>用来解决网络包乱序问题。</strong></p>
 <p><strong>确认应答号</strong>：指下一次「期望」收到的数据的序列号，发送端收到这个确认应答以后可以认为在这个序号以前的数据都已经被正常接收。<strong>用来解决丢包的问题。</strong></p>
 <p><strong>控制位：</strong></p>
@@ -671,7 +671,7 @@
 <li>TCP 的数据大小如果大于 MSS 大小，则会在传输层进行分片，目标主机收到后，也同样在传输层组装 TCP 数据包，如果中途丢失了一个分片，只需要传输丢失的这个分片。</li>
 <li>UDP 的数据大小如果大于 MTU 大小，则会在 IP 层进行分片，目标主机收到后，在 IP 层组装完数据，接着再传给传输层。</li>
 </ul>
-<h3 id="三次握手-1"><a href="#三次握手-1" class="headerlink" title="三次握手"></a>三次握手</h3><p><img    class="lazyload" data-original="/TCP三次握手.drawio-1742366660756-59.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">TCP 三次握手</span></p>
+<h3 id="三次握手-1"><a href="#三次握手-1" class="headerlink" title="三次握手"></a>三次握手</h3><p><img    class="lazyload" data-original="TCP三次握手.drawio-1742366660756-59.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">TCP 三次握手</span></p>
 <p><strong>第三次握手是可以携带数据的，前两次握手是不可以携带数据的</strong></p>
 <h4 id="为什么是三次握手？不是两次、四次？"><a href="#为什么是三次握手？不是两次、四次？" class="headerlink" title="为什么是三次握手？不是两次、四次？"></a>为什么是三次握手？不是两次、四次？</h4><ul>
 <li>三次握手才可以阻止重复历史连接的初始化（主要原因）<ul>
@@ -734,7 +734,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img    class="lazyload" data-original="/format,png-20230309230614791.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 80%;" /><span class="image-caption">客户端主动关闭连接 —— TCP 四次挥手</span></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img    class="lazyload" data-original="format,png-20230309230614791.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 80%;" /><span class="image-caption">客户端主动关闭连接 —— TCP 四次挥手</span></p>
 <p>每个方向都需要<strong>一个 FIN 和一个 ACK</strong>，因此通常被称为<strong>四次挥手</strong>。</p>
 <p><strong>主动关闭连接的，才有 TIME_WAIT 状态。</strong></p>
 <h4 id="为什么挥手需要四次？"><a href="#为什么挥手需要四次？" class="headerlink" title="为什么挥手需要四次？"></a>为什么挥手需要四次？</h4><ul>
@@ -745,23 +745,23 @@
 <h4 id="第一次挥手丢失了，会发生什么？"><a href="#第一次挥手丢失了，会发生什么？" class="headerlink" title="第一次挥手丢失了，会发生什么？"></a>第一次挥手丢失了，会发生什么？</h4><p>当客户端（主动关闭方）调用 close 函数后，就会向服务端发送 FIN 报文，试图与服务端断开连接，此时客户端的连接进入到 <code>FIN_WAIT_1</code> 状态。</p>
 <p>正常情况下，如果能及时收到服务端（被动关闭方）的 ACK，则会很快变为 <code>FIN_WAIT2</code>状态。</p>
 <p>如果第一次挥手丢失了，那么客户端迟迟收不到被动方的 ACK 的话，也就会触发超时重传机制，重传 FIN 报文，重发次数由 <code>tcp_orphan_retries</code> 参数控制。</p>
-<p><img    class="lazyload" data-original="/第1次握手丢失.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="第1次握手丢失.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
 <h4 id="第二次挥手丢失了，会发生什么？"><a href="#第二次挥手丢失了，会发生什么？" class="headerlink" title="第二次挥手丢失了，会发生什么？"></a>第二次挥手丢失了，会发生什么？</h4><p>当服务端收到客户端的第一次挥手后，就会先回一个 ACK 确认报文，此时服务端的连接进入到 <code>CLOSE_WAIT</code> 状态。</p>
 <p>在前面我们也提了，ACK 报文是不会重传的，所以如果服务端的第二次挥手丢失了，客户端就会触发超时重传机制，重传 FIN 报文，直到收到服务端的第二次挥手，或者达到最大的重传次数。</p>
 <ul>
 <li>当客户端超时重传 2 次 FIN 报文后，由于 tcp_orphan_retries 为 2，已达到最大重传次数，于是再等待一段时间（时间为上一次超时时间的 2 倍），如果还是没能收到服务端的第二次挥手（ACK 报文），那么客户端就会断开连接。</li>
 </ul>
-<p><img    class="lazyload" data-original="/第2次握手丢失.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="第2次握手丢失.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
 <h4 id="第三次挥手丢失了，会发生什么？"><a href="#第三次挥手丢失了，会发生什么？" class="headerlink" title="第三次挥手丢失了，会发生什么？"></a>第三次挥手丢失了，会发生什么？</h4><p>当服务端（被动关闭方）收到客户端（主动关闭方）的 FIN 报文后，内核会自动回复 ACK，同时连接处于 <code>CLOSE_WAIT</code> 状态，顾名思义，它表示等待应用进程调用 close 函数关闭连接。</p>
 <p>此时，内核是没有权利替代进程关闭连接，必须由进程主动调用 close 函数来触发服务端发送 FIN 报文。</p>
 <p>服务端处于 CLOSE_WAIT 状态时，调用了 close 函数，内核就会发出 FIN 报文，同时连接进入 LAST_ACK 状态，等待客户端返回 ACK 来确认连接关闭。</p>
 <p>如果迟迟收不到这个 ACK，服务端就会重发 FIN 报文，重发次数仍然由 <code>tcp_orphan_retries</code> 参数控制，这与客户端重发 FIN 报文的重传次数控制方式是一样的。</p>
-<p><img    class="lazyload" data-original="/第三次握手丢失.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="第三次握手丢失.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
 <h4 id="第四次挥手丢失了，会发生什么？"><a href="#第四次挥手丢失了，会发生什么？" class="headerlink" title="第四次挥手丢失了，会发生什么？"></a>第四次挥手丢失了，会发生什么？</h4><p>当客户端收到服务端的第三次挥手的 FIN 报文后，就会回 ACK 报文，也就是第四次挥手，此时客户端连接进入 <code>TIME_WAIT</code> 状态。</p>
 <p>在 Linux 系统，TIME_WAIT 状态会持续 2MSL 后才会进入关闭状态。</p>
 <p>然后，服务端（被动关闭方）没有收到 ACK 报文前，还是处于 LAST_ACK 状态。</p>
 <p>如果第四次挥手的 ACK 报文没有到达服务端，服务端就会重发 FIN 报文，重发次数仍然由前面介绍过的 <code>tcp_orphan_retries</code> 参数控制。</p>
-<p><img    class="lazyload" data-original="/第四次挥手丢失drawio.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="第四次挥手丢失drawio.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
 <h4 id="为什么-TIME-WAIT-等待的时间是-2MSL？"><a href="#为什么-TIME-WAIT-等待的时间是-2MSL？" class="headerlink" title="为什么 TIME_WAIT 等待的时间是 2MSL？"></a>为什么 TIME_WAIT 等待的时间是 2MSL？</h4><p><code>MSL</code> 是 Maximum Segment Lifetime，<strong>报文最大生存时间</strong>，它是任何报文在网络上存在的最长时间，超过这个时间报文将被丢弃。因为 TCP 报文基于是 IP 协议的，而 IP 头中有一个 <code>TTL</code> 字段，是 IP 数据报可以经过的最大路由数，每经过一个处理他的路由器此值就减 1，当此值为 0 则数据报将被丢弃，同时发送 ICMP 报文通知源主机。</p>
 <p>MSL 与 TTL 的区别： MSL 的单位是时间，而 TTL 是经过路由跳数。所以 <strong>MSL 应该要大于等于 TTL 消耗为 0 的时间</strong>，以确保报文已被自然消亡。</p>
 <p><strong>TTL 的值一般是 64，Linux 将 MSL 设置为 30 秒，意味着 Linux 认为数据报文经过 64 个路由器的时间不会超过 30 秒，如果超过了，就认为报文已经消失在网络中了</strong>。</p>
@@ -841,12 +841,12 @@
 <li>半连接队列（SYN 队列）：接收到一个 SYN 建立连接请求，处于 SYN_RCVD 状态；</li>
 <li>全连接队列（Accpet 队列）：已完成 TCP 三次握手过程，处于 ESTABLISHED 状态；</li>
 </ul>
-<p><img    class="lazyload" data-original="/format,png-20230309230542373.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption"> SYN 队列 与 Accpet 队列 </span></p>
+<p><img    class="lazyload" data-original="format,png-20230309230542373.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption"> SYN 队列 与 Accpet 队列 </span></p>
 <p>在 Linux 内核 2.2 之后，backlog 变成 accept 队列，也就是已完成连接建立的队列长度，<strong>所以现在通常认为 backlog 是 accept 队列。</strong></p>
 <p><strong>但是上限值是内核参数 somaxconn 的大小，也就说 accpet 队列长度 = min(backlog, somaxconn)。</strong></p>
-<h4 id="accept-发生在三次握手的哪一步？"><a href="#accept-发生在三次握手的哪一步？" class="headerlink" title="accept 发生在三次握手的哪一步？"></a>accept 发生在三次握手的哪一步？</h4><p><img    class="lazyload" data-original="/socket三次握手.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">socket 三次握手</span></p>
+<h4 id="accept-发生在三次握手的哪一步？"><a href="#accept-发生在三次握手的哪一步？" class="headerlink" title="accept 发生在三次握手的哪一步？"></a>accept 发生在三次握手的哪一步？</h4><p><img    class="lazyload" data-original="socket三次握手.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">socket 三次握手</span></p>
 <p>从上面的描述过程，我们可以得知<strong>客户端 connect 成功返回是在第二次握手，服务端 accept 成功返回是在三次握手成功之后。</strong></p>
-<h4 id="客户端调用-close-了，连接是断开的流程是什么？"><a href="#客户端调用-close-了，连接是断开的流程是什么？" class="headerlink" title="客户端调用 close 了，连接是断开的流程是什么？"></a>客户端调用 close 了，连接是断开的流程是什么？</h4><p><img    class="lazyload" data-original="/format,png-20230309230538308.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">客户端调用 close 过程</span></p>
+<h4 id="客户端调用-close-了，连接是断开的流程是什么？"><a href="#客户端调用-close-了，连接是断开的流程是什么？" class="headerlink" title="客户端调用 close 了，连接是断开的流程是什么？"></a>客户端调用 close 了，连接是断开的流程是什么？</h4><p><img    class="lazyload" data-original="format,png-20230309230538308.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">客户端调用 close 过程</span></p>
 <ul>
 <li>客户端调用 <code>close</code>，表明客户端没有数据需要发送了，则此时会向服务端发送 FIN 报文，进入 FIN_WAIT_1 状态；</li>
 <li>服务端接收到了 FIN 报文，TCP 协议栈会为 FIN 包插入一个文件结束符 <code>EOF</code> 到接收缓冲区中，应用程序可以通过 <code>read</code> 调用来感知这个 FIN 包。这个 <code>EOF</code> 会被<strong>放在已排队等候的其他已接收的数据之后</strong>，这就意味着服务端需要处理这种异常情况，因为 EOF 表示在该连接上再无额外数据到达。此时，服务端进入 CLOSE_WAIT 状态；</li>
@@ -878,16 +878,16 @@
 <li><strong>确认号</strong>：指下一次「期望」收到的数据的序列号，发送端收到接收方发来的 ACK 确认报文以后，就可以认为在这个序号以前的数据都已经被正常接收。<strong>用来解决丢包的问题。</strong></li>
 <li><strong>控制位：</strong>用来标识 TCP 报文是什么类型的报文，比如是 SYN 报文、数据报文、ACK 报文，FIN 报文等。</li>
 </ul>
-<p><img    class="lazyload" data-original="/ae18cbf6071c47b98014a68d05c37d16.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">在这里插入图片描述</span></p>
+<p><img    class="lazyload" data-original="ae18cbf6071c47b98014a68d05c37d16.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">在这里插入图片描述</span></p>
 <h2 id="IP-篇"><a href="#IP-篇" class="headerlink" title="IP 篇"></a>IP 篇</h2><p>网络层的主要作用是：<strong>实现主机与主机之间的通信，也叫点对点（end to end）通信。</strong></p>
 <p><strong>MAC（数据链路层） 的作用则是实现「直连」的两个设备之间通信，而 IP 则负责在「没有直连」的两个网络之间进行通信传输。</strong></p>
-<h3 id="IP-地址分类"><a href="#IP-地址分类" class="headerlink" title="IP 地址分类"></a>IP 地址分类</h3><p><img    class="lazyload" data-original="/7-1742387166512-1.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">IP 地址分类</span></p>
+<h3 id="IP-地址分类"><a href="#IP-地址分类" class="headerlink" title="IP 地址分类"></a>IP 地址分类</h3><p><img    class="lazyload" data-original="7-1742387166512-1.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">IP 地址分类</span></p>
 <h3 id="无分类地址-CIDR"><a href="#无分类地址-CIDR" class="headerlink" title="无分类地址 CIDR"></a>无分类地址 CIDR</h3><p>32 比特的 IP 地址被划分为两部分，前面是<strong>网络号</strong>，后面是<strong>主机号</strong></p>
 <p>表示形式 <code>a.b.c.d/x</code>，其中 <code>/x</code> 表示前 x 位属于<strong>网络号</strong>， x 的范围是 <code>0 ~ 32</code>，这就使得 IP 地址更加具有灵活性。</p>
 <h4 id="为什么要分离网络号和主机号？"><a href="#为什么要分离网络号和主机号？" class="headerlink" title="为什么要分离网络号和主机号？"></a>为什么要分离网络号和主机号？</h4><p>因为两台计算机要通讯，首先要判断是否处于同一个广播域内，即网络地址是否相同。如果网络地址相同，表明接受方在本网络上，那么可以把数据包直接发送到目标主机。</p>
 <p>路由器寻址工作中，也就是通过这样的方式来找到对应的网络号的，进而把数据包转发给对应的网络内。</p>
 <h4 id="怎么进行子网划分？"><a href="#怎么进行子网划分？" class="headerlink" title="怎么进行子网划分？"></a>怎么进行子网划分？</h4><p><strong>子网划分实际上是将主机地址分为两个部分：子网网络地址和子网主机地址</strong>。形式如下：</p>
-<p><img    class="lazyload" data-original="/18-1742387270279-4.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="18-1742387270279-4.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">img</span></p>
 <h3 id="IPV6"><a href="#IPV6" class="headerlink" title="IPV6"></a>IPV6</h3><p>IPv4 的地址是 32 位的，大约可以提供 42 亿个地址，但是早在 2011 年 IPv4 地址就已经被分配完了。</p>
 <p>但是 IPv6 的地址是 <code>128</code> 位的。 IPv4 和 IPv6 不能相互兼容。</p>
 <h4 id="IPv6-的亮点"><a href="#IPv6-的亮点" class="headerlink" title="IPv6 的亮点"></a>IPv6 的亮点</h4><ul>
@@ -902,14 +902,14 @@
 <li>任播地址，用于通信最近的节点，最近的节点是由路由协议决定</li>
 <li>没有广播地址</li>
 </ul>
-<p><img    class="lazyload" data-original="/29.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">IPv6地址结构</span></p>
+<p><img    class="lazyload" data-original="29.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">IPv6地址结构</span></p>
 <p>对于一对一通信的 IPv6 地址，主要划分了三类单播地址，每类地址的有效范围都不同。</p>
 <ul>
 <li>在同一链路单播通信，不经过路由器，可以使用<strong>链路本地单播地址</strong>，IPv4 没有此类型</li>
 <li>在内网里单播通信，可以使用<strong>唯一本地地址</strong>，相当于 IPv4 的私有 IP</li>
 <li>在互联网通信，可以使用<strong>全局单播地址</strong>，相当于 IPv4 的公有 IP</li>
 </ul>
-<h4 id="IPv4-首部与-IPv6-首部"><a href="#IPv4-首部与-IPv6-首部" class="headerlink" title="IPv4 首部与 IPv6 首部"></a>IPv4 首部与 IPv6 首部</h4><p><img    class="lazyload" data-original="/31.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">IPv4 首部与 IPv6 首部的差异</span></p>
+<h4 id="IPv4-首部与-IPv6-首部"><a href="#IPv4-首部与-IPv6-首部" class="headerlink" title="IPv4 首部与 IPv6 首部"></a>IPv4 首部与 IPv6 首部</h4><p><img    class="lazyload" data-original="31.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">IPv4 首部与 IPv6 首部的差异</span></p>
 <p>IPv6 相比 IPv4 的首部改进：</p>
 <ul>
 <li><strong>取消了首部校验和字段。</strong> 因为在数据链路层和传输层都会校验，因此 IPv6 直接取消了 IP 的校验。</li>
@@ -1924,7 +1924,7 @@
 </ul>
 <h5 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h5><p>索引下推能够减少<strong>二级索引</strong>在查询时的回表操作，提高查询的效率，因为它将 Server 层部分负责的事情，交给存储引擎层去处理了。</p>
 <p>举一个具体的例子，方便大家理解，这里一张用户表如下，我对 age 和 reward 字段建立了联合索引（age，reward）：</p>
-<p><img    class="lazyload" data-original="/路飞表.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="路飞表.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p>现在有下面这条查询语句：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> t_user <span class="hljs-keyword">where</span> age <span class="hljs-operator">&gt;</span> <span class="hljs-number">20</span> <span class="hljs-keyword">and</span> reward <span class="hljs-operator">=</span> <span class="hljs-number">100000</span>;<br></code></pre></td></tr></table></figure>
 <p>联合索引当遇到范围查询 (&gt;、&lt;) 就会停止匹配，也就是 <strong>age 字段能用到联合索引，但是 reward 字段则无法利用到索引</strong>。</p>
@@ -1945,7 +1945,7 @@
 </ul>
 <p>好了，现在我们知道了一张数据库表的数据是保存在「 表名字.ibd 」的文件里的，这个文件也称为独占表空间文件。</p>
 <h3 id="表空间文件的结构是怎么样的？"><a href="#表空间文件的结构是怎么样的？" class="headerlink" title="表空间文件的结构是怎么样的？"></a>表空间文件的结构是怎么样的？</h3><p><strong>表空间由段（segment）、区（extent）、页（page）、行（row）组成</strong>，InnoDB存储引擎的逻辑存储结构大致如下图：</p>
-<p><img    class="lazyload" data-original="/表空间结构.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="表空间结构.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">img</span></p>
 <h4 id="行（row）"><a href="#行（row）" class="headerlink" title="行（row）"></a>行（row）</h4><p>数据库表中的记录都是按行（row）进行存放的，每行记录根据不同的行格式，有不同的存储结构。</p>
 <h4 id="页（page）"><a href="#页（page）" class="headerlink" title="页（page）"></a>页（page）</h4><p>记录是按照行来存储的，但是数据库的读取并不以「行」为单位，否则一次读取（也就是一次 I/O 操作）只能处理一行数据，效率会非常低。</p>
 <p>因此，<strong>InnoDB 的数据是按「页」为单位来读写的</strong>，也就是说，当需要读一条记录的时候，并不是将这个行记录从磁盘读出来，而是以页为单位，将其整体读入内存。</p>
@@ -1967,7 +1967,7 @@
 <li>Dynamic 和 Compressed 两个都是紧凑的行格式，它们的行格式都和 Compact 差不多，因为都是基于 Compact 改进一点东西。从 MySQL5.7 版本之后，默认使用 Dynamic 行格式。</li>
 </ul>
 <p>Dynamic 和 Compressed 这两个行格式跟 Compact 非常像。</p>
-<h3 id="COMPACT-行格式长什么样？"><a href="#COMPACT-行格式长什么样？" class="headerlink" title="COMPACT 行格式长什么样？"></a>COMPACT 行格式长什么样？</h3><p><img    class="lazyload" data-original="/COMPACT.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<h3 id="COMPACT-行格式长什么样？"><a href="#COMPACT-行格式长什么样？" class="headerlink" title="COMPACT 行格式长什么样？"></a>COMPACT 行格式长什么样？</h3><p><img    class="lazyload" data-original="COMPACT.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p><strong>记录的额外信息</strong>包含 3 个部分：变长字段长度列表、NULL 值列表、记录头信息。</p>
 <p>varchar(n) 和 char(n) 的区别是什么，相信大家都非常清楚，char 是定长的，varchar 是变长的，变长字段实际存储的数据的长度（大小）不固定的。</p>
 <p>在存储数据的时候，也要把数据占用的大小存起来，存到「变长字段长度列表」里面，读取数据的时候才能根据这个「变长字段长度列表」去读取对应长度的数据。其他 TEXT、BLOB 等变长字段也是这么实现的。</p>
@@ -1989,7 +1989,7 @@
 <h3 id="行溢出后，MySQL-是怎么处理的？"><a href="#行溢出后，MySQL-是怎么处理的？" class="headerlink" title="行溢出后，MySQL 是怎么处理的？"></a>行溢出后，MySQL 是怎么处理的？</h3><p>MySQL 中磁盘和内存交互的基本单位是页，一个页的大小一般是 <code>16KB</code>，也就是 <code>16384字节</code>，而一个 varchar(n) 类型的列最多可以存储 <code>65532字节</code>，一些大对象如 TEXT、BLOB 可能存储更多的数据，这时一个页可能就存不了一条记录。这个时候就会<strong>发生行溢出，多的数据就会存到另外的「溢出页」中</strong>。</p>
 <p>如果一个数据页存不了一条记录，InnoDB 存储引擎会自动将溢出的数据存放到「溢出页」中。在一般情况下，InnoDB 的数据都是存放在 「数据页」中。但是当发生行溢出时，溢出的数据会存放到「溢出页」中。</p>
 <p>当发生行溢出时，在记录的真实数据处只会保存该列的一部分数据，而把剩余的数据放在「溢出页」中，然后真实数据处用 20 字节存储指向溢出页的地址，从而可以找到剩余数据所在的页。大致如下图所示。</p>
-<p><img    class="lazyload" data-original="/行溢出.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="行溢出.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">img</span></p>
 <h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ul>
 <li>按「数据结构」分类：<strong>B+tree索引、Hash索引(innodb 不支持手动创建)、Full-text索引</strong>。</li>
 <li>按「物理存储」分类：<strong>聚簇索引（主键索引）、二级索引（辅助索引）</strong>。</li>
@@ -2062,7 +2062,7 @@
 <p>MySQL 5.6 引入的<strong>索引下推优化</strong>（index condition pushdown)， <strong>可以在联合索引遍历过程中，对联合索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数</strong>。</p>
 <p>当你的查询语句的执行计划里，出现了 Extra 为 <code>Using index condition</code>，那么说明使用了索引下推的优化。</p>
 <h3 id="索引区分度"><a href="#索引区分度" class="headerlink" title="索引区分度"></a>索引区分度</h3><p>建立联合索引时的字段顺序，对索引效率也有很大影响。越靠前的字段被用于索引过滤的概率越高，实际开发工作中<strong>建立联合索引时，要把区分度大的字段排在前面，这样区分度大的字段越有可能被更多的 SQL 使用到</strong>。</p>
-<p><img    class="lazyload" data-original="/区分度.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">区分度计算公式</span></p>
+<p><img    class="lazyload" data-original="区分度.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:67%;" /><span class="image-caption">区分度计算公式</span></p>
 <p>性别的区分度就很小，不适合建立索引或不适合排在联合索引列的靠前的位置，而 UUID 这类字段就比较适合做索引或排在联合索引列的靠前的位置。</p>
 <h3 id="联合索引进行排序"><a href="#联合索引进行排序" class="headerlink" title="联合索引进行排序"></a>联合索引进行排序</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">order</span> <span class="hljs-keyword">where</span> status <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> create_time <span class="hljs-keyword">asc</span><br></code></pre></td></tr></table></figure>
 <p>更好的方式给 status 和 create_time 列建立一个联合索引，因为这样可以避免 MySQL 数据库发生文件排序。</p>
@@ -2187,7 +2187,7 @@
 <li>roll_pointer，每次对某条聚簇索引记录进行改动时，都会把旧版本的记录写入到 undo 日志中，然后<strong>这个隐藏列是个指针，指向每一个旧版本记录</strong>，于是就可以通过它找到修改前的记录。</li>
 </ul>
 <p>创建 read view 之后，可以将记录中的 trx_id 划分为 3 种情况：</p>
-<p><img    class="lazyload" data-original="/ReadView.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="ReadView.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p>如果记录 trx_id &lt; min_trx_id，那么该记录可见。（记录已提交）</p>
 <p>如果记录 trx_id &gt; max_trx_id，那么该记录不可见。（记录在当前事务之后）</p>
 <p>如果记录 min_trx_id &lt;= trx_id &lt;= max_trx_id：</p>
@@ -2275,7 +2275,7 @@
 <p>间隙锁虽然存在 X 型间隙锁和 S 型间隙锁，但是并没有什么区别，<strong>间隙锁之间是兼容的，即两个事务可以同时持有包含共同间隙范围的间隙锁，并不存在互斥关系，因为间隙锁的目的是防止插入幻影记录而提出的</strong>。</p>
 <h4 id="Next-Key-Lock"><a href="#Next-Key-Lock" class="headerlink" title="Next-Key Lock"></a><strong>Next-Key Lock</strong></h4><p>Next-Key Lock 称为临键锁，是 Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身。</p>
 <p>假设，表中有一个范围 id 为（3，5] 的 next-key lock，那么其他事务即不能插入 id = 4 记录，也不能修改 id = 5 这条记录。</p>
-<p><img    class="lazyload" data-original="/临键锁.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="临键锁.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p><strong>next-key lock 是包含间隙锁+记录锁的，如果一个事务获取了 X 型的 next-key lock，那么另外一个事务在获取相同范围的 X 型的 next-key lock 时，是会被阻塞的</strong>。</p>
 <h4 id="插入意向锁"><a href="#插入意向锁" class="headerlink" title="插入意向锁"></a>插入意向锁</h4><p>一个事务在插入一条记录的时候，需要判断插入位置是否已被其他事务加了间隙锁（next-key lock 也包含间隙锁）。</p>
 <p>插入意向锁名字虽然有意向锁，但是它并<strong>不是意向锁，它是一种特殊的间隙锁，属于行级别锁</strong>。</p>
@@ -2312,7 +2312,7 @@
 <li><strong>redo log（重做日志）</strong>：是 Innodb 存储引擎层生成的日志，实现了事务中的<strong>持久性</strong>，主要<strong>用于掉电等故障恢复</strong>；</li>
 <li><strong>binlog （归档日志）</strong>：是 Server 层生成的日志，主要<strong>用于数据备份和主从复制</strong>；</li>
 </ul>
-<h3 id="Undo-log"><a href="#Undo-log" class="headerlink" title="Undo log"></a>Undo log</h3><p><img    class="lazyload" data-original="/回滚事务.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">回滚事务</span></p>
+<h3 id="Undo-log"><a href="#Undo-log" class="headerlink" title="Undo log"></a>Undo log</h3><p><img    class="lazyload" data-original="回滚事务.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">回滚事务</span></p>
 <ul>
 <li><strong>事务回滚</strong></li>
 <li><strong>通过 ReadView + undo log 实现 MVCC（多版本并发控制）</strong>。</li>
@@ -2337,7 +2337,7 @@
 <li>InnoDB 的后台线程每隔 1 秒，将 redo log buffer 持久化到磁盘。</li>
 <li>每次事务提交时都将缓存在 redo log buffer 里的 redo log 直接持久化到磁盘（这个策略可由 innodb_flush_log_at_trx_commit 参数控制，下面会说）。</li>
 </ul>
-<h3 id="redo-log-满了"><a href="#redo-log-满了" class="headerlink" title="redo log 满了"></a>redo log 满了</h3><p><img    class="lazyload" data-original="/checkpoint.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
+<h3 id="redo-log-满了"><a href="#redo-log-满了" class="headerlink" title="redo log 满了"></a>redo log 满了</h3><p><img    class="lazyload" data-original="checkpoint.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
 <p>如果 write pos 追上了 checkpoint，就意味着 <strong>redo log 文件满了，这时 MySQL 不能再执行新的更新操作，也就是说 MySQL 会被阻塞</strong>（<em>因此所以针对并发量大的系统，适当设置 redo log 的文件大小非常重要</em>），此时<strong>会停下来将 Buffer Pool 中的脏页刷新到磁盘中，然后标记 redo log 哪些记录可以被擦除，接着对旧的 redo log 记录进行擦除，等擦除完旧记录腾出了空间，checkpoint 就会往后移动（图中顺时针）</strong>，然后 MySQL 恢复正常运行，继续执行新的更新操作。</p>
 <h3 id="为什么需要-binlog-？"><a href="#为什么需要-binlog-？" class="headerlink" title="为什么需要 binlog ？"></a>为什么需要 binlog ？</h3><p>前面介绍的 undo log 和 redo log 这两个日志都是 Innodb 存储引擎生成的。</p>
 <p>MySQL 在完成一条更新操作后，Server 层还会生成一条 binlog，等之后事务提交的时候，会将该事物执行过程中产生的所有 binlog 统一写 入 binlog 文件。</p>
@@ -2375,7 +2375,7 @@
 <p>binlog 文件保存的是全量的日志，也就是保存了所有数据变更的情况，理论上只要记录在 binlog 上的数据，都可以恢复，所以如果不小心整个数据库的数据被删除了，得用 binlog 文件恢复数据。</p>
 <h3 id="主从复制是怎么实现？"><a href="#主从复制是怎么实现？" class="headerlink" title="主从复制是怎么实现？"></a>主从复制是怎么实现？</h3><p>MySQL 的主从复制依赖于 binlog ，也就是记录 MySQL 上的所有变化并以二进制形式保存在磁盘上。复制的过程就是将 binlog 中的数据从主库传输到从库上。</p>
 <p>这个过程一般是<strong>异步</strong>的，也就是主库上执行事务操作的线程不会等待复制 binlog 的线程同步完成。</p>
-<p><img    class="lazyload" data-original="/主从复制过程.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 80%;" /><span class="image-caption">MySQL 主从复制过程</span></p>
+<p><img    class="lazyload" data-original="主从复制过程.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 80%;" /><span class="image-caption">MySQL 主从复制过程</span></p>
 <ul>
 <li><strong>写入 Binlog</strong>：主库写 binlog 日志，提交事务，并更新本地存储数据。</li>
 <li><strong>同步 Binlog</strong>：把 binlog 复制到所有从库上，每个从库把 binlog 写到暂存日志中。</li>
@@ -2406,7 +2406,7 @@
 <p><strong>两阶段提交把单个事务的提交拆分成了 2 个阶段，分别是「准备（Prepare）阶段」和「提交（Commit）阶段」</strong>，每个阶段都由协调者（Coordinator）和参与者（Participant）共同完成。注意，不要把提交（Commit）阶段和 commit 语句混淆了，commit 语句执行的时候，会包含提交（Commit）阶段。</p>
 <p>MySQL 使用了<strong>内部 XA 事务</strong>（是的，也有外部 XA 事务，跟本文不太相关，我就不介绍了），内部 XA 事务由 binlog 作为协调者，存储引擎是参与者。</p>
 <p>当客户端执行 commit 语句或者在自动提交的情况下，MySQL 内部开启一个 XA 事务，<strong>分两阶段来完成 XA 事务的提交</strong>，如下图：</p>
-<p><img    class="lazyload" data-original="/两阶段提交.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">两阶段提交</span></p>
+<p><img    class="lazyload" data-original="两阶段提交.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:80%;" /><span class="image-caption">两阶段提交</span></p>
 <p>从图中可看出，事务的提交过程有两个阶段，就是<strong>将 redo log 的写入拆成了两个步骤：prepare 和 commit，中间再穿插写入binlog</strong>，具体如下：</p>
 <ul>
 <li><strong>prepare 阶段</strong>：将 XID（内部 XA 事务的 ID） 写入到 redo log，同时将 redo log 对应的事务状态设置为 prepare，然后将 redo log 持久化到磁盘（innodb_flush_log_at_trx_commit = 1 的作用）；</li>
@@ -2476,7 +2476,7 @@
 <li><strong>BIO_AOF_FSYNC</strong>，AOF刷盘任务队列：当 AOF 日志配置成 everysec 选项后，主线程会把 AOF 写日志操作封装成一个任务，也放到队列中。当发现队列有任务后，后台线程会调用 fsync(fd)，将 AOF 文件刷盘，</li>
 <li><strong>BIO_LAZY_FREE</strong>，lazy free 任务队列：当队列有任务后，后台线程会 free(obj) 释放对象 / free(dict) 删除数据库所有对象 / free(skiplist) 释放跳表对象；</li>
 </ul>
-<p><img    class="lazyload" data-original="/redis单线程模型.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="redis单线程模型.drawio.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
 <ul>
 <li>Redis 的大部分操作<strong>都在内存中完成</strong>，并且采用了高效的数据结构，因此 Redis 瓶颈可能是机器的内存或者网络带宽，而并非 CPU，既然 CPU 不是瓶颈，那么自然就采用单线程的解决方案了；</li>
 <li>Redis 采用单线程模型可以<strong>避免了多线程之间的竞争</strong>，省去了多线程切换带来的时间和性能上的开销，而且也不会导致死锁问题。</li>
@@ -2529,7 +2529,7 @@
 <p><strong>但是重写过程中，主进程依然可以正常处理命令</strong>，那问题来了，重写 AOF 日志过程中，如果主进程修改了已经存在 key-value，那么会发生写时复制，此时这个 key-value 数据在子进程的内存数据就跟主进程的内存数据不一致了，这时要怎么办呢？</p>
 <p>为了解决这种数据不一致问题，Redis 设置了一个 <strong>AOF 重写缓冲区</strong>，这个缓冲区在创建 bgrewriteaof 子进程之后开始使用。</p>
 <p>在重写 AOF 期间，当 Redis 执行完一个写命令之后，它会<strong>同时将这个写命令写入到 「AOF 缓冲区」和 「AOF 重写缓冲区」</strong>。</p>
-<p><img    class="lazyload" data-original="/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0ODI3Njc0,size_16,color_FFFFFF,t_70-20230309232301042.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0ODI3Njc0,size_16,color_FFFFFF,t_70-20230309232301042.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom: 50%;" /><span class="image-caption">img</span></p>
 <p>也就是说，在 bgrewriteaof 子进程执行 AOF 重写期间，主进程需要执行以下三个工作:</p>
 <ul>
 <li>执行客户端发来的命令；</li>
@@ -2815,7 +2815,7 @@
 </ul>
 <p>在 Redis 可以使用有序集合（ZSet）的方式来实现延迟消息队列的，ZSet 有一个 Score 属性可以用来存储延迟执行的时间。</p>
 <p>使用 zadd score1 value1 命令就可以一直往内存中生产消息。再利用 zrangebysocre 查询符合条件的所有待处理的任务， 通过循环执行队列任务即可。</p>
-<p><img    class="lazyload" data-original="/延迟队列.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="延迟队列.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <h3 id="Redis-的大-key-如何处理？"><a href="#Redis-的大-key-如何处理？" class="headerlink" title="Redis 的大 key 如何处理？"></a>Redis 的大 key 如何处理？</h3><blockquote>
 <p>什么是 Redis 大 key？</p>
 </blockquote>
@@ -3400,7 +3400,7 @@
 </ul>
 <p><strong>拉取模型(pull)</strong></p>
 <p>kafka采用拉取模型，由消费者自己记录消费状态，每个消费者互相独立地顺序拉取每个分区的消息。</p>
-<p><img    class="lazyload" data-original="/1717921512808-fb0372de-7ada-4bc4-bfb5-7e599d9335ac.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="1717921512808-fb0372de-7ada-4bc4-bfb5-7e599d9335ac.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p>说明：</p>
 <ul>
 <li>有两个消费者（不同消费者组）拉取同一个主题的消息，消费者A的消费进度是3，消费者B的消费进度是6。</li>
@@ -3408,7 +3408,7 @@
 <li>这种由消费者控制偏移量的优点是：<strong>消费者可以按照任意的顺序消费消息</strong>。比如，消费者可以重置到旧的偏移量，重新处理之前已经消费过的消息；或者直接跳到最近的位置，从当前的时刻开始消费。</li>
 </ul>
 <h3 id="消费者组"><a href="#消费者组" class="headerlink" title="消费者组"></a>消费者组</h3><p>kafka 消费者是以consumer group消费者组的方式工作，由一个或者多个消费者组成一个组，共同消费一个topic。每个分区在同一时间只能由group中的一个消费者读取，但是多个group可以同时消费这个partition。</p>
-<p><img    class="lazyload" data-original="/1717921705776-04ba7b13-4350-4444-b332-9b3607096fe2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="1717921705776-04ba7b13-4350-4444-b332-9b3607096fe2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span></p>
 <p>上图中，有一个由三个消费者组成的group，有一个消费者读取主题中的两个分区，另外两个分别读取一个分区。某个消费者读取某个分区，也可以叫做某个消费者是某个分区的拥有者。</p>
 <p>优点在于：</p>
 <ul>
@@ -3697,9 +3697,9 @@
 <li>方式二：通过 mmap() 系统调用在文件映射区域分配内存；</li>
 </ul>
 <p>方式一实现的方式很简单，就是通过 brk() 函数将「堆顶」指针向高地址移动，获得新的内存空间。如下图：</p>
-<p><img    class="lazyload" data-original="/brk申请.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="brk申请.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
 <p>方式二通过 mmap() 系统调用中「私有匿名映射」的方式，在文件映射区分配一块内存，也就是从文件映射区“偷”了一块内存。如下图：</p>
-<p><img    class="lazyload" data-original="/mmap申请.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
+<p><img    class="lazyload" data-original="mmap申请.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="    style="zoom:50%;" /><span class="image-caption">img</span></p>
 <blockquote>
 <p>什么场景下 malloc() 会通过 brk() 分配内存？又是什么场景下通过 mmap() 分配内存？</p>
 </blockquote>
