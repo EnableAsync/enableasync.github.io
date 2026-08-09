@@ -180,15 +180,15 @@
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>August 10, 2026</span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6145</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6072</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
         <h1 id="MoE-漫游记"><a href="#MoE-漫游记" class="headerlink" title="MoE 漫游记"></a>MoE 漫游记</h1><blockquote>
-<p>参考：苏剑林 简单谈谈K3的MoE和Attention <a target="_blank" rel="noopener" href="https://kexue\.fm/archives/11848">https://kexue\.fm/archives/11848</a></p>
-<p><a target="_blank" rel="noopener" href="https://kexue\.fm/archives/10735">https://kexue\.fm/archives/10735</a></p>
+<p>参考：苏剑林 简单谈谈K3的MoE和Attention <a target="_blank" rel="noopener" href="https://kexue.fm/archives/11848">https://kexue.fm/archives/11848</a></p>
+<p><a target="_blank" rel="noopener" href="https://kexue.fm/archives/10735">https://kexue.fm/archives/10735</a></p>
 </blockquote>
 <h1 id="为什么使用-MoE，MoE-的缺点"><a href="#为什么使用-MoE，MoE-的缺点" class="headerlink" title="为什么使用 MoE，MoE 的缺点"></a>为什么使用 MoE，MoE 的缺点</h1><p>MoE 本质上是对 Transformer 中 FFN 结构的「<strong>近似</strong>」，假设我们有无穷多算力进行 scaling 时，并不需要 MoE，只需要有足够大的 FFN 就能取得很好的效果。</p>
 <p>但是在有限的算力情况下，MoE 是一种能够提升 scaling law 曲线斜率的方法（相同算力下取得更好的结果），是因为 MoE 能够在计算量增加较少的情况下更多地增加参数规模。假设有 $n$个专家，激活 $k$个专家，每个专家参数量为 $M$，那么我们近似地用 $kM$ 的参数获得了 $nM$ 参数所该有的智能。</p>
@@ -231,8 +231,8 @@ b \leftarrow b-\gamma\frac{F-Q}{\operatorname{RMS}(F-Q)}</script><p>这里的 RM
 <p>简单来说，$\operatorname{sign}$ 的问题在于不论 $F_i$ 与目标 $Q_i$ 的远近都使用同样的更新幅度，这导致原本就已经跟 $Q_i$ 比较接近的 $F_i$ 反而容易偏离原本已经达到的均衡，从而产生震荡；而 RMS Norm 则保留了 $F_i-Q_i$ 之间的相对大小，更新幅度更加自适应一些，理论上更有助于促进均衡，实测效果也多是它更好。</p>
 <p>有了上面的改进之后，在同一个 step 内，相对接近 Q 的 Export 更新更小；但是还缺一个点：越来越均衡的时候，bias 更新越小，于是我觉得可以加上 Loss 衰减来优化这个点（待做实验）：</p>
 <script type="math/tex; mode=display">
-b \leftarrow b-\gamma_t\frac{F-Q}{\operatorname{RMS}(F-Q) + \epsilon}</script><h1 id="MoE-Scaling"><a href="#MoE-Scaling" class="headerlink" title="MoE Scaling"></a>MoE Scaling</h1><h2 id="Latent-MoE-NVIDIA"><a href="#Latent-MoE-NVIDIA" class="headerlink" title="Latent MoE - NVIDIA"></a>Latent MoE - NVIDIA</h2><p><a target="_blank" rel="noopener" href="https://arxiv\.org/abs/2601\.18089">https://arxiv\.org/abs/2601\.18089</a></p>
-<p><img    class="lazyload" data-original="1786295108792-1.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Image</span></p>
+b \leftarrow b-\gamma_t\frac{F-Q}{\operatorname{RMS}(F-Q) + \epsilon}</script><h1 id="MoE-Scaling"><a href="#MoE-Scaling" class="headerlink" title="MoE Scaling"></a>MoE Scaling</h1><h2 id="Latent-MoE-NVIDIA"><a href="#Latent-MoE-NVIDIA" class="headerlink" title="Latent MoE - NVIDIA"></a>Latent MoE - NVIDIA</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2601.18089">https://arxiv.org/abs/2601.18089</a></p>
+<p><img    class="lazyload" data-original="1786295108792-1.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Latent MoE</span></p>
 <p>动机和出发点与图像生成中的 Stable Diffusion 类似：在高维空间中需要更多的计算量，因此在低维空间（Latent 空间）中进行操作。</p>
 <p>好处是可以在大致相同的训练和推理成本下，实现更好的效果（通过减少参数量，达到相同的效果）。但是也引入了一些稳定性的问题，Kimi 的 Stable LatentMoE 对此进行了解决。</p>
 <h2 id="Stable-LatentMoE-Kimi"><a href="#Stable-LatentMoE-Kimi" class="headerlink" title="Stable LatentMoE - Kimi"></a>Stable LatentMoE - Kimi</h2><p>当前主流架构的 MoE 都是如下形式：</p>
@@ -246,13 +246,13 @@ b \leftarrow b-\gamma_t\frac{F-Q}{\operatorname{RMS}(F-Q) + \epsilon}</script><h
 \cdot \sigma(x)</script><p>这样先将门控部分控制在 $(-\beta,\beta)$ 内，其中 $\beta=4$。进一步压测发现，这样还不能完全杜绝膨胀，所以 Kimi 干脆把线性部分也加上了 $\operatorname{softcap}$ 运算，形成了如今的 SiTU-GLU：</p>
 <p>$W_3\left(<br>\operatorname{SiTU}(W_1x;\beta_1)<br>\odot<br>\operatorname{softcap}(W_2x;\beta_2)<br>\right)$</p>
 <p>其中 $\beta_1=4,\beta_2=25$。给 SwiGLU 引入 Clip 操作已经不新鲜，GPT-OSS、DSV4 就已经引入过 Hard Clip 操作，但 Kimi 团队发现，在同样的界限下，$\operatorname{softcap}$ 往往能起到更好的效果，所以选择了 $\operatorname{softcap}$。</p>
-<h1 id="MoE-推导"><a href="#MoE-推导" class="headerlink" title="MoE 推导"></a>MoE 推导</h1><h2 id="MoE-是-FFN-的近似"><a href="#MoE-是-FFN-的近似" class="headerlink" title="MoE 是 FFN 的近似"></a>MoE 是 FFN 的近似</h2><p><img    class="lazyload" data-original="image-20260810011153310.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20260810011153310</span></p>
-<p><img    class="lazyload" data-original="./image-20260810011236531.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20260810011236531</span></p>
-<p><img    class="lazyload" data-original="./image-20260810011246620.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20260810011246620</span></p>
-<h2 id="MoE-负载均衡-Aux-Loss"><a href="#MoE-负载均衡-Aux-Loss" class="headerlink" title="MoE 负载均衡 Aux Loss"></a>MoE 负载均衡 Aux Loss</h2><p><img    class="lazyload" data-original="./image-20260810011253626.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20260810011253626</span></p>
-<p><img    class="lazyload" data-original="./image-20260810011259752.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20260810011259752</span></p>
-<h2 id="MoE-负载均衡-Loss-Free-推导"><a href="#MoE-负载均衡-Loss-Free-推导" class="headerlink" title="MoE 负载均衡 Loss Free 推导"></a>MoE 负载均衡 Loss Free 推导</h2><p><img    class="lazyload" data-original="./image-20260810011306635.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20260810011306635</span></p>
-<p><img    class="lazyload" data-original="./image-20260810011311524.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20260810011311524</span></p>
+<h1 id="MoE-推导"><a href="#MoE-推导" class="headerlink" title="MoE 推导"></a>MoE 推导</h1><h2 id="MoE-是-FFN-的近似"><a href="#MoE-是-FFN-的近似" class="headerlink" title="MoE 是 FFN 的近似"></a>MoE 是 FFN 的近似</h2><p><img    class="lazyload" data-original="image-20260810011153310.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MoE 是 FFN 的近似 1</span></p>
+<p><img    class="lazyload" data-original="./image-20260810011236531.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MoE 是 FFN 的近似 2</span></p>
+<p><img    class="lazyload" data-original="./image-20260810011246620.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">MoE 是 FFN 的近似 3</span></p>
+<h2 id="MoE-负载均衡-Aux-Loss"><a href="#MoE-负载均衡-Aux-Loss" class="headerlink" title="MoE 负载均衡 Aux Loss"></a>MoE 负载均衡 Aux Loss</h2><p><img    class="lazyload" data-original="./image-20260810011253626.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Aux Loss 1</span></p>
+<p><img    class="lazyload" data-original="./image-20260810011259752.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Aux Loss 2</span></p>
+<h2 id="MoE-负载均衡-Loss-Free-推导"><a href="#MoE-负载均衡-Loss-Free-推导" class="headerlink" title="MoE 负载均衡 Loss Free 推导"></a>MoE 负载均衡 Loss Free 推导</h2><p><img    class="lazyload" data-original="./image-20260810011306635.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Loss Free 1</span></p>
+<p><img    class="lazyload" data-original="./image-20260810011311524.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Loss Free 2</span></p>
 
       </section>
       <section class="extra">
