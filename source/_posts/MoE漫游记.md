@@ -7,9 +7,9 @@ typora-root-url: ./MoE漫游记
 
 # MoE 漫游记
 
-> 参考：苏剑林 简单谈谈K3的MoE和Attention https://kexue\.fm/archives/11848
+> 参考：苏剑林 简单谈谈K3的MoE和Attention https://kexue.fm/archives/11848
 >
-> https://kexue\.fm/archives/10735
+> https://kexue.fm/archives/10735
 >
 
 # 为什么使用 MoE，MoE 的缺点
@@ -119,9 +119,9 @@ $$
 
 ## Latent MoE \- NVIDIA
 
-https://arxiv\.org/abs/2601\.18089
+https://arxiv.org/abs/2601.18089
 
-![Image](1786295108792-1.png)
+![Latent MoE](1786295108792-1.png)
 
 动机和出发点与图像生成中的 Stable Diffusion 类似：在高维空间中需要更多的计算量，因此在低维空间（Latent 空间）中进行操作。
 
@@ -162,25 +162,25 @@ $W_3\left(
 
 ## MoE 是 FFN 的近似
 
-![image-20260810011153310](image-20260810011153310.png)
+![MoE 是 FFN 的近似 1](image-20260810011153310.png)
 
-![image-20260810011236531](./image-20260810011236531.png)
+![MoE 是 FFN 的近似 2](./image-20260810011236531.png)
 
-![image-20260810011246620](./image-20260810011246620.png)
+![MoE 是 FFN 的近似 3](./image-20260810011246620.png)
 
 ## MoE 负载均衡 Aux Loss
 
-![image-20260810011253626](./image-20260810011253626.png)
+![Aux Loss 1](./image-20260810011253626.png)
 
-![image-20260810011259752](./image-20260810011259752.png)
+![Aux Loss 2](./image-20260810011259752.png)
 
 
 
 ## MoE 负载均衡 Loss Free 推导
 
-![image-20260810011306635](./image-20260810011306635.png)
+![Loss Free 1](./image-20260810011306635.png)
 
-![image-20260810011311524](./image-20260810011311524.png)
+![Loss Free 2](./image-20260810011311524.png)
 
 
 
